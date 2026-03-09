@@ -55,6 +55,11 @@ export function SiteHeader() {
               </Button>
             </Link>
           )}
+          <Link to="/invoices">
+            <Button variant="ghost" size="icon">
+              <Receipt className="h-4 w-4" />
+            </Button>
+          </Link>
           <Link to="/messages">
             <Button variant="ghost" size="icon" className="relative">
               <MessageSquare className="h-4 w-4" />
