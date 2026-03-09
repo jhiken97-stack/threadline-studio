@@ -14,7 +14,7 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
             </p>
           </div>
           <div className="font-mono text-[10px] text-muted-foreground tracking-wide">
-            US · PORTUGAL · CHINA — © {new Date().getFullYear()}
+            THREADLINE — © {new Date().getFullYear()}
           </div>
         </div>
       </footer>
