@@ -312,38 +312,6 @@ export default function Index() {
         </div>
       </section>
 
-      {/* PRICING TRANSPARENCY */}
-      <section className="border-b border-foreground/10">
-        <div className="container py-12">
-          <h2 className="font-display text-sm font-700 uppercase tracking-[0.15em] mb-2">Simple, Transparent Pricing</h2>
-          <p className="font-body text-sm text-muted-foreground max-w-lg mb-8">
-            No subscriptions. No hidden fees. Threadline only makes money when your project moves forward.
-          </p>
-          <div className="grid sm:grid-cols-3 gap-px bg-foreground/10 max-w-3xl">
-            <div className="bg-background p-6">
-              <span className="font-display text-3xl font-800 text-signal block mb-1">1%</span>
-              <h3 className="font-body text-sm font-600 mb-1">Brand Fee</h3>
-              <p className="font-mono text-[10px] text-muted-foreground leading-relaxed">
-                Added to your invoice total at checkout. On a $5,000 order, that's $50.
-              </p>
-            </div>
-            <div className="bg-background p-6">
-              <span className="font-display text-3xl font-800 text-signal block mb-1">1%</span>
-              <h3 className="font-body text-sm font-600 mb-1">Vendor Fee</h3>
-              <p className="font-mono text-[10px] text-muted-foreground leading-relaxed">
-                Deducted from the vendor's payout. Manufacturers keep 99% of every payment.
-              </p>
-            </div>
-            <div className="bg-background p-6">
-              <span className="font-display text-3xl font-800 text-foreground block mb-1">2%</span>
-              <h3 className="font-body text-sm font-600 mb-1">Total Platform Fee</h3>
-              <p className="font-mono text-[10px] text-muted-foreground leading-relaxed">
-                That's it. No markups on manufacturing costs, no monthly charges.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* CTA */}
       <section className="bg-foreground text-background">
