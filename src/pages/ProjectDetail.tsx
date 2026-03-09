@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, MessageSquare, Check, Clock, Package, Truck, FileText, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useProjects } from "@/lib/projects";
 
 const STAGES = [
   { key: "brief", label: "Brief Sent", icon: FileText, help: "Your project details have been shared with the manufacturer. They'll review and respond soon." },
@@ -12,45 +12,10 @@ const STAGES = [
   { key: "complete", label: "Delivered", icon: Check, help: "Your order has arrived! Review your experience and reorder when you're ready for your next drop." },
 ];
 
-const PROJECTS: Record<string, {
-  id: number; vendor: string; product: string; stage: string; region: string; updated: string; priority: boolean;
-  timeline: { stage: string; date: string; note: string }[];
-}> = {
-  "1": {
-    id: 1, vendor: "Ateliê Nova", product: "FW26 Hoodie Program", stage: "sample", region: "PT", updated: "2h ago", priority: true,
-    timeline: [
-      { stage: "brief", date: "Feb 12", note: "Brief submitted with hoodie specs and colorways" },
-      { stage: "matched", date: "Feb 14", note: "Ateliê Nova accepted — 94% match score" },
-      { stage: "sample", date: "Feb 28", note: "First sample in production, stone wash colorway added" },
-    ],
-  },
-  "2": {
-    id: 2, vendor: "Shenzhen Textile Co.", product: "Heavy Tee Blanks", stage: "production", region: "CN", updated: "5h ago", priority: false,
-    timeline: [
-      { stage: "brief", date: "Jan 20", note: "Brief submitted for 420gsm tee blanks" },
-      { stage: "matched", date: "Jan 22", note: "Shenzhen Textile matched — premium heavyweight specialist" },
-      { stage: "sample", date: "Feb 5", note: "Samples approved after one revision" },
-      { stage: "production", date: "Feb 18", note: "Bulk production started — 500 units, 3 colorways" },
-    ],
-  },
-  "3": {
-    id: 3, vendor: "Brooklyn Garment Dist.", product: "Selvedge Denim Jean", stage: "matched", region: "US", updated: "1d ago", priority: true,
-    timeline: [
-      { stage: "brief", date: "Mar 1", note: "Brief submitted for selvedge denim program" },
-      { stage: "matched", date: "Mar 3", note: "Brooklyn Garment matched — discussing construction details" },
-    ],
-  },
-  "4": {
-    id: 4, vendor: "Porto Fleece Works", product: "Organic Fleece Crew", stage: "brief", region: "PT", updated: "3d ago", priority: false,
-    timeline: [
-      { stage: "brief", date: "Mar 5", note: "Brief submitted — awaiting vendor review" },
-    ],
-  },
-};
-
 export default function ProjectDetail() {
   const { id } = useParams();
-  const project = PROJECTS[id || ""];
+  const { getProject, conversations } = useProjects();
+  const project = getProject(id || "");
 
   if (!project) {
     return (
@@ -62,6 +27,7 @@ export default function ProjectDetail() {
   }
 
   const currentStageIndex = STAGES.findIndex(s => s.key === project.stage);
+  const relatedConvo = conversations.find(c => c.projectId === project.id);
 
   return (
     <div>

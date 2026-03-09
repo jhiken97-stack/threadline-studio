@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { ArrowUpRight, Check, ArrowRight, Upload, X, FileText, CreditCard, MessageSquare, ClipboardList, Bell } from "lucide-react";
+import { ArrowUpRight, Check, ArrowRight, Upload, X, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
+import { useProjects } from "@/lib/projects";
 
 const CATEGORIES = [
   "Cut & Sew", "Heavyweight Jersey", "Fleece", "Knitwear", "Denim",
@@ -29,6 +30,7 @@ type SubmitPhase = "matching" | "results";
 export default function BriefBuilder() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { addProjectFromBrief, addDirectProject } = useProjects();
   const vendorName = searchParams.get("vendorName");
   const vendorId = searchParams.get("vendor");
 
@@ -69,10 +71,23 @@ export default function BriefBuilder() {
     setForm((f) => ({ ...f, files: f.files.filter((_, i) => i !== index) }));
   };
 
+  const briefData = {
+    labelName: form.labelName,
+    category: form.category,
+    tier: form.tier,
+    quantity: form.quantity,
+    description: form.description,
+  };
+
   const handleSubmit = () => {
     setSubmitted(true);
     setSubmitPhase("matching");
     setMatchProgress(0);
+
+    // If submitting directly to a named vendor, create the project immediately
+    if (vendorName) {
+      addDirectProject(vendorName, briefData);
+    }
   };
 
   // Matching animation — runs 7 seconds then reveals results
@@ -93,8 +108,9 @@ export default function BriefBuilder() {
     return () => clearInterval(timer);
   }, [submitted, submitPhase]);
 
-  const handleSendRequest = (vendorId: number) => {
-    setSentRequests((prev) => [...prev, vendorId]);
+  const handleSendRequest = (vendor: typeof MATCHED_VENDORS[0]) => {
+    addProjectFromBrief(vendor, briefData);
+    setSentRequests((prev) => [...prev, vendor.id]);
   };
 
   const allRequestsSent = !vendorName && sentRequests.length > 0;
@@ -180,7 +196,7 @@ export default function BriefBuilder() {
                           <Button
                             variant="editorial"
                             size="sm"
-                            onClick={() => handleSendRequest(v.id)}
+                            onClick={() => handleSendRequest(v)}
                           >
                             Send Request <ArrowUpRight className="ml-1 h-3 w-3" />
                           </Button>
@@ -298,9 +314,7 @@ export default function BriefBuilder() {
                 </div>
               </div>
               <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2">
-                  Quality Level
-                </span>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2">Quality Level</span>
                 <div className="flex gap-2">
                   {TIERS.map((t) => (
                     <button
@@ -329,49 +343,28 @@ export default function BriefBuilder() {
               <p className="font-body text-sm text-muted-foreground mb-4">
                 Upload any files that help describe your product — tech packs, sketches, reference images, fabric swatches, or mood boards. This is optional but helps manufacturers give you an accurate quote faster.
               </p>
-
-              <input
-                ref={fileInputRef}
-                type="file"
-                multiple
-                accept=".pdf,.png,.jpg,.jpeg,.ai,.eps,.svg,.doc,.docx,.xls,.xlsx"
-                onChange={handleFileAdd}
-                className="hidden"
-              />
-
+              <input ref={fileInputRef} type="file" multiple accept=".pdf,.png,.jpg,.jpeg,.ai,.eps,.svg,.doc,.docx,.xls,.xlsx" onChange={handleFileAdd} className="hidden" />
               <button
                 onClick={() => fileInputRef.current?.click()}
                 className="w-full border-2 border-dashed border-foreground/20 hover:border-foreground/40 transition-colors p-8 flex flex-col items-center gap-3 group"
               >
                 <Upload className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors" />
-                <span className="font-body text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                  Click to upload files
-                </span>
-                <span className="font-mono text-[10px] text-muted-foreground/50 uppercase tracking-wider">
-                  PDF, images, AI, EPS, DOC — up to 20MB each
-                </span>
+                <span className="font-body text-sm text-muted-foreground group-hover:text-foreground transition-colors">Click to upload files</span>
+                <span className="font-mono text-[10px] text-muted-foreground/50 uppercase tracking-wider">PDF, images, AI, EPS, DOC — up to 20MB each</span>
               </button>
-
               {form.files.length > 0 && (
                 <div className="space-y-2">
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block">
-                    Uploaded Files ({form.files.length})
-                  </span>
+                  <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block">Uploaded Files ({form.files.length})</span>
                   {form.files.map((file, i) => (
                     <div key={i} className="flex items-center justify-between px-4 py-3 border border-foreground/10 bg-muted/30">
                       <div className="flex items-center gap-3 min-w-0">
                         <FileText className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                         <div className="min-w-0">
                           <p className="font-body text-sm truncate">{file.name}</p>
-                          <p className="font-mono text-[10px] text-muted-foreground/50 uppercase">
-                            {(file.size / 1024 / 1024).toFixed(2)} MB
-                          </p>
+                          <p className="font-mono text-[10px] text-muted-foreground/50 uppercase">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
                         </div>
                       </div>
-                      <button
-                        onClick={() => removeFile(i)}
-                        className="text-muted-foreground hover:text-foreground transition-colors p-1"
-                      >
+                      <button onClick={() => removeFile(i)} className="text-muted-foreground hover:text-foreground transition-colors p-1">
                         <X className="h-4 w-4" />
                       </button>
                     </div>
@@ -384,15 +377,10 @@ export default function BriefBuilder() {
           {step === 3 && (
             <div className="space-y-8">
               <h2 className="font-display text-lg font-700 uppercase tracking-tight mb-1">Your Priorities</h2>
-              <p className="font-body text-sm text-muted-foreground mb-4">
-                Help us understand what matters most to you so we can find the best match.
-              </p>
-
+              <p className="font-body text-sm text-muted-foreground mb-4">Help us understand what matters most to you so we can find the best match.</p>
               {!vendorId && (
                 <div>
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2">
-                    Any preference on where it's made?
-                  </span>
+                  <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2">Any preference on where it's made?</span>
                   <div className="flex gap-2">
                     {COUNTRIES.map((c) => (
                       <button
@@ -406,36 +394,23 @@ export default function BriefBuilder() {
                       </button>
                     ))}
                   </div>
-                  <p className="font-mono text-[10px] text-muted-foreground/60 mt-1.5">
-                    Skip this if you don't have a preference — we'll match you with the best options anywhere.
-                  </p>
+                  <p className="font-mono text-[10px] text-muted-foreground/60 mt-1.5">Skip this if you don't have a preference — we'll match you with the best options anywhere.</p>
                 </div>
               )}
-
               <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-3">
-                  What's more important — keeping costs low or getting the highest quality?
-                </span>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-3">What's more important — keeping costs low or getting the highest quality?</span>
                 <div className="flex items-center gap-4">
                   <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider w-20 text-right">Lower cost</span>
                   <div className="flex-1 flex gap-1">
                     {[1, 2, 3, 4, 5].map((v) => (
-                      <button
-                        key={v}
-                        onClick={() => setForm({ ...form, qualityVsCost: v })}
-                        className={`flex-1 h-8 transition-all ${
-                          v <= form.qualityVsCost ? "bg-foreground" : "bg-foreground/10"
-                        }`}
-                      />
+                      <button key={v} onClick={() => setForm({ ...form, qualityVsCost: v })} className={`flex-1 h-8 transition-all ${v <= form.qualityVsCost ? "bg-foreground" : "bg-foreground/10"}`} />
                     ))}
                   </div>
                   <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider w-20">Top quality</span>
                 </div>
                 <p className="font-mono text-[10px] text-muted-foreground/60 mt-2 text-center">
-                  {form.qualityVsCost <= 2
-                    ? "Got it — we'll focus on cost-effective manufacturers who still meet quality standards."
-                    : form.qualityVsCost >= 4
-                    ? "Got it — we'll prioritize manufacturers known for exceptional quality and craftsmanship."
+                  {form.qualityVsCost <= 2 ? "Got it — we'll focus on cost-effective manufacturers who still meet quality standards."
+                    : form.qualityVsCost >= 4 ? "Got it — we'll prioritize manufacturers known for exceptional quality and craftsmanship."
                     : "A good balance — solid quality at a reasonable price point."}
                 </p>
               </div>
@@ -445,9 +420,7 @@ export default function BriefBuilder() {
           {step === 4 && (
             <div className="space-y-4">
               <h2 className="font-display text-lg font-700 uppercase tracking-tight mb-1">Review Your Project</h2>
-              <p className="font-body text-sm text-muted-foreground mb-4">
-                Take a quick look — you can always go back and change things.
-              </p>
+              <p className="font-body text-sm text-muted-foreground mb-4">Take a quick look — you can always go back and change things.</p>
               <div className="border border-foreground/10 divide-y divide-foreground/10">
                 {vendorName && <ReviewRow label="Manufacturer" value={vendorName} />}
                 <ReviewRow label="Brand" value={form.labelName || "—"} />
@@ -470,14 +443,10 @@ export default function BriefBuilder() {
           {/* Navigation */}
           <div className="flex items-center justify-between mt-8 pt-6 border-t border-foreground/10">
             {step > 0 ? (
-              <Button variant="ghost" size="sm" onClick={() => setStep(step - 1)}>
-                ← Back
-              </Button>
+              <Button variant="ghost" size="sm" onClick={() => setStep(step - 1)}>← Back</Button>
             ) : <div />}
             {step < STEPS.length - 1 ? (
-              <Button variant="editorial" size="lg" onClick={() => setStep(step + 1)}>
-                Continue
-              </Button>
+              <Button variant="editorial" size="lg" onClick={() => setStep(step + 1)}>Continue</Button>
             ) : (
               <Button variant="signal" size="lg" onClick={handleSubmit}>
                 {vendorName ? `Submit to ${vendorName}` : "Submit & Get Matched"} <ArrowUpRight className="ml-1 h-4 w-4" />
