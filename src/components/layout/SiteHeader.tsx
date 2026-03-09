@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { Menu, X, ArrowUpRight, MessageSquare, Bookmark } from "lucide-react";
+import { Menu, X, ArrowUpRight, MessageSquare, Bookmark, Receipt } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useVendorActions } from "@/lib/vendors";
 
