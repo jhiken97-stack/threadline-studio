@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { ArrowUpRight, Check } from "lucide-react";
+import { ArrowUpRight, Check, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const CATEGORIES = ["Cut & Sew", "Heavyweight Jersey", "Fleece", "Knitwear", "Denim", "Private Label"];
 const TIERS = ["Premium", "Luxury"];
@@ -10,7 +11,13 @@ const COUNTRIES = [
   { code: "CN", name: "China" },
 ];
 
-const STEPS = ["Details", "Specs", "Preferences", "Review"];
+const STEPS = ["Details", "Specs", "Priorities", "Review"];
+
+const MATCHED_VENDORS = [
+  { name: "Ateliê Nova", region: "PT", category: "Cut & Sew", match: 94 },
+  { name: "Porto Fleece Works", region: "PT", category: "Fleece", match: 87 },
+  { name: "Brooklyn Garment Dist.", region: "US", category: "Denim", match: 82 },
+];
 
 export default function BriefBuilder() {
   const [step, setStep] = useState(0);
@@ -22,6 +29,7 @@ export default function BriefBuilder() {
     quantity: "",
     sampleTimeline: "",
     countries: [] as string[],
+    qualityVsCost: 3, // 1=cost-focused, 5=quality-focused
   });
 
   const toggleCountry = (code: string) => {
@@ -33,16 +41,43 @@ export default function BriefBuilder() {
 
   if (submitted) {
     return (
-      <div className="min-h-[70vh] flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 bg-signal flex items-center justify-center mx-auto mb-4">
-            <Check className="h-6 w-6 text-signal-foreground" />
+      <div>
+        <section className="border-b border-foreground/10">
+          <div className="container py-10">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-8 h-8 bg-signal flex items-center justify-center">
+                <Check className="h-4 w-4 text-signal-foreground" />
+              </div>
+              <h1 className="font-display text-2xl font-800 uppercase tracking-tight">Brief Submitted</h1>
+            </div>
+            <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
+              We're matching you with manufacturers based on your requirements.
+            </p>
           </div>
-          <h1 className="font-display text-3xl font-800 uppercase tracking-tight mb-2">Brief submitted.</h1>
-          <p className="font-mono text-xs text-muted-foreground uppercase tracking-wider">
-            We'll match you with relevant vendors.
+        </section>
+
+        <section className="container py-10 max-w-2xl">
+          <h2 className="font-display text-sm font-700 uppercase tracking-[0.15em] mb-6">Matched Manufacturers</h2>
+          <div className="flex flex-col divide-y divide-foreground/10 border-t border-b border-foreground/10">
+            {MATCHED_VENDORS.map((v) => (
+              <div key={v.name} className="py-4 flex items-center justify-between">
+                <div>
+                  <h3 className="font-body text-sm font-600">{v.name}</h3>
+                  <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">{v.category} · {v.region}</p>
+                </div>
+                <span className="font-mono text-xs font-600 text-signal">{v.match}% match</span>
+              </div>
+            ))}
+          </div>
+          <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider mt-4">
+            Vendors have been notified and will respond within 48 hours.
           </p>
-        </div>
+          <Link to="/workbench">
+            <Button variant="editorial" size="lg" className="mt-6">
+              Go to Workbench <ArrowRight className="ml-1 h-4 w-4" />
+            </Button>
+          </Link>
+        </section>
       </div>
     );
   }
@@ -53,7 +88,7 @@ export default function BriefBuilder() {
       <section className="border-b border-foreground/10">
         <div className="container py-10">
           <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-2">Production Tool</p>
-          <h1 className="font-display text-3xl md:text-5xl font-800 uppercase tracking-tight">Build Your Brief</h1>
+          <h1 className="font-display text-3xl md:text-4xl font-800 uppercase tracking-tight">Build Your Brief</h1>
         </div>
       </section>
 
@@ -71,7 +106,7 @@ export default function BriefBuilder() {
                 >
                   {String(i + 1).padStart(2, "0")} {s}
                 </button>
-                {i < STEPS.length - 1 && <div className="w-8 h-px bg-foreground/15" />}
+                {i < STEPS.length - 1 && <div className="w-6 h-px bg-foreground/15" />}
               </div>
             ))}
           </div>
@@ -80,17 +115,17 @@ export default function BriefBuilder() {
 
       {/* Form */}
       <section>
-        <div className="container max-w-2xl py-12">
+        <div className="container max-w-2xl py-10">
           {step === 0 && (
             <div className="space-y-6">
-              <h2 className="font-display text-xl font-700 uppercase tracking-tight mb-6">Label Details</h2>
-              <BriefField label="Label Name" value={form.labelName} onChange={(v) => setForm({ ...form, labelName: v })} placeholder="Your brand name" />
+              <h2 className="font-display text-lg font-700 uppercase tracking-tight mb-4">Label Details</h2>
+              <BriefField label="Label / Brand Name" value={form.labelName} onChange={(v) => setForm({ ...form, labelName: v })} placeholder="Your brand name" />
             </div>
           )}
 
           {step === 1 && (
             <div className="space-y-6">
-              <h2 className="font-display text-xl font-700 uppercase tracking-tight mb-6">Product Specs</h2>
+              <h2 className="font-display text-lg font-700 uppercase tracking-tight mb-4">Product Specs</h2>
               <div>
                 <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2">Category</span>
                 <div className="flex flex-wrap gap-2">
@@ -98,7 +133,7 @@ export default function BriefBuilder() {
                     <button
                       key={cat}
                       onClick={() => setForm({ ...form, category: cat })}
-                      className={`font-mono text-[10px] px-4 py-2 uppercase tracking-wider transition-all ${
+                      className={`font-mono text-[10px] px-3 py-1.5 uppercase tracking-wider transition-all ${
                         form.category === cat ? "bg-foreground text-background" : "border border-foreground/20 hover:border-foreground/40"
                       }`}
                     >
@@ -114,7 +149,7 @@ export default function BriefBuilder() {
                     <button
                       key={t}
                       onClick={() => setForm({ ...form, tier: t })}
-                      className={`font-mono text-[10px] px-4 py-2 uppercase tracking-wider transition-all ${
+                      className={`font-mono text-[10px] px-3 py-1.5 uppercase tracking-wider transition-all ${
                         form.tier === t ? "bg-foreground text-background" : "border border-foreground/20 hover:border-foreground/40"
                       }`}
                     >
@@ -129,8 +164,10 @@ export default function BriefBuilder() {
           )}
 
           {step === 2 && (
-            <div className="space-y-6">
-              <h2 className="font-display text-xl font-700 uppercase tracking-tight mb-6">Preferences</h2>
+            <div className="space-y-8">
+              <h2 className="font-display text-lg font-700 uppercase tracking-tight mb-4">Priorities</h2>
+              
+              {/* Countries */}
               <div>
                 <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2">Preferred Countries</span>
                 <div className="flex gap-2">
@@ -138,7 +175,7 @@ export default function BriefBuilder() {
                     <button
                       key={c.code}
                       onClick={() => toggleCountry(c.code)}
-                      className={`font-mono text-xs px-5 py-3 uppercase tracking-wider transition-all ${
+                      className={`font-mono text-[10px] px-4 py-2.5 uppercase tracking-wider transition-all ${
                         form.countries.includes(c.code) ? "bg-foreground text-background" : "border border-foreground/20 hover:border-foreground/40"
                       }`}
                     >
@@ -147,25 +184,52 @@ export default function BriefBuilder() {
                   ))}
                 </div>
               </div>
+
+              {/* Quality vs Cost slider */}
+              <div>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-3">Quality vs. Cost Priority</span>
+                <div className="flex items-center gap-4">
+                  <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider w-16 text-right">Cost</span>
+                  <div className="flex-1 flex gap-1">
+                    {[1, 2, 3, 4, 5].map((v) => (
+                      <button
+                        key={v}
+                        onClick={() => setForm({ ...form, qualityVsCost: v })}
+                        className={`flex-1 h-8 transition-all ${
+                          v <= form.qualityVsCost ? "bg-foreground" : "bg-foreground/10"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider w-16">Quality</span>
+                </div>
+                <p className="font-mono text-[10px] text-muted-foreground/60 mt-2 text-center">
+                  {form.qualityVsCost <= 2 ? "You'll be matched with cost-efficient manufacturers." : form.qualityVsCost >= 4 ? "You'll be matched with premium-quality manufacturers." : "Balanced — good quality at reasonable cost."}
+                </p>
+              </div>
             </div>
           )}
 
           {step === 3 && (
-            <div className="space-y-6">
-              <h2 className="font-display text-xl font-700 uppercase tracking-tight mb-6">Review Brief</h2>
+            <div className="space-y-4">
+              <h2 className="font-display text-lg font-700 uppercase tracking-tight mb-4">Review Brief</h2>
               <div className="border border-foreground/10 divide-y divide-foreground/10">
                 <ReviewRow label="Label" value={form.labelName || "—"} />
                 <ReviewRow label="Category" value={form.category || "—"} />
                 <ReviewRow label="Tier" value={form.tier || "—"} />
                 <ReviewRow label="Quantity" value={form.quantity || "—"} />
-                <ReviewRow label="Sample Timeline" value={form.sampleTimeline || "—"} />
+                <ReviewRow label="Timeline" value={form.sampleTimeline || "—"} />
                 <ReviewRow label="Countries" value={form.countries.join(", ") || "—"} />
+                <ReviewRow label="Priority" value={form.qualityVsCost <= 2 ? "Cost-focused" : form.qualityVsCost >= 4 ? "Quality-focused" : "Balanced"} />
               </div>
+              <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
+                Submitting will automatically match you with relevant manufacturers.
+              </p>
             </div>
           )}
 
           {/* Navigation */}
-          <div className="flex items-center justify-between mt-10 pt-6 border-t border-foreground/10">
+          <div className="flex items-center justify-between mt-8 pt-6 border-t border-foreground/10">
             {step > 0 ? (
               <Button variant="ghost" size="sm" onClick={() => setStep(step - 1)}>
                 ← Back
@@ -177,7 +241,7 @@ export default function BriefBuilder() {
               </Button>
             ) : (
               <Button variant="signal" size="lg" onClick={() => setSubmitted(true)}>
-                Submit Brief <ArrowUpRight className="ml-1 h-4 w-4" />
+                Submit & Match <ArrowUpRight className="ml-1 h-4 w-4" />
               </Button>
             )}
           </div>
@@ -188,10 +252,7 @@ export default function BriefBuilder() {
 }
 
 function BriefField({ label, value, onChange, placeholder }: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  placeholder: string;
+  label: string; value: string; onChange: (v: string) => void; placeholder: string;
 }) {
   return (
     <div>
@@ -208,7 +269,7 @@ function BriefField({ label, value, onChange, placeholder }: {
 
 function ReviewRow({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex items-center justify-between px-5 py-3">
+    <div className="flex items-center justify-between px-4 py-3">
       <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{label}</span>
       <span className="font-body text-sm font-500">{value}</span>
     </div>
