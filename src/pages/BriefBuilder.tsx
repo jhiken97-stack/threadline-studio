@@ -33,8 +33,28 @@ export default function BriefBuilder() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { addProjectFromBrief, addDirectProject } = useProjects();
+  const { isLoggedIn } = useAuth();
   const vendorName = searchParams.get("vendorName");
   const vendorId = searchParams.get("vendor");
+
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto px-6">
+          <Lock className="h-6 w-6 mx-auto mb-4 text-muted-foreground/40" />
+          <h1 className="font-display text-2xl md:text-3xl font-800 uppercase tracking-tight mb-2">Sign up to continue</h1>
+          <p className="font-mono text-xs text-muted-foreground uppercase tracking-wider mb-6">
+            Join Threadline to build project briefs and connect with manufacturers.
+          </p>
+          <Link to="/join">
+            <Button variant="editorial" size="lg">
+              Join Threadline <ArrowUpRight className="ml-1 h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);

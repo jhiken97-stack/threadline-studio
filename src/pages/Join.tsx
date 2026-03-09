@@ -37,7 +37,12 @@ export default function Join() {
         </p>
 
         <form
-          onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData(e.currentTarget);
+            login(formData.get("label") as string || "User");
+            setSubmitted(true);
+          }}
           className="flex flex-col gap-4"
         >
           <FormField label="Label Name" name="label" placeholder="Your brand / label name" />
