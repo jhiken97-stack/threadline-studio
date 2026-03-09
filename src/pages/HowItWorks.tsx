@@ -100,7 +100,7 @@ export default function HowItWorks() {
               </Button>
             </Link>
             <Link to="/concierge">
-              <Button variant="outline" size="lg" className="border-background/30 text-background hover:bg-background hover:text-foreground">
+              <Button variant="outline" size="lg" className="border-background/30 text-foreground hover:bg-background hover:text-foreground">
                 Get 1-on-1 Help
               </Button>
             </Link>
