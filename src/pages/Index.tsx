@@ -260,11 +260,16 @@ export default function Index() {
       {/* REGIONS */}
       <section className="border-b border-foreground/10">
         <div className="container py-10">
-          <h2 className="font-display text-sm font-700 uppercase tracking-[0.15em] mb-1">Manufacturer Regions</h2>
+          <div className="flex items-center justify-between mb-1">
+            <h2 className="font-display text-sm font-700 uppercase tracking-[0.15em]">Manufacturer Regions</h2>
+            <Link to="/sourcing-guide" className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+              Sourcing guide <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
           <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider mb-5">
             Where our manufacturers are based — your brand can be located anywhere
           </p>
-          <div className="grid md:grid-cols-3 gap-px bg-foreground/10">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-px bg-foreground/10">
             {GEO_MODULES.map((geo) => (
               <Link key={geo.code} to={`/vendors?region=${geo.code}`} className="bg-background p-5 group hover:bg-foreground hover:text-background transition-all duration-300">
                 <span className="font-display text-3xl font-800 leading-none block mb-2 group-hover:text-signal transition-colors">
