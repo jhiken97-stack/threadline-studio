@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowUpRight, ArrowRight, Search, Lock, Bookmark, GitCompare } from "lucide-react";
+import { ArrowUpRight, ArrowRight, Search, Lock, Bookmark, BookmarkCheck, GitCompare, Factory, FileText, Package, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useVendorActions } from "@/lib/vendors";
 import fashionHoodie from "@/assets/fashion-hoodie.jpg";
 import fashionDenim from "@/assets/fashion-denim.jpg";
 import fashionFleece from "@/assets/fashion-fleece.jpg";
@@ -11,12 +12,12 @@ const CATEGORIES = ["Cut & Sew", "Heavyweight Jersey", "Fleece", "Knitwear", "De
 const REGIONS = ["US", "PT", "CN"] as const;
 
 const FEATURED_MANUFACTURERS = [
-  { id: 1, name: "Ateliê Nova", region: "PT", categories: ["Cut & Sew"], tier: "Premium", image: fashionHoodie, moqPreview: "200–500", leadPreview: "6–8 wks" },
-  { id: 2, name: "Shenzhen Textile Co.", region: "CN", categories: ["Heavyweight Jersey"], tier: "Luxury", image: fashionTee, moqPreview: "300–1000", leadPreview: "8–10 wks" },
-  { id: 3, name: "Brooklyn Garment Dist.", region: "US", categories: ["Denim"], tier: "Premium", image: fashionDenim, moqPreview: "100–300", leadPreview: "4–6 wks" },
-  { id: 4, name: "Porto Fleece Works", region: "PT", categories: ["Fleece"], tier: "Premium", image: fashionFleece, moqPreview: "200–400", leadPreview: "5–7 wks" },
-  { id: 5, name: "Guangzhou Knit Mill", region: "CN", categories: ["Knitwear"], tier: "Luxury", image: fashionHoodie, moqPreview: "500–2000", leadPreview: "10–12 wks" },
-  { id: 6, name: "LA Cut House", region: "US", categories: ["Private Label"], tier: "Premium", image: fashionTee, moqPreview: "150–500", leadPreview: "3–5 wks" },
+  { id: 1, name: "Ateliê Nova", region: "PT", categories: ["Cut & Sew"], tier: "Premium", image: fashionHoodie },
+  { id: 2, name: "Shenzhen Textile Co.", region: "CN", categories: ["Heavyweight Jersey"], tier: "Luxury", image: fashionTee },
+  { id: 3, name: "Brooklyn Garment Dist.", region: "US", categories: ["Denim"], tier: "Premium", image: fashionDenim },
+  { id: 4, name: "Porto Fleece Works", region: "PT", categories: ["Fleece"], tier: "Premium", image: fashionFleece },
+  { id: 5, name: "Guangzhou Knit Mill", region: "CN", categories: ["Knitwear"], tier: "Luxury", image: fashionHoodie },
+  { id: 6, name: "LA Cut House", region: "US", categories: ["Private Label"], tier: "Premium", image: fashionTee },
 ];
 
 const SEARCH_SUGGESTIONS = [
@@ -24,6 +25,14 @@ const SEARCH_SUGGESTIONS = [
   "Cut & sew, MOQ < 300",
   "Denim specialist, USA",
   "Luxury knitwear, China",
+];
+
+const HOW_IT_WORKS_STEPS = [
+  { icon: Search, title: "Browse manufacturers", desc: "Search vetted factories by category, country, and budget" },
+  { icon: FileText, title: "Submit your project", desc: "Tell us what you want to make — we'll match you with the right factory" },
+  { icon: Package, title: "Review samples", desc: "Approve physical samples before committing to a full production run" },
+  { icon: Factory, title: "Production begins", desc: "Your manufacturer produces your order while we keep you updated" },
+  { icon: Truck, title: "Receive your product", desc: "Quality-checked products shipped to you, ready to sell" },
 ];
 
 const GEO_MODULES = [
@@ -72,11 +81,7 @@ export default function Index() {
       {/* HERO — full-width image with overlay */}
       <section className="relative">
         <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-          <img
-            src={fashionHoodie}
-            alt="Fashion production"
-            className="w-full h-full object-cover"
-          />
+          <img src={fashionHoodie} alt="Fashion production" className="w-full h-full object-cover" />
           <div className="absolute inset-0 bg-foreground/70" />
         </div>
         <div className="absolute inset-0 flex items-center">
@@ -124,7 +129,7 @@ export default function Index() {
         </div>
       </section>
 
-      {/* HOW IT WORKS — quick overview */}
+      {/* HOW IT WORKS — synced with full page, with icons */}
       <section className="border-b border-foreground/10 bg-muted/30">
         <div className="container py-8">
           <div className="flex items-center justify-between mb-5">
@@ -133,19 +138,18 @@ export default function Index() {
               Full guide <ArrowRight className="h-3 w-3" />
             </Link>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { step: "01", title: "Find a manufacturer", desc: "Browse vetted factories by category, country, and budget" },
-              { step: "02", title: "Submit your project", desc: "Tell us what you want to make — we'll handle the rest" },
-              { step: "03", title: "Get samples made", desc: "Review physical samples before committing to a full order" },
-              { step: "04", title: "Receive your product", desc: "We track production and shipping so you don't have to guess" },
-            ].map((item) => (
-              <div key={item.step} className="p-4 border border-foreground/10 bg-background">
-                <span className="font-mono text-[9px] text-muted-foreground/40 block mb-2">{item.step}</span>
-                <h3 className="font-body text-sm font-600 mb-1">{item.title}</h3>
-                <p className="font-mono text-[10px] text-muted-foreground leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+            {HOW_IT_WORKS_STEPS.map((item, i) => {
+              const Icon = item.icon;
+              return (
+                <div key={i} className="p-4 border border-foreground/10 bg-background">
+                  <Icon className="h-4 w-4 text-signal mb-2" />
+                  <span className="font-mono text-[9px] text-muted-foreground/40 block mb-1">{String(i + 1).padStart(2, "0")}</span>
+                  <h3 className="font-body text-sm font-600 mb-1">{item.title}</h3>
+                  <p className="font-mono text-[10px] text-muted-foreground leading-relaxed">{item.desc}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -255,15 +259,15 @@ export default function Index() {
           <p className="font-mono text-[10px] text-background/40 uppercase tracking-wider mb-5">
             Tell us what you want to make — we'll help you find the right manufacturer and guide you through the process.
           </p>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
             <Link to="/brief">
               <Button variant="signal" size="lg">
                 Start Your First Project <ArrowUpRight className="ml-1 h-4 w-4" />
               </Button>
             </Link>
-            <Link to="/vendors">
+            <Link to="/concierge">
               <Button variant="outline" size="lg" className="border-background/30 text-background hover:bg-background hover:text-foreground">
-                Browse Manufacturers
+                Get 1-on-1 Help
               </Button>
             </Link>
           </div>
@@ -274,6 +278,10 @@ export default function Index() {
 }
 
 function ManufacturerCard({ manufacturer: m }: { manufacturer: typeof FEATURED_MANUFACTURERS[0] }) {
+  const { toggleSave, toggleCompare, isSaved, isComparing } = useVendorActions();
+  const saved = isSaved(m.id);
+  const comparing = isComparing(m.id);
+
   return (
     <div className="bg-background p-5 group hover:bg-muted/40 transition-colors duration-200">
       <div className="w-full aspect-[3/2] bg-muted mb-3 border border-foreground/5 overflow-hidden">
@@ -308,15 +316,26 @@ function ManufacturerCard({ manufacturer: m }: { manufacturer: typeof FEATURED_M
         </div>
       </div>
 
-      {/* Quick actions — visible on hover */}
+      {/* Quick actions */}
       <div className="flex items-center gap-3 mt-3 pt-2 border-t border-foreground/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-        <button className="font-mono text-[10px] text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider flex items-center gap-1">
-          <Bookmark className="h-3 w-3" /> Save
+        <button
+          onClick={() => toggleSave(m.id)}
+          className={`font-mono text-[10px] transition-colors uppercase tracking-wider flex items-center gap-1 ${
+            saved ? "text-signal" : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          {saved ? <BookmarkCheck className="h-3 w-3" /> : <Bookmark className="h-3 w-3" />}
+          {saved ? "Saved" : "Save"}
         </button>
-        <button className="font-mono text-[10px] text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider flex items-center gap-1">
-          <GitCompare className="h-3 w-3" /> Compare
+        <button
+          onClick={() => toggleCompare(m.id)}
+          className={`font-mono text-[10px] transition-colors uppercase tracking-wider flex items-center gap-1 ${
+            comparing ? "text-signal" : "text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <GitCompare className="h-3 w-3" /> {comparing ? "Comparing" : "Compare"}
         </button>
-        <Link to={`/brief?vendor=${m.id}`} className="font-mono text-[10px] text-signal hover:text-signal/80 transition-colors uppercase tracking-wider flex items-center gap-1 ml-auto">
+        <Link to={`/brief?vendor=${m.id}&vendorName=${encodeURIComponent(m.name)}`} className="font-mono text-[10px] text-signal hover:text-signal/80 transition-colors uppercase tracking-wider flex items-center gap-1 ml-auto">
           Start Project <ArrowRight className="h-3 w-3" />
         </Link>
       </div>

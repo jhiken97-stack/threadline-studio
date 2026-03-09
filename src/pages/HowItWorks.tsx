@@ -1,40 +1,46 @@
 import { Link } from "react-router-dom";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Search, FileText, Users, Package, Factory, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const STEPS = [
   {
     number: "01",
+    icon: Search,
     title: "Browse Manufacturers",
-    description: "Look through our network of vetted factories in the US, Portugal, and China. Filter by what you're making, your budget, and how many units you need.",
+    description: "Search our network of vetted factories in the US, Portugal, and China. Filter by what you're making, your budget, and how many units you need.",
     detail: "Every manufacturer on Threadline has been checked for quality, reliability, and clear communication.",
   },
   {
     number: "02",
+    icon: FileText,
     title: "Tell Us What You Want to Make",
     description: "Fill out a simple project brief — what you're making, how many, and what matters most to you (quality, price, speed). It takes about 2 minutes.",
     detail: "You can submit to a specific manufacturer or let us match you automatically.",
   },
   {
     number: "03",
+    icon: Users,
     title: "Get Matched with the Right Factory",
     description: "Based on your project details, we connect you with manufacturers who are the best fit. They'll review your brief and respond directly through the platform.",
     detail: "No cold emails or awkward introductions — manufacturers come to you.",
   },
   {
     number: "04",
+    icon: Package,
     title: "Review Samples Before You Commit",
     description: "Before you order in bulk, your manufacturer will make sample pieces for you to check. You approve them, request changes, or try a different factory.",
     detail: "We recommend getting samples from 2–3 manufacturers to compare quality.",
   },
   {
     number: "05",
+    icon: Factory,
     title: "Production & Communication",
     description: "Once you approve samples, bulk production begins. Your Workbench keeps you updated at every stage — no chasing emails or wondering what's happening.",
     detail: "Message your manufacturer directly through Threadline anytime you have questions.",
   },
   {
     number: "06",
+    icon: Truck,
     title: "Receive Your Finished Product",
     description: "Your products go through a quality check and ship to you. You're ready to launch your collection, open your store, or start selling.",
     detail: "All your project history stays saved so you can easily reorder for your next season.",
@@ -57,24 +63,28 @@ export default function HowItWorks() {
       </section>
 
       <section>
-        {STEPS.map((step) => (
-          <div key={step.number} className="border-b border-foreground/10">
-            <div className="container py-10 md:py-14">
-              <div className="grid md:grid-cols-12 gap-6 md:gap-10 items-start">
-                <div className="md:col-span-1">
-                  <span className="font-mono text-[10px] text-muted-foreground/40 uppercase tracking-widest">{step.number}</span>
-                </div>
-                <div className="md:col-span-4">
-                  <h2 className="font-display text-xl md:text-2xl font-800 uppercase tracking-tight">{step.title}</h2>
-                </div>
-                <div className="md:col-span-7">
-                  <p className="font-body text-sm text-foreground/80 leading-relaxed mb-3">{step.description}</p>
-                  <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider leading-relaxed">{step.detail}</p>
+        {STEPS.map((step) => {
+          const Icon = step.icon;
+          return (
+            <div key={step.number} className="border-b border-foreground/10">
+              <div className="container py-10 md:py-14">
+                <div className="grid md:grid-cols-12 gap-6 md:gap-10 items-start">
+                  <div className="md:col-span-1 flex items-center gap-3 md:flex-col md:items-start">
+                    <Icon className="h-5 w-5 text-signal" />
+                    <span className="font-mono text-[10px] text-muted-foreground/40 uppercase tracking-widest">{step.number}</span>
+                  </div>
+                  <div className="md:col-span-4">
+                    <h2 className="font-display text-xl md:text-2xl font-800 uppercase tracking-tight">{step.title}</h2>
+                  </div>
+                  <div className="md:col-span-7">
+                    <p className="font-body text-sm text-foreground/80 leading-relaxed mb-3">{step.description}</p>
+                    <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider leading-relaxed">{step.detail}</p>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </section>
 
       <section className="bg-foreground text-background">
@@ -83,15 +93,15 @@ export default function HowItWorks() {
           <p className="font-body text-sm text-background/60 mb-6">
             It's free to browse manufacturers and submit your first project.
           </p>
-          <div className="flex gap-3">
+          <div className="flex flex-wrap gap-3">
             <Link to="/brief">
               <Button variant="signal" size="lg">
                 Start Your First Project <ArrowUpRight className="ml-1 h-4 w-4" />
               </Button>
             </Link>
-            <Link to="/vendors">
+            <Link to="/concierge">
               <Button variant="outline" size="lg" className="border-background/30 text-background hover:bg-background hover:text-foreground">
-                Browse Manufacturers
+                Get 1-on-1 Help
               </Button>
             </Link>
           </div>
