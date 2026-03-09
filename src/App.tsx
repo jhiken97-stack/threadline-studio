@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { SiteLayout } from "@/components/layout/SiteLayout";
 import { VendorActionsProvider } from "@/lib/vendors";
 import { ProjectsProvider } from "@/lib/projects";
+import { AuthProvider } from "@/lib/auth";
 import Index from "./pages/Index";
 import Vendors from "./pages/Vendors";
 import Join from "./pages/Join";
@@ -26,6 +27,7 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
+      <AuthProvider>
       <VendorActionsProvider>
         <ProjectsProvider>
         <Toaster />
@@ -52,6 +54,7 @@ const App = () => (
         </BrowserRouter>
         </ProjectsProvider>
       </VendorActionsProvider>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

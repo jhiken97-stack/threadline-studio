@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import { ArrowUpRight, Check, ArrowRight, Upload, X, FileText } from "lucide-react";
+import { ArrowUpRight, Check, ArrowRight, Upload, X, FileText, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import { useProjects } from "@/lib/projects";
+import { useAuth } from "@/lib/auth";
 
 const CATEGORIES = [
   "Cut & Sew", "Heavyweight Jersey", "Fleece", "Knitwear", "Denim",
@@ -32,6 +33,7 @@ export default function BriefBuilder() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { addProjectFromBrief, addDirectProject } = useProjects();
+  const { isLoggedIn } = useAuth();
   const vendorName = searchParams.get("vendorName");
   const vendorId = searchParams.get("vendor");
 
@@ -53,6 +55,43 @@ export default function BriefBuilder() {
   });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Matching animation — runs 7 seconds then reveals results
+  useEffect(() => {
+    if (!submitted || submitPhase !== "matching") return;
+    const duration = 7000;
+    const interval = 50;
+    let elapsed = 0;
+    const timer = setInterval(() => {
+      elapsed += interval;
+      const progress = Math.min((elapsed / duration) * 100, 100);
+      setMatchProgress(progress);
+      if (elapsed >= duration) {
+        clearInterval(timer);
+        setSubmitPhase("results");
+      }
+    }, interval);
+    return () => clearInterval(timer);
+  }, [submitted, submitPhase]);
+
+  if (!isLoggedIn) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto px-6">
+          <Lock className="h-6 w-6 mx-auto mb-4 text-muted-foreground/40" />
+          <h1 className="font-display text-2xl md:text-3xl font-800 uppercase tracking-tight mb-2">Sign up to continue</h1>
+          <p className="font-mono text-xs text-muted-foreground uppercase tracking-wider mb-6">
+            Join Threadline to build project briefs and connect with manufacturers.
+          </p>
+          <Link to="/join">
+            <Button variant="editorial" size="lg">
+              Join Threadline <ArrowUpRight className="ml-1 h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   const toggleCountry = (code: string) => {
     setForm((f) => ({
@@ -91,23 +130,6 @@ export default function BriefBuilder() {
     }
   };
 
-  // Matching animation — runs 7 seconds then reveals results
-  useEffect(() => {
-    if (!submitted || submitPhase !== "matching") return;
-    const duration = 7000;
-    const interval = 50;
-    let elapsed = 0;
-    const timer = setInterval(() => {
-      elapsed += interval;
-      const progress = Math.min((elapsed / duration) * 100, 100);
-      setMatchProgress(progress);
-      if (elapsed >= duration) {
-        clearInterval(timer);
-        setSubmitPhase("results");
-      }
-    }, interval);
-    return () => clearInterval(timer);
-  }, [submitted, submitPhase]);
 
   const handleSendRequest = (vendor: typeof MATCHED_VENDORS[0]) => {
     addProjectFromBrief(vendor, briefData);

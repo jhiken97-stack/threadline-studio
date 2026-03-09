@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { ArrowUpRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/auth";
 
 export default function Join() {
   const [submitted, setSubmitted] = useState(false);
+  const { login, isLoggedIn } = useAuth();
 
-  if (submitted) {
+  if (isLoggedIn || submitted) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center">
         <div className="text-center">
@@ -35,7 +37,12 @@ export default function Join() {
         </p>
 
         <form
-          onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}
+          onSubmit={(e) => {
+            e.preventDefault();
+            const formData = new FormData(e.currentTarget);
+            login(formData.get("label") as string || "User");
+            setSubmitted(true);
+          }}
           className="flex flex-col gap-4"
         >
           <FormField label="Label Name" name="label" placeholder="Your brand / label name" />
