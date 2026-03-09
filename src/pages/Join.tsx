@@ -5,8 +5,9 @@ import { useAuth } from "@/lib/auth";
 
 export default function Join() {
   const [submitted, setSubmitted] = useState(false);
+  const { login, isLoggedIn } = useAuth();
 
-  if (submitted) {
+  if (isLoggedIn || submitted) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center">
         <div className="text-center">
