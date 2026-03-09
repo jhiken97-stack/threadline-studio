@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowUpRight, ArrowRight, Lock, Bookmark, BookmarkCheck, GitCompare, Factory, FileText, Package, Truck, Search } from "lucide-react";
+import { ArrowUpRight, ArrowRight, Lock, Bookmark, BookmarkCheck, GitCompare, Factory, FileText, Package, Truck, Search, MessageSquare, CreditCard, ClipboardList, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useVendorActions } from "@/lib/vendors";
@@ -274,6 +274,33 @@ export default function Index() {
                 </p>
               </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* EVERYTHING IN ONE PLACE */}
+      <section className="border-b border-foreground/10 bg-muted/30">
+        <div className="container py-12">
+          <h2 className="font-display text-sm font-700 uppercase tracking-[0.15em] mb-2">Everything in One Place</h2>
+          <p className="font-body text-sm text-muted-foreground max-w-lg mb-8">
+            No juggling spreadsheets, email chains, and separate invoicing tools. Threadline handles your entire production workflow.
+          </p>
+          <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-px bg-foreground/10">
+            {[
+              { icon: MessageSquare, title: "Communication", desc: "Message manufacturers directly — all conversations saved in one thread" },
+              { icon: CreditCard, title: "Payments & Invoices", desc: "Pay securely through the platform with transparent invoicing" },
+              { icon: ClipboardList, title: "Order Updates", desc: "Track production milestones from sampling to delivery in real time" },
+              { icon: Bell, title: "Notifications", desc: "Get notified at every stage — no chasing emails or wondering what's next" },
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <div key={item.title} className="bg-background p-6">
+                  <Icon className="h-5 w-5 text-signal mb-3" />
+                  <h3 className="font-body text-sm font-600 mb-1">{item.title}</h3>
+                  <p className="font-mono text-[10px] text-muted-foreground leading-relaxed">{item.desc}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

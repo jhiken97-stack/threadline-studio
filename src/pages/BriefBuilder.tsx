@@ -1,9 +1,14 @@
-import { useState } from "react";
-import { ArrowUpRight, Check, ArrowRight } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { ArrowUpRight, Check, ArrowRight, Upload, X, FileText, CreditCard, MessageSquare, ClipboardList, Bell } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useSearchParams, useNavigate } from "react-router-dom";
+import { Progress } from "@/components/ui/progress";
 
-const CATEGORIES = ["Cut & Sew", "Heavyweight Jersey", "Fleece", "Knitwear", "Denim", "Private Label"];
+const CATEGORIES = [
+  "Cut & Sew", "Heavyweight Jersey", "Fleece", "Knitwear", "Denim",
+  "Private Label", "Outerwear", "Activewear", "Swimwear", "Leather Goods",
+  "Tailoring", "Accessories",
+];
 const TIERS = ["Premium", "Luxury"];
 const COUNTRIES = [
   { code: "US", name: "United States" },
@@ -11,21 +16,27 @@ const COUNTRIES = [
   { code: "CN", name: "China" },
 ];
 
-const STEPS = ["Your Brand", "What You're Making", "Your Priorities", "Review & Submit"];
+const STEPS = ["Your Brand", "What You're Making", "Files & Tech Packs", "Your Priorities", "Review & Submit"];
 
 const MATCHED_VENDORS = [
-  { name: "Ateliê Nova", region: "PT", category: "Cut & Sew", match: 94 },
-  { name: "Porto Fleece Works", region: "PT", category: "Fleece", match: 87 },
-  { name: "Brooklyn Garment Dist.", region: "US", category: "Denim", match: 82 },
+  { id: 1, name: "Ateliê Nova", region: "PT", category: "Cut & Sew", match: 94 },
+  { id: 2, name: "Porto Fleece Works", region: "PT", category: "Fleece", match: 87 },
+  { id: 3, name: "Brooklyn Garment Dist.", region: "US", category: "Denim", match: 82 },
 ];
+
+type SubmitPhase = "matching" | "results";
 
 export default function BriefBuilder() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const vendorName = searchParams.get("vendorName");
   const vendorId = searchParams.get("vendor");
 
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [submitPhase, setSubmitPhase] = useState<SubmitPhase>("matching");
+  const [matchProgress, setMatchProgress] = useState(0);
+  const [sentRequests, setSentRequests] = useState<number[]>([]);
   const [form, setForm] = useState({
     labelName: "",
     category: "",
@@ -35,7 +46,10 @@ export default function BriefBuilder() {
     countries: [] as string[],
     qualityVsCost: 3,
     description: "",
+    files: [] as File[],
   });
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const toggleCountry = (code: string) => {
     setForm((f) => ({
@@ -44,7 +58,83 @@ export default function BriefBuilder() {
     }));
   };
 
-  if (submitted) {
+  const handleFileAdd = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setForm((f) => ({ ...f, files: [...f.files, ...Array.from(e.target.files!)] }));
+    }
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const removeFile = (index: number) => {
+    setForm((f) => ({ ...f, files: f.files.filter((_, i) => i !== index) }));
+  };
+
+  const handleSubmit = () => {
+    setSubmitted(true);
+    setSubmitPhase("matching");
+    setMatchProgress(0);
+  };
+
+  // Matching animation — runs 7 seconds then reveals results
+  useEffect(() => {
+    if (!submitted || submitPhase !== "matching") return;
+    const duration = 7000;
+    const interval = 50;
+    let elapsed = 0;
+    const timer = setInterval(() => {
+      elapsed += interval;
+      const progress = Math.min((elapsed / duration) * 100, 100);
+      setMatchProgress(progress);
+      if (elapsed >= duration) {
+        clearInterval(timer);
+        setSubmitPhase("results");
+      }
+    }, interval);
+    return () => clearInterval(timer);
+  }, [submitted, submitPhase]);
+
+  const handleSendRequest = (vendorId: number) => {
+    setSentRequests((prev) => [...prev, vendorId]);
+  };
+
+  const allRequestsSent = !vendorName && sentRequests.length > 0;
+
+  // MATCHING PHASE
+  if (submitted && submitPhase === "matching") {
+    return (
+      <div>
+        <section className="border-b border-foreground/10">
+          <div className="container py-10">
+            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-2">
+              {vendorName ? `Sending to ${vendorName}` : "Finding Your Matches"}
+            </p>
+            <h1 className="font-display text-2xl md:text-3xl font-800 uppercase tracking-tight">
+              {vendorName ? "Submitting Your Project…" : "Matching You with Manufacturers…"}
+            </h1>
+          </div>
+        </section>
+        <section className="container max-w-lg py-20">
+          <div className="space-y-6">
+            <Progress value={matchProgress} className="h-1 bg-foreground/10 [&>div]:bg-foreground" />
+            <div className="space-y-2">
+              <p className="font-body text-sm text-foreground/80 text-center">
+                {matchProgress < 30 && "Analyzing your project details…"}
+                {matchProgress >= 30 && matchProgress < 60 && "Scanning manufacturer capabilities…"}
+                {matchProgress >= 60 && matchProgress < 90 && "Calculating compatibility scores…"}
+                {matchProgress >= 90 && "Finalizing your matches…"}
+              </p>
+              <p className="font-mono text-[10px] text-muted-foreground/50 uppercase tracking-wider text-center">
+                {Math.round(matchProgress)}%
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  // RESULTS PHASE — after matching
+  if (submitted && submitPhase === "results") {
     return (
       <div>
         <section className="border-b border-foreground/10">
@@ -53,13 +143,14 @@ export default function BriefBuilder() {
               <div className="w-8 h-8 bg-signal flex items-center justify-center">
                 <Check className="h-4 w-4 text-signal-foreground" />
               </div>
-              <h1 className="font-display text-2xl font-800 uppercase tracking-tight">You're all set!</h1>
+              <h1 className="font-display text-2xl font-800 uppercase tracking-tight">
+                {vendorName ? "Project Submitted!" : "Your Matches Are Ready"}
+              </h1>
             </div>
             <p className="font-body text-sm text-muted-foreground max-w-md">
               {vendorName
                 ? `Your project has been sent to ${vendorName}. They'll review it and get back to you soon.`
-                : "We're matching you with manufacturers who are a great fit for your project."
-              }
+                : "We found manufacturers that are a great fit. Send them a request to get started."}
             </p>
           </div>
         </section>
@@ -69,29 +160,53 @@ export default function BriefBuilder() {
             <>
               <h2 className="font-display text-sm font-700 uppercase tracking-[0.15em] mb-6">Your Top Matches</h2>
               <div className="flex flex-col divide-y divide-foreground/10 border-t border-b border-foreground/10 mb-6">
-                {MATCHED_VENDORS.map((v) => (
-                  <div key={v.name} className="py-4 flex items-center justify-between">
-                    <div>
-                      <h3 className="font-body text-sm font-600">{v.name}</h3>
-                      <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">{v.category} · {v.region}</p>
+                {MATCHED_VENDORS.map((v) => {
+                  const isSent = sentRequests.includes(v.id);
+                  return (
+                    <div key={v.id} className="py-4 flex items-center justify-between">
+                      <div>
+                        <h3 className="font-body text-sm font-600">{v.name}</h3>
+                        <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
+                          {v.category} · {v.region}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-4">
+                        <span className="font-mono text-xs font-600 text-signal">{v.match}% match</span>
+                        {isSent ? (
+                          <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                            <Check className="h-3 w-3 text-signal" /> Request Sent
+                          </span>
+                        ) : (
+                          <Button
+                            variant="editorial"
+                            size="sm"
+                            onClick={() => handleSendRequest(v.id)}
+                          >
+                            Send Request <ArrowUpRight className="ml-1 h-3 w-3" />
+                          </Button>
+                        )}
+                      </div>
                     </div>
-                    <span className="font-mono text-xs font-600 text-signal">{v.match}% match</span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </>
           )}
+
           <p className="font-body text-sm text-muted-foreground mb-2">What happens next?</p>
           <ul className="space-y-2 mb-6">
             <li className="font-body text-sm text-foreground/80">• Manufacturers will review your project and respond within 48 hours</li>
             <li className="font-body text-sm text-foreground/80">• You'll get a notification when they reply</li>
             <li className="font-body text-sm text-foreground/80">• You can message them directly from your Workbench</li>
           </ul>
-          <Link to="/workbench">
-            <Button variant="editorial" size="lg">
-              Go to Your Workbench <ArrowRight className="ml-1 h-4 w-4" />
-            </Button>
-          </Link>
+
+          {(vendorName || allRequestsSent) && (
+            <Link to="/workbench">
+              <Button variant="editorial" size="lg">
+                Go to Your Workbench <ArrowRight className="ml-1 h-4 w-4" />
+              </Button>
+            </Link>
+          )}
         </section>
       </div>
     );
@@ -117,7 +232,7 @@ export default function BriefBuilder() {
       {/* Progress */}
       <section className="border-b border-foreground/10">
         <div className="container py-4">
-          <div className="flex items-center gap-0">
+          <div className="flex items-center gap-0 flex-wrap">
             {STEPS.map((s, i) => (
               <div key={s} className="flex items-center">
                 <button
@@ -209,13 +324,70 @@ export default function BriefBuilder() {
           )}
 
           {step === 2 && (
+            <div className="space-y-6">
+              <h2 className="font-display text-lg font-700 uppercase tracking-tight mb-1">Files & Tech Packs</h2>
+              <p className="font-body text-sm text-muted-foreground mb-4">
+                Upload any files that help describe your product — tech packs, sketches, reference images, fabric swatches, or mood boards. This is optional but helps manufacturers give you an accurate quote faster.
+              </p>
+
+              <input
+                ref={fileInputRef}
+                type="file"
+                multiple
+                accept=".pdf,.png,.jpg,.jpeg,.ai,.eps,.svg,.doc,.docx,.xls,.xlsx"
+                onChange={handleFileAdd}
+                className="hidden"
+              />
+
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="w-full border-2 border-dashed border-foreground/20 hover:border-foreground/40 transition-colors p-8 flex flex-col items-center gap-3 group"
+              >
+                <Upload className="h-6 w-6 text-muted-foreground group-hover:text-foreground transition-colors" />
+                <span className="font-body text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                  Click to upload files
+                </span>
+                <span className="font-mono text-[10px] text-muted-foreground/50 uppercase tracking-wider">
+                  PDF, images, AI, EPS, DOC — up to 20MB each
+                </span>
+              </button>
+
+              {form.files.length > 0 && (
+                <div className="space-y-2">
+                  <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block">
+                    Uploaded Files ({form.files.length})
+                  </span>
+                  {form.files.map((file, i) => (
+                    <div key={i} className="flex items-center justify-between px-4 py-3 border border-foreground/10 bg-muted/30">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <FileText className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                        <div className="min-w-0">
+                          <p className="font-body text-sm truncate">{file.name}</p>
+                          <p className="font-mono text-[10px] text-muted-foreground/50 uppercase">
+                            {(file.size / 1024 / 1024).toFixed(2)} MB
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => removeFile(i)}
+                        className="text-muted-foreground hover:text-foreground transition-colors p-1"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {step === 3 && (
             <div className="space-y-8">
               <h2 className="font-display text-lg font-700 uppercase tracking-tight mb-1">Your Priorities</h2>
               <p className="font-body text-sm text-muted-foreground mb-4">
                 Help us understand what matters most to you so we can find the best match.
               </p>
-              
-              {/* Countries */}
+
               {!vendorId && (
                 <div>
                   <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2">
@@ -240,7 +412,6 @@ export default function BriefBuilder() {
                 </div>
               )}
 
-              {/* Quality vs Cost slider */}
               <div>
                 <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-3">
                   What's more important — keeping costs low or getting the highest quality?
@@ -271,7 +442,7 @@ export default function BriefBuilder() {
             </div>
           )}
 
-          {step === 3 && (
+          {step === 4 && (
             <div className="space-y-4">
               <h2 className="font-display text-lg font-700 uppercase tracking-tight mb-1">Review Your Project</h2>
               <p className="font-body text-sm text-muted-foreground mb-4">
@@ -284,14 +455,14 @@ export default function BriefBuilder() {
                 <ReviewRow label="Quality Level" value={form.tier || "—"} />
                 <ReviewRow label="Quantity" value={form.quantity || "—"} />
                 <ReviewRow label="Sample Timeline" value={form.sampleTimeline || "—"} />
+                <ReviewRow label="Files" value={form.files.length > 0 ? `${form.files.length} file${form.files.length > 1 ? "s" : ""} attached` : "None"} />
                 {!vendorId && <ReviewRow label="Location Preference" value={form.countries.join(", ") || "No preference"} />}
                 <ReviewRow label="Priority" value={form.qualityVsCost <= 2 ? "Cost-focused" : form.qualityVsCost >= 4 ? "Quality-focused" : "Balanced"} />
               </div>
               <p className="font-body text-xs text-muted-foreground mt-2">
                 {vendorName
                   ? `When you submit, ${vendorName} will be notified and can start reviewing your project right away.`
-                  : "When you submit, we'll automatically match you with manufacturers that fit your needs."
-                }
+                  : "When you submit, we'll automatically match you with manufacturers that fit your needs."}
               </p>
             </div>
           )}
@@ -308,7 +479,7 @@ export default function BriefBuilder() {
                 Continue
               </Button>
             ) : (
-              <Button variant="signal" size="lg" onClick={() => setSubmitted(true)}>
+              <Button variant="signal" size="lg" onClick={handleSubmit}>
                 {vendorName ? `Submit to ${vendorName}` : "Submit & Get Matched"} <ArrowUpRight className="ml-1 h-4 w-4" />
               </Button>
             )}
