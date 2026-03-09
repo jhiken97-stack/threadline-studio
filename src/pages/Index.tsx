@@ -8,13 +8,11 @@ import fashionHoodie from "@/assets/fashion-hoodie.jpg";
 import fashionDenim from "@/assets/fashion-denim.jpg";
 import fashionFleece from "@/assets/fashion-fleece.jpg";
 import fashionTee from "@/assets/fashion-tee.jpg";
-import runway1 from "@/assets/runway-1.mp4";
-import runway2 from "@/assets/runway-2.mp4";
-import runway3 from "@/assets/runway-3.mp4";
-import runway4 from "@/assets/runway-4.mp4";
-import runway5 from "@/assets/runway-5.mp4";
+import runway1 from "@/assets/runway-3.mp4";
+import runway2 from "@/assets/runway-4.mp4";
+import runway3 from "@/assets/runway-5.mp4";
 
-const RUNWAY_CLIPS = [runway1, runway2, runway3, runway4, runway5];
+const RUNWAY_CLIPS = [runway1, runway2, runway3];
 
 const CATEGORIES = ["Cut & Sew", "Heavyweight Jersey", "Fleece", "Knitwear", "Denim", "Private Label"] as const;
 const MOQ_RANGES = [
