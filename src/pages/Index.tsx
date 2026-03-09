@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowUpRight, ArrowRight, Search, Lock, Bookmark, BookmarkCheck, GitCompare, Factory, FileText, Package, Truck } from "lucide-react";
+import { ArrowUpRight, ArrowRight, Lock, Bookmark, BookmarkCheck, GitCompare, Factory, FileText, Package, Truck, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useVendorActions } from "@/lib/vendors";
 import fashionHoodie from "@/assets/fashion-hoodie.jpg";
 import fashionDenim from "@/assets/fashion-denim.jpg";
@@ -9,22 +10,25 @@ import fashionFleece from "@/assets/fashion-fleece.jpg";
 import fashionTee from "@/assets/fashion-tee.jpg";
 
 const CATEGORIES = ["Cut & Sew", "Heavyweight Jersey", "Fleece", "Knitwear", "Denim", "Private Label"] as const;
-const REGIONS = ["US", "PT", "CN"] as const;
+const MOQ_RANGES = [
+  { label: "Under 100 units", value: "0-100" },
+  { label: "100 – 300 units", value: "100-300" },
+  { label: "300 – 500 units", value: "300-500" },
+  { label: "500+ units", value: "500+" },
+] as const;
+const REGIONS_OPTIONS = [
+  { label: "United States", value: "US" },
+  { label: "Portugal", value: "PT" },
+  { label: "China", value: "CN" },
+] as const;
 
 const FEATURED_MANUFACTURERS = [
-  { id: 1, name: "Ateliê Nova", region: "PT", categories: ["Cut & Sew"], tier: "Premium", image: fashionHoodie },
-  { id: 2, name: "Shenzhen Textile Co.", region: "CN", categories: ["Heavyweight Jersey"], tier: "Luxury", image: fashionTee },
-  { id: 3, name: "Brooklyn Garment Dist.", region: "US", categories: ["Denim"], tier: "Premium", image: fashionDenim },
-  { id: 4, name: "Porto Fleece Works", region: "PT", categories: ["Fleece"], tier: "Premium", image: fashionFleece },
-  { id: 5, name: "Guangzhou Knit Mill", region: "CN", categories: ["Knitwear"], tier: "Luxury", image: fashionHoodie },
-  { id: 6, name: "LA Cut House", region: "US", categories: ["Private Label"], tier: "Premium", image: fashionTee },
-];
-
-const SEARCH_SUGGESTIONS = [
-  "Heavyweight fleece, Portugal",
-  "Cut & sew, MOQ < 300",
-  "Denim specialist, USA",
-  "Luxury knitwear, China",
+  { id: 1, name: "Ateliê Nova", region: "PT", categories: ["Cut & Sew"], tier: "Premium", moqRange: "100-300", image: fashionHoodie },
+  { id: 2, name: "Shenzhen Textile Co.", region: "CN", categories: ["Heavyweight Jersey"], tier: "Luxury", moqRange: "300-500", image: fashionTee },
+  { id: 3, name: "Brooklyn Garment Dist.", region: "US", categories: ["Denim"], tier: "Premium", moqRange: "100-300", image: fashionDenim },
+  { id: 4, name: "Porto Fleece Works", region: "PT", categories: ["Fleece"], tier: "Premium", moqRange: "0-100", image: fashionFleece },
+  { id: 5, name: "Guangzhou Knit Mill", region: "CN", categories: ["Knitwear"], tier: "Luxury", moqRange: "500+", image: fashionHoodie },
+  { id: 6, name: "LA Cut House", region: "US", categories: ["Private Label"], tier: "Premium", moqRange: "0-100", image: fashionTee },
 ];
 
 const HOW_IT_WORKS_STEPS = [
@@ -43,45 +47,42 @@ const GEO_MODULES = [
 
 export default function Index() {
   const navigate = useNavigate();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [activeCategories, setActiveCategories] = useState<string[]>([]);
-  const [activeRegions, setActiveRegions] = useState<string[]>([]);
-
-  const toggleCategory = (cat: string) => {
-    setActiveCategories((prev) =>
-      prev.includes(cat) ? prev.filter((c) => c !== cat) : [...prev, cat]
-    );
-  };
-
-  const toggleRegion = (r: string) => {
-    setActiveRegions((prev) =>
-      prev.includes(r) ? prev.filter((x) => x !== r) : [...prev, r]
-    );
-  };
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedMoq, setSelectedMoq] = useState<string>("");
+  const [selectedRegion, setSelectedRegion] = useState<string>("");
 
   const filtered = useMemo(() => {
     return FEATURED_MANUFACTURERS.filter((m) => {
-      if (activeCategories.length > 0 && !m.categories.some((c) => activeCategories.includes(c))) return false;
-      if (activeRegions.length > 0 && !activeRegions.includes(m.region)) return false;
-      if (searchQuery) {
-        const q = searchQuery.toLowerCase();
-        return (
-          m.name.toLowerCase().includes(q) ||
-          m.categories.some((c) => c.toLowerCase().includes(q)) ||
-          m.region.toLowerCase().includes(q) ||
-          m.tier.toLowerCase().includes(q)
-        );
-      }
+      if (selectedCategory && !m.categories.includes(selectedCategory)) return false;
+      if (selectedRegion && m.region !== selectedRegion) return false;
+      if (selectedMoq && m.moqRange !== selectedMoq) return false;
       return true;
     });
-  }, [activeCategories, activeRegions, searchQuery]);
+  }, [selectedCategory, selectedRegion, selectedMoq]);
+
+  const hasFilters = selectedCategory || selectedMoq || selectedRegion;
+
+  const clearFilters = () => {
+    setSelectedCategory("");
+    setSelectedMoq("");
+    setSelectedRegion("");
+  };
 
   return (
     <div>
-      {/* HERO — full-width image with overlay */}
+      {/* HERO — full-width video with overlay */}
       <section className="relative">
         <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-          <img src={fashionHoodie} alt="Fashion production" className="w-full h-full object-cover" />
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+            poster={fashionHoodie}
+          >
+            <source src="/hero-fashion.mp4" type="video/mp4" />
+          </video>
           <div className="absolute inset-0 bg-foreground/70" />
         </div>
         <div className="absolute inset-0 flex items-center">
@@ -100,36 +101,77 @@ export default function Index() {
               We connect new clothing brands with vetted manufacturers — and guide you through every step, from first sample to finished product.
             </p>
 
-            {/* Search Module */}
-            <div className="max-w-xl">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <input
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && navigate(`/vendors?q=${encodeURIComponent(searchQuery)}`)}
-                  placeholder="Search by product, category, MOQ, or country…"
-                  className="w-full h-12 pl-11 pr-4 bg-background border border-foreground/15 font-body text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:border-foreground/40 transition-colors"
-                />
+            {/* Selector Module */}
+            <div className="max-w-2xl">
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger className="h-12 bg-background border-foreground/15 font-mono text-xs uppercase tracking-wider">
+                    <SelectValue placeholder="Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {CATEGORIES.map((cat) => (
+                      <SelectItem key={cat} value={cat} className="font-mono text-xs uppercase tracking-wider">
+                        {cat}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select value={selectedMoq} onValueChange={setSelectedMoq}>
+                  <SelectTrigger className="h-12 bg-background border-foreground/15 font-mono text-xs uppercase tracking-wider">
+                    <SelectValue placeholder="MOQ Range" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {MOQ_RANGES.map((moq) => (
+                      <SelectItem key={moq.value} value={moq.value} className="font-mono text-xs uppercase tracking-wider">
+                        {moq.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select value={selectedRegion} onValueChange={setSelectedRegion}>
+                  <SelectTrigger className="h-12 bg-background border-foreground/15 font-mono text-xs uppercase tracking-wider">
+                    <SelectValue placeholder="Factory Location" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {REGIONS_OPTIONS.map((r) => (
+                      <SelectItem key={r.value} value={r.value} className="font-mono text-xs uppercase tracking-wider">
+                        {r.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Button
+                  variant="signal"
+                  size="lg"
+                  className="h-12 px-6"
+                  onClick={() => {
+                    const params = new URLSearchParams();
+                    if (selectedCategory) params.set("category", selectedCategory);
+                    if (selectedMoq) params.set("moq", selectedMoq);
+                    if (selectedRegion) params.set("region", selectedRegion);
+                    navigate(`/vendors?${params.toString()}`);
+                  }}
+                >
+                  Find Manufacturers <ArrowRight className="ml-1 h-4 w-4" />
+                </Button>
               </div>
-              <div className="flex flex-wrap gap-2 mt-3">
-                {SEARCH_SUGGESTIONS.map((s) => (
-                  <button
-                    key={s}
-                    onClick={() => setSearchQuery(s)}
-                    className="font-mono text-[10px] px-2.5 py-1 border border-background/20 text-background/60 hover:text-background hover:border-background/40 transition-colors uppercase tracking-wider"
-                  >
-                    {s}
-                  </button>
-                ))}
-              </div>
+              {hasFilters && (
+                <button
+                  onClick={clearFilters}
+                  className="font-mono text-[10px] text-background/50 hover:text-background transition-colors uppercase tracking-wider mt-3"
+                >
+                  Clear selections
+                </button>
+              )}
             </div>
           </div>
         </div>
       </section>
 
-      {/* HOW IT WORKS — synced with full page, with icons */}
+      {/* HOW IT WORKS */}
       <section className="border-b border-foreground/10 bg-muted/30">
         <div className="container py-8">
           <div className="flex items-center justify-between mb-5">
@@ -154,54 +196,6 @@ export default function Index() {
         </div>
       </section>
 
-      {/* FILTER CHIPS */}
-      <section className="border-b border-foreground/10">
-        <div className="container py-5">
-          <div className="flex flex-wrap items-center gap-4">
-            <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">Filter:</span>
-            <div className="flex flex-wrap gap-1.5">
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => toggleCategory(cat)}
-                  className={`font-mono text-[10px] px-3 py-1.5 uppercase tracking-wider transition-all ${
-                    activeCategories.includes(cat)
-                      ? "bg-foreground text-background"
-                      : "border border-foreground/15 text-muted-foreground hover:text-foreground hover:border-foreground/30"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-            <div className="w-px h-4 bg-foreground/10" />
-            <div className="flex gap-1.5">
-              {REGIONS.map((r) => (
-                <button
-                  key={r}
-                  onClick={() => toggleRegion(r)}
-                  className={`font-mono text-[10px] px-3 py-1.5 uppercase tracking-wider transition-all ${
-                    activeRegions.includes(r)
-                      ? "bg-signal text-signal-foreground"
-                      : "bg-foreground text-background hover:bg-signal hover:text-signal-foreground"
-                  }`}
-                >
-                  {r}
-                </button>
-              ))}
-            </div>
-            {(activeCategories.length > 0 || activeRegions.length > 0) && (
-              <button
-                onClick={() => { setActiveCategories([]); setActiveRegions([]); }}
-                className="font-mono text-[10px] text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider"
-              >
-                Clear all
-              </button>
-            )}
-          </div>
-        </div>
-      </section>
-
       {/* FEATURED MANUFACTURERS */}
       <section className="border-b border-foreground/10">
         <div className="container py-10">
@@ -210,9 +204,19 @@ export default function Index() {
               Featured Manufacturers
               <span className="font-mono text-[10px] font-400 text-muted-foreground ml-3">{filtered.length} results</span>
             </h2>
-            <Link to="/vendors" className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
-              View all <ArrowRight className="h-3 w-3" />
-            </Link>
+            <div className="flex items-center gap-4">
+              {hasFilters && (
+                <button
+                  onClick={clearFilters}
+                  className="font-mono text-[10px] text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider"
+                >
+                  Clear filters
+                </button>
+              )}
+              <Link to="/vendors" className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+                View all <ArrowRight className="h-3 w-3" />
+              </Link>
+            </div>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-px bg-foreground/10">
             {filtered.map((m) => (
