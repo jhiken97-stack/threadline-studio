@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from "react";
-import { ArrowUpRight, Check, ArrowRight, Upload, X, FileText } from "lucide-react";
+import { ArrowUpRight, Check, ArrowRight, Upload, X, FileText, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import { useProjects } from "@/lib/projects";
+import { useAuth } from "@/lib/auth";
 
 const CATEGORIES = [
   "Cut & Sew", "Heavyweight Jersey", "Fleece", "Knitwear", "Denim",
