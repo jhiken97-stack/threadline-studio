@@ -19,6 +19,7 @@ import SavedVendors from "./pages/SavedVendors";
 import CompareVendors from "./pages/CompareVendors";
 import Concierge from "./pages/Concierge";
 import SourcingGuide from "./pages/SourcingGuide";
+import Invoices from "./pages/Invoices";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
