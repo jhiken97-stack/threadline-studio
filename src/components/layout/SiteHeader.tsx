@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { Menu, X, ArrowUpRight, MessageSquare, Bookmark, Receipt } from "lucide-react";
+import { Menu, X, ArrowUpRight, MessageSquare, Bookmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useVendorActions } from "@/lib/vendors";
 
@@ -55,11 +55,6 @@ export function SiteHeader() {
               </Button>
             </Link>
           )}
-          <Link to="/invoices">
-            <Button variant="ghost" size="icon">
-              <Receipt className="h-4 w-4" />
-            </Button>
-          </Link>
           <Link to="/messages">
             <Button variant="ghost" size="icon" className="relative">
               <MessageSquare className="h-4 w-4" />
