@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { ArrowRight, AlertCircle, MessageSquare, ChevronRight } from "lucide-react";
+import { ArrowRight, AlertCircle, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useProjects } from "@/lib/projects";
 
 const STAGES = [
   { key: "brief", label: "Brief Sent", description: "Your project details are being reviewed by manufacturers." },
@@ -12,26 +13,10 @@ const STAGES = [
   { key: "complete", label: "Delivered", description: "Your order has arrived! You're ready to launch." },
 ];
 
-interface Thread {
-  id: number;
-  vendor: string;
-  product: string;
-  stage: string;
-  region: string;
-  updated: string;
-  priority: boolean;
-}
-
-const THREADS: Thread[] = [
-  { id: 1, vendor: "Ateliê Nova", product: "FW26 Hoodie Program", stage: "sample", region: "PT", updated: "2h ago", priority: true },
-  { id: 2, vendor: "Shenzhen Textile Co.", product: "Heavy Tee Blanks", stage: "production", region: "CN", updated: "5h ago", priority: false },
-  { id: 3, vendor: "Brooklyn Garment Dist.", product: "Selvedge Denim Jean", stage: "matched", region: "US", updated: "1d ago", priority: true },
-  { id: 4, vendor: "Porto Fleece Works", product: "Organic Fleece Crew", stage: "brief", region: "PT", updated: "3d ago", priority: false },
-];
-
 export default function Workbench() {
+  const { threads } = useProjects();
   const [activeStage, setActiveStage] = useState<string | null>(null);
-  const filtered = activeStage ? THREADS.filter((t) => t.stage === activeStage) : THREADS;
+  const filtered = activeStage ? threads.filter((t) => t.stage === activeStage) : threads;
 
   return (
     <div>
@@ -56,7 +41,7 @@ export default function Workbench() {
           </div>
           <div className="grid grid-cols-2 md:grid-cols-6 gap-3">
             {STAGES.map((s, i) => {
-              const count = THREADS.filter((t) => t.stage === s.key).length;
+              const count = threads.filter((t) => t.stage === s.key).length;
               const isActive = activeStage === s.key;
               return (
                 <button
