@@ -25,6 +25,7 @@ const REGIONS_OPTIONS = [
   { label: "United States", value: "US" },
   { label: "Portugal", value: "PT" },
   { label: "China", value: "CN" },
+  { label: "India", value: "IN" },
 ] as const;
 
 const FEATURED_MANUFACTURERS = [
