@@ -1,0 +1,214 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Lock, ArrowUpRight, Grid, List } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
+const REGIONS = ["All", "US", "PT", "CN"] as const;
+const CATEGORIES = ["All", "Cut & Sew", "Heavyweight Jersey", "Fleece", "Knitwear", "Denim", "Private Label"] as const;
+const TIERS = ["All", "Premium", "Luxury"] as const;
+const MOQ_RANGES = ["All", "50–200", "200–500", "500–1000", "1000+"] as const;
+const LEAD_TIMES = ["All", "2–4 weeks", "4–8 weeks", "8–12 weeks"] as const;
+
+interface Vendor {
+  id: number;
+  name: string;
+  region: string;
+  category: string;
+  tier: string;
+  summary: string;
+  moq: string;
+  leadTime: string;
+  capabilities: string;
+  responsiveness: string;
+}
+
+const VENDORS: Vendor[] = [
+  { id: 1, name: "Ateliê Nova", region: "PT", category: "Cut & Sew", tier: "Premium", summary: "Lisbon-based atelier specializing in premium cut-and-sew for contemporary labels.", moq: "100–300", leadTime: "4–6 weeks", capabilities: "Pattern making, grading, sampling", responsiveness: "High" },
+  { id: 2, name: "Shenzhen Textile Co.", region: "CN", category: "Heavyweight Jersey", tier: "Luxury", summary: "Large-scale heavyweight jersey production with luxury finishing.", moq: "500–2000", leadTime: "6–8 weeks", capabilities: "Enzyme wash, garment dye, custom trims", responsiveness: "Medium" },
+  { id: 3, name: "Brooklyn Garment Dist.", region: "US", category: "Denim", tier: "Premium", summary: "Brooklyn denim specialist with heritage construction methods.", moq: "50–200", leadTime: "3–5 weeks", capabilities: "Selvedge, distressing, custom rivets", responsiveness: "High" },
+  { id: 4, name: "Porto Fleece Works", region: "PT", category: "Fleece", tier: "Premium", summary: "Porto-based fleece manufacturer with organic certification.", moq: "200–500", leadTime: "4–6 weeks", capabilities: "Organic cotton fleece, heavyweight, brushed finish", responsiveness: "High" },
+  { id: 5, name: "Guangzhou Knit Mill", region: "CN", category: "Knitwear", tier: "Luxury", summary: "Precision knitwear mill supporting complex patterns and yarns.", moq: "300–1000", leadTime: "6–10 weeks", capabilities: "Intarsia, jacquard, merino, cashmere blend", responsiveness: "Medium" },
+  { id: 6, name: "LA Cut House", region: "US", category: "Private Label", tier: "Premium", summary: "Full-service private label production based in Los Angeles.", moq: "100–500", leadTime: "3–5 weeks", capabilities: "Full package, labeling, custom packaging", responsiveness: "High" },
+  { id: 7, name: "Fábrica do Minho", region: "PT", category: "Knitwear", tier: "Luxury", summary: "Northern Portugal knitwear factory with 40+ years of heritage craft.", moq: "150–400", leadTime: "5–7 weeks", capabilities: "Hand-linked finishing, gauge range 3–14", responsiveness: "Medium" },
+  { id: 8, name: "Dongguan Dye Works", region: "CN", category: "Cut & Sew", tier: "Premium", summary: "Specializing in garment-dyed cut and sew with extensive color lab.", moq: "500–3000", leadTime: "5–8 weeks", capabilities: "Garment dye, vintage wash, overdye", responsiveness: "Medium" },
+  { id: 9, name: "Portland Sew Co.", region: "US", category: "Cut & Sew", tier: "Premium", summary: "Small-batch cut and sew with focus on streetwear silhouettes.", moq: "25–150", leadTime: "2–4 weeks", capabilities: "Small batch, streetwear focus, quick turn", responsiveness: "High" },
+];
+
+export default function Vendors() {
+  const [region, setRegion] = useState("All");
+  const [category, setCategory] = useState("All");
+  const [tier, setTier] = useState("All");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+
+  const filtered = VENDORS.filter((v) => {
+    if (region !== "All" && v.region !== region) return false;
+    if (category !== "All" && v.category !== category) return false;
+    if (tier !== "All" && v.tier !== tier) return false;
+    return true;
+  });
+
+  return (
+    <div>
+      {/* Header */}
+      <section className="border-b border-foreground/10">
+        <div className="container py-10">
+          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-2">Vendor Network</p>
+          <h1 className="font-display text-3xl md:text-5xl font-800 uppercase tracking-tight">Explore Vendors</h1>
+        </div>
+      </section>
+
+      {/* Filters */}
+      <section className="border-b border-foreground/10 sticky top-14 z-40 bg-background/95 backdrop-blur-sm">
+        <div className="container py-4">
+          <div className="flex flex-wrap items-center gap-6">
+            <FilterGroup label="Region" options={REGIONS} value={region} onChange={setRegion} />
+            <FilterGroup label="Category" options={CATEGORIES} value={category} onChange={setCategory} />
+            <FilterGroup label="Tier" options={TIERS} value={tier} onChange={setTier} />
+            <div className="ml-auto flex items-center gap-1">
+              <button
+                onClick={() => setViewMode("grid")}
+                className={`p-2 transition-colors ${viewMode === "grid" ? "text-foreground" : "text-muted-foreground"}`}
+              >
+                <Grid className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setViewMode("list")}
+                className={`p-2 transition-colors ${viewMode === "list" ? "text-foreground" : "text-muted-foreground"}`}
+              >
+                <List className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Results */}
+      <section>
+        <div className="container py-8">
+          <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mb-6">
+            {filtered.length} vendor{filtered.length !== 1 ? "s" : ""} found
+          </p>
+
+          {viewMode === "grid" ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-foreground/10">
+              {filtered.map((vendor) => (
+                <VendorCard key={vendor.id} vendor={vendor} />
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col divide-y divide-foreground/10">
+              {filtered.map((vendor) => (
+                <VendorListItem key={vendor.id} vendor={vendor} />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Gated CTA */}
+      <section className="border-t border-foreground/10 bg-muted">
+        <div className="container py-16 text-center">
+          <Lock className="h-6 w-6 mx-auto mb-4 text-muted-foreground" />
+          <h2 className="font-display text-2xl font-800 uppercase tracking-tight mb-2">Full intelligence is gated</h2>
+          <p className="font-mono text-xs text-muted-foreground uppercase tracking-wider mb-6 max-w-md mx-auto">
+            Sign up to unlock MOQ bands, lead times, capabilities, and contact details.
+          </p>
+          <Link to="/join">
+            <Button variant="editorial" size="lg">
+              Unlock vendor data <ArrowUpRight className="ml-1 h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function FilterGroup({ label, options, value, onChange }: {
+  label: string;
+  options: readonly string[];
+  value: string;
+  onChange: (v: string) => void;
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">{label}:</span>
+      <div className="flex flex-wrap gap-1">
+        {options.map((opt) => (
+          <button
+            key={opt}
+            onClick={() => onChange(opt)}
+            className={`font-mono text-[10px] px-3 py-1.5 uppercase tracking-wider transition-all duration-150 ${
+              value === opt
+                ? "bg-foreground text-background"
+                : "bg-transparent text-muted-foreground hover:text-foreground border border-foreground/10 hover:border-foreground/30"
+            }`}
+          >
+            {opt}
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function VendorCard({ vendor }: { vendor: Vendor }) {
+  return (
+    <div className="bg-background p-6 group hover:bg-muted/50 transition-colors duration-200">
+      <div className="flex items-start justify-between mb-3">
+        <div className="w-10 h-10 bg-muted flex items-center justify-center border border-foreground/5 group-hover:border-foreground/20 transition-colors">
+          <span className="font-display text-lg font-800 text-foreground/20 group-hover:text-foreground/40 transition-colors">
+            {vendor.name[0]}
+          </span>
+        </div>
+        <span className="font-mono text-[10px] px-2 py-0.5 bg-foreground text-background uppercase tracking-wider">
+          {vendor.region}
+        </span>
+      </div>
+      <h3 className="font-body text-sm font-600 mb-1">{vendor.name}</h3>
+      <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider mb-3">{vendor.category} · {vendor.tier}</p>
+      <p className="font-body text-xs text-muted-foreground leading-relaxed mb-4">{vendor.summary}</p>
+
+      {/* Gated fields */}
+      <div className="space-y-2">
+        <GatedField label="MOQ Range" />
+        <GatedField label="Lead Time" />
+        <GatedField label="Capabilities" />
+      </div>
+    </div>
+  );
+}
+
+function VendorListItem({ vendor }: { vendor: Vendor }) {
+  return (
+    <div className="py-5 flex flex-col md:flex-row md:items-center gap-4 group hover:bg-muted/30 -mx-4 px-4 transition-colors">
+      <div className="flex items-center gap-4 flex-1 min-w-0">
+        <div className="w-8 h-8 bg-muted flex items-center justify-center flex-shrink-0">
+          <span className="font-display text-sm font-800 text-foreground/20">{vendor.name[0]}</span>
+        </div>
+        <div className="min-w-0">
+          <h3 className="font-body text-sm font-600 truncate">{vendor.name}</h3>
+          <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">{vendor.category}</p>
+        </div>
+      </div>
+      <div className="flex items-center gap-3 flex-shrink-0">
+        <span className="font-mono text-[10px] px-2 py-0.5 border border-foreground/15 uppercase tracking-wider text-muted-foreground">{vendor.tier}</span>
+        <span className="font-mono text-[10px] px-2 py-0.5 bg-foreground text-background uppercase tracking-wider">{vendor.region}</span>
+        <span className="font-mono text-[10px] text-muted-foreground/40 flex items-center gap-1">
+          <Lock className="h-3 w-3" /> Gated
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function GatedField({ label }: { label: string }) {
+  return (
+    <div className="flex items-center justify-between py-1.5 border-t border-dashed border-foreground/8">
+      <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">{label}</span>
+      <span className="flex items-center gap-1 font-mono text-[10px] text-muted-foreground/40">
+        <Lock className="h-2.5 w-2.5" /> Sign up to view
+      </span>
+    </div>
+  );
+}
