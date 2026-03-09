@@ -67,11 +67,13 @@ export default function Vendors() {
 
   return (
     <div>
-      {/* Header */}
       <section className="border-b border-foreground/10">
         <div className="container py-8">
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-1">Vendor Network</p>
-          <h1 className="font-display text-2xl md:text-4xl font-800 uppercase tracking-tight">Explore Vendors</h1>
+          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-1">Manufacturer Network</p>
+          <h1 className="font-display text-2xl md:text-4xl font-800 uppercase tracking-tight">Browse Manufacturers</h1>
+          <p className="font-body text-sm text-muted-foreground mt-2">
+            Find the right factory for your project. Click "Start Project" on any manufacturer to begin.
+          </p>
         </div>
       </section>
 
@@ -98,7 +100,7 @@ export default function Vendors() {
       <section>
         <div className="container py-6">
           <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mb-5">
-            {filtered.length} vendor{filtered.length !== 1 ? "s" : ""}
+            {filtered.length} manufacturer{filtered.length !== 1 ? "s" : ""}
           </p>
           {viewMode === "grid" ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-foreground/10">
@@ -116,13 +118,13 @@ export default function Vendors() {
       <section className="border-t border-foreground/10 bg-muted/50">
         <div className="container py-12 text-center">
           <Lock className="h-5 w-5 mx-auto mb-3 text-muted-foreground" />
-          <h2 className="font-display text-xl font-800 uppercase tracking-tight mb-1">Full intelligence is gated</h2>
+          <h2 className="font-display text-xl font-800 uppercase tracking-tight mb-1">Want the full picture?</h2>
           <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider mb-5 max-w-sm mx-auto">
-            Sign up to unlock MOQ bands, lead times, capabilities, and messaging.
+            Sign up to see MOQ ranges, lead times, pricing details, and message manufacturers directly.
           </p>
           <Link to="/join">
             <Button variant="editorial" size="lg">
-              Unlock vendor data <ArrowUpRight className="ml-1 h-4 w-4" />
+              Create free account <ArrowUpRight className="ml-1 h-4 w-4" />
             </Button>
           </Link>
         </div>
@@ -176,25 +178,19 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
         <GatedField label="MOQ Range" />
         <GatedField label="Lead Time" />
         <GatedField label="Capabilities" />
-        <div className="flex items-center justify-between py-1 border-t border-dashed border-foreground/8">
-          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">Message</span>
-          <span className="flex items-center gap-1 font-mono text-[10px] text-muted-foreground/40">
-            <MessageSquare className="h-2.5 w-2.5" /> Sign up
-          </span>
-        </div>
       </div>
 
-      {/* Quick actions */}
-      <div className="flex items-center gap-3 mt-3 pt-2 border-t border-foreground/5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-        <button className="font-mono text-[10px] text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider flex items-center gap-1">
+      {/* Actions */}
+      <div className="flex items-center gap-3 mt-3 pt-2 border-t border-foreground/5">
+        <Link
+          to={`/brief?vendor=${vendor.id}&vendorName=${encodeURIComponent(vendor.name)}`}
+          className="font-mono text-[10px] text-signal hover:text-signal/80 transition-colors uppercase tracking-wider flex items-center gap-1"
+        >
+          Start Project <ArrowRight className="h-3 w-3" />
+        </Link>
+        <button className="font-mono text-[10px] text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider flex items-center gap-1 ml-auto">
           <Bookmark className="h-3 w-3" /> Save
         </button>
-        <button className="font-mono text-[10px] text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider flex items-center gap-1">
-          <GitCompare className="h-3 w-3" /> Compare
-        </button>
-        <span className="font-mono text-[10px] text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider flex items-center gap-1 ml-auto cursor-pointer">
-          Profile <ArrowRight className="h-3 w-3" />
-        </span>
       </div>
     </div>
   );
@@ -210,11 +206,14 @@ function VendorListItem({ vendor }: { vendor: Vendor }) {
         </div>
       </div>
       <div className="flex items-center gap-2 flex-shrink-0">
+        <Link
+          to={`/brief?vendor=${vendor.id}&vendorName=${encodeURIComponent(vendor.name)}`}
+          className="font-mono text-[10px] text-signal hover:text-signal/80 transition-colors uppercase tracking-wider flex items-center gap-1"
+        >
+          Start Project <ArrowRight className="h-3 w-3" />
+        </Link>
         <span className="font-mono text-[10px] px-2 py-0.5 border border-foreground/15 uppercase tracking-wider text-muted-foreground">{vendor.tier}</span>
         <span className="font-mono text-[10px] px-2 py-0.5 bg-foreground text-background uppercase">{vendor.region}</span>
-        <span className="font-mono text-[10px] text-muted-foreground/40 flex items-center gap-1">
-          <Lock className="h-3 w-3" /> Gated
-        </span>
       </div>
     </div>
   );

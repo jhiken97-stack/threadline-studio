@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ArrowUpRight, Check, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 const CATEGORIES = ["Cut & Sew", "Heavyweight Jersey", "Fleece", "Knitwear", "Denim", "Private Label"];
 const TIERS = ["Premium", "Luxury"];
@@ -11,7 +11,7 @@ const COUNTRIES = [
   { code: "CN", name: "China" },
 ];
 
-const STEPS = ["Details", "Specs", "Priorities", "Review"];
+const STEPS = ["Your Brand", "What You're Making", "Your Priorities", "Review & Submit"];
 
 const MATCHED_VENDORS = [
   { name: "Ateliê Nova", region: "PT", category: "Cut & Sew", match: 94 },
@@ -20,6 +20,10 @@ const MATCHED_VENDORS = [
 ];
 
 export default function BriefBuilder() {
+  const [searchParams] = useSearchParams();
+  const vendorName = searchParams.get("vendorName");
+  const vendorId = searchParams.get("vendor");
+
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({
@@ -29,7 +33,8 @@ export default function BriefBuilder() {
     quantity: "",
     sampleTimeline: "",
     countries: [] as string[],
-    qualityVsCost: 3, // 1=cost-focused, 5=quality-focused
+    qualityVsCost: 3,
+    description: "",
   });
 
   const toggleCountry = (code: string) => {
@@ -48,33 +53,43 @@ export default function BriefBuilder() {
               <div className="w-8 h-8 bg-signal flex items-center justify-center">
                 <Check className="h-4 w-4 text-signal-foreground" />
               </div>
-              <h1 className="font-display text-2xl font-800 uppercase tracking-tight">Brief Submitted</h1>
+              <h1 className="font-display text-2xl font-800 uppercase tracking-tight">You're all set!</h1>
             </div>
-            <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
-              We're matching you with manufacturers based on your requirements.
+            <p className="font-body text-sm text-muted-foreground max-w-md">
+              {vendorName
+                ? `Your project has been sent to ${vendorName}. They'll review it and get back to you soon.`
+                : "We're matching you with manufacturers who are a great fit for your project."
+              }
             </p>
           </div>
         </section>
 
         <section className="container py-10 max-w-2xl">
-          <h2 className="font-display text-sm font-700 uppercase tracking-[0.15em] mb-6">Matched Manufacturers</h2>
-          <div className="flex flex-col divide-y divide-foreground/10 border-t border-b border-foreground/10">
-            {MATCHED_VENDORS.map((v) => (
-              <div key={v.name} className="py-4 flex items-center justify-between">
-                <div>
-                  <h3 className="font-body text-sm font-600">{v.name}</h3>
-                  <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">{v.category} · {v.region}</p>
-                </div>
-                <span className="font-mono text-xs font-600 text-signal">{v.match}% match</span>
+          {!vendorName && (
+            <>
+              <h2 className="font-display text-sm font-700 uppercase tracking-[0.15em] mb-6">Your Top Matches</h2>
+              <div className="flex flex-col divide-y divide-foreground/10 border-t border-b border-foreground/10 mb-6">
+                {MATCHED_VENDORS.map((v) => (
+                  <div key={v.name} className="py-4 flex items-center justify-between">
+                    <div>
+                      <h3 className="font-body text-sm font-600">{v.name}</h3>
+                      <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">{v.category} · {v.region}</p>
+                    </div>
+                    <span className="font-mono text-xs font-600 text-signal">{v.match}% match</span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-          <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider mt-4">
-            Vendors have been notified and will respond within 48 hours.
-          </p>
+            </>
+          )}
+          <p className="font-body text-sm text-muted-foreground mb-2">What happens next?</p>
+          <ul className="space-y-2 mb-6">
+            <li className="font-body text-sm text-foreground/80">• Manufacturers will review your project and respond within 48 hours</li>
+            <li className="font-body text-sm text-foreground/80">• You'll get a notification when they reply</li>
+            <li className="font-body text-sm text-foreground/80">• You can message them directly from your Workbench</li>
+          </ul>
           <Link to="/workbench">
-            <Button variant="editorial" size="lg" className="mt-6">
-              Go to Workbench <ArrowRight className="ml-1 h-4 w-4" />
+            <Button variant="editorial" size="lg">
+              Go to Your Workbench <ArrowRight className="ml-1 h-4 w-4" />
             </Button>
           </Link>
         </section>
@@ -87,8 +102,15 @@ export default function BriefBuilder() {
       {/* Header */}
       <section className="border-b border-foreground/10">
         <div className="container py-10">
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-2">Production Tool</p>
-          <h1 className="font-display text-3xl md:text-4xl font-800 uppercase tracking-tight">Build Your Brief</h1>
+          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-2">
+            {vendorName ? `Project for ${vendorName}` : "Start a New Project"}
+          </p>
+          <h1 className="font-display text-3xl md:text-4xl font-800 uppercase tracking-tight">
+            {vendorName ? "Submit Your Project" : "Tell Us What You Want to Make"}
+          </h1>
+          <p className="font-body text-sm text-muted-foreground mt-2 max-w-lg">
+            Don't worry if you don't have all the details yet — just share what you know and we'll help you figure out the rest.
+          </p>
         </div>
       </section>
 
@@ -118,16 +140,34 @@ export default function BriefBuilder() {
         <div className="container max-w-2xl py-10">
           {step === 0 && (
             <div className="space-y-6">
-              <h2 className="font-display text-lg font-700 uppercase tracking-tight mb-4">Label Details</h2>
-              <BriefField label="Label / Brand Name" value={form.labelName} onChange={(v) => setForm({ ...form, labelName: v })} placeholder="Your brand name" />
+              <h2 className="font-display text-lg font-700 uppercase tracking-tight mb-1">About Your Brand</h2>
+              <p className="font-body text-sm text-muted-foreground mb-4">
+                Whether you're just starting out or already selling — tell us a bit about your brand.
+              </p>
+              <BriefField label="Brand or Label Name" value={form.labelName} onChange={(v) => setForm({ ...form, labelName: v })} placeholder="e.g. My Clothing Brand" />
+              <div>
+                <label className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-1.5">
+                  Describe your project (optional)
+                </label>
+                <textarea
+                  value={form.description}
+                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  placeholder="Tell us about your idea — what are you trying to create? Who is it for?"
+                  rows={3}
+                  className="w-full bg-transparent border border-foreground/20 px-4 py-3 font-body text-sm text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:border-foreground transition-colors resize-none"
+                />
+              </div>
             </div>
           )}
 
           {step === 1 && (
             <div className="space-y-6">
-              <h2 className="font-display text-lg font-700 uppercase tracking-tight mb-4">Product Specs</h2>
+              <h2 className="font-display text-lg font-700 uppercase tracking-tight mb-1">What Are You Making?</h2>
+              <p className="font-body text-sm text-muted-foreground mb-4">
+                Pick the category that best describes your product. Not sure? Just pick the closest one — you can change it later.
+              </p>
               <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2">Category</span>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2">Product Type</span>
                 <div className="flex flex-wrap gap-2">
                   {CATEGORIES.map((cat) => (
                     <button
@@ -143,7 +183,9 @@ export default function BriefBuilder() {
                 </div>
               </div>
               <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2">Quality Tier</span>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2">
+                  Quality Level
+                </span>
                 <div className="flex gap-2">
                   {TIERS.map((t) => (
                     <button
@@ -157,39 +199,54 @@ export default function BriefBuilder() {
                     </button>
                   ))}
                 </div>
+                <p className="font-mono text-[10px] text-muted-foreground/60 mt-1.5">
+                  Premium = great quality, lower MOQs. Luxury = highest-end materials and construction.
+                </p>
               </div>
-              <BriefField label="Target Quantity" value={form.quantity} onChange={(v) => setForm({ ...form, quantity: v })} placeholder="e.g. 200–500 units" />
-              <BriefField label="Sample Timeline" value={form.sampleTimeline} onChange={(v) => setForm({ ...form, sampleTimeline: v })} placeholder="e.g. 4 weeks" />
+              <BriefField label="How many units do you need?" value={form.quantity} onChange={(v) => setForm({ ...form, quantity: v })} placeholder="e.g. 200–500 (it's okay to estimate)" />
+              <BriefField label="When do you need samples by?" value={form.sampleTimeline} onChange={(v) => setForm({ ...form, sampleTimeline: v })} placeholder="e.g. 4 weeks, no rush, ASAP" />
             </div>
           )}
 
           {step === 2 && (
             <div className="space-y-8">
-              <h2 className="font-display text-lg font-700 uppercase tracking-tight mb-4">Priorities</h2>
+              <h2 className="font-display text-lg font-700 uppercase tracking-tight mb-1">Your Priorities</h2>
+              <p className="font-body text-sm text-muted-foreground mb-4">
+                Help us understand what matters most to you so we can find the best match.
+              </p>
               
               {/* Countries */}
-              <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2">Preferred Countries</span>
-                <div className="flex gap-2">
-                  {COUNTRIES.map((c) => (
-                    <button
-                      key={c.code}
-                      onClick={() => toggleCountry(c.code)}
-                      className={`font-mono text-[10px] px-4 py-2.5 uppercase tracking-wider transition-all ${
-                        form.countries.includes(c.code) ? "bg-foreground text-background" : "border border-foreground/20 hover:border-foreground/40"
-                      }`}
-                    >
-                      {c.code} — {c.name}
-                    </button>
-                  ))}
+              {!vendorId && (
+                <div>
+                  <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2">
+                    Any preference on where it's made?
+                  </span>
+                  <div className="flex gap-2">
+                    {COUNTRIES.map((c) => (
+                      <button
+                        key={c.code}
+                        onClick={() => toggleCountry(c.code)}
+                        className={`font-mono text-[10px] px-4 py-2.5 uppercase tracking-wider transition-all ${
+                          form.countries.includes(c.code) ? "bg-foreground text-background" : "border border-foreground/20 hover:border-foreground/40"
+                        }`}
+                      >
+                        {c.code} — {c.name}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="font-mono text-[10px] text-muted-foreground/60 mt-1.5">
+                    Skip this if you don't have a preference — we'll match you with the best options anywhere.
+                  </p>
                 </div>
-              </div>
+              )}
 
               {/* Quality vs Cost slider */}
               <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-3">Quality vs. Cost Priority</span>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-3">
+                  What's more important — keeping costs low or getting the highest quality?
+                </span>
                 <div className="flex items-center gap-4">
-                  <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider w-16 text-right">Cost</span>
+                  <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider w-20 text-right">Lower cost</span>
                   <div className="flex-1 flex gap-1">
                     {[1, 2, 3, 4, 5].map((v) => (
                       <button
@@ -201,10 +258,14 @@ export default function BriefBuilder() {
                       />
                     ))}
                   </div>
-                  <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider w-16">Quality</span>
+                  <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider w-20">Top quality</span>
                 </div>
                 <p className="font-mono text-[10px] text-muted-foreground/60 mt-2 text-center">
-                  {form.qualityVsCost <= 2 ? "You'll be matched with cost-efficient manufacturers." : form.qualityVsCost >= 4 ? "You'll be matched with premium-quality manufacturers." : "Balanced — good quality at reasonable cost."}
+                  {form.qualityVsCost <= 2
+                    ? "Got it — we'll focus on cost-effective manufacturers who still meet quality standards."
+                    : form.qualityVsCost >= 4
+                    ? "Got it — we'll prioritize manufacturers known for exceptional quality and craftsmanship."
+                    : "A good balance — solid quality at a reasonable price point."}
                 </p>
               </div>
             </div>
@@ -212,18 +273,25 @@ export default function BriefBuilder() {
 
           {step === 3 && (
             <div className="space-y-4">
-              <h2 className="font-display text-lg font-700 uppercase tracking-tight mb-4">Review Brief</h2>
+              <h2 className="font-display text-lg font-700 uppercase tracking-tight mb-1">Review Your Project</h2>
+              <p className="font-body text-sm text-muted-foreground mb-4">
+                Take a quick look — you can always go back and change things.
+              </p>
               <div className="border border-foreground/10 divide-y divide-foreground/10">
-                <ReviewRow label="Label" value={form.labelName || "—"} />
-                <ReviewRow label="Category" value={form.category || "—"} />
-                <ReviewRow label="Tier" value={form.tier || "—"} />
+                {vendorName && <ReviewRow label="Manufacturer" value={vendorName} />}
+                <ReviewRow label="Brand" value={form.labelName || "—"} />
+                <ReviewRow label="Product Type" value={form.category || "—"} />
+                <ReviewRow label="Quality Level" value={form.tier || "—"} />
                 <ReviewRow label="Quantity" value={form.quantity || "—"} />
-                <ReviewRow label="Timeline" value={form.sampleTimeline || "—"} />
-                <ReviewRow label="Countries" value={form.countries.join(", ") || "—"} />
+                <ReviewRow label="Sample Timeline" value={form.sampleTimeline || "—"} />
+                {!vendorId && <ReviewRow label="Location Preference" value={form.countries.join(", ") || "No preference"} />}
                 <ReviewRow label="Priority" value={form.qualityVsCost <= 2 ? "Cost-focused" : form.qualityVsCost >= 4 ? "Quality-focused" : "Balanced"} />
               </div>
-              <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
-                Submitting will automatically match you with relevant manufacturers.
+              <p className="font-body text-xs text-muted-foreground mt-2">
+                {vendorName
+                  ? `When you submit, ${vendorName} will be notified and can start reviewing your project right away.`
+                  : "When you submit, we'll automatically match you with manufacturers that fit your needs."
+                }
               </p>
             </div>
           )}
@@ -241,7 +309,7 @@ export default function BriefBuilder() {
               </Button>
             ) : (
               <Button variant="signal" size="lg" onClick={() => setSubmitted(true)}>
-                Submit & Match <ArrowUpRight className="ml-1 h-4 w-4" />
+                {vendorName ? `Submit to ${vendorName}` : "Submit & Get Matched"} <ArrowUpRight className="ml-1 h-4 w-4" />
               </Button>
             )}
           </div>
