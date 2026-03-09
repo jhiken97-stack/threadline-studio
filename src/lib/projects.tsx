@@ -34,6 +34,17 @@ export interface Conversation {
   projectId: number;
 }
 
+export interface Invoice {
+  id: number;
+  projectId: number;
+  vendor: string;
+  description: string;
+  amount: number;
+  status: "pending" | "paid";
+  date: string;
+  paidDate?: string;
+}
+
 // Seed data
 const SEED_THREADS: ProjectThread[] = [
   {
@@ -103,6 +114,14 @@ const SEED_MESSAGES: Record<number, ConversationMessage[]> = {
   ],
 };
 
+const SEED_INVOICES: Invoice[] = [
+  { id: 1, projectId: 1, vendor: "Ateliê Nova", description: "Sampling fee — FW26 Hoodie (3 colorways)", amount: 450, status: "paid", date: "Feb 28", paidDate: "Mar 1" },
+  { id: 2, projectId: 2, vendor: "Shenzhen Textile Co.", description: "Production deposit — Heavy Tee Blanks (50%)", amount: 3750, status: "paid", date: "Feb 18", paidDate: "Feb 19" },
+  { id: 3, projectId: 2, vendor: "Shenzhen Textile Co.", description: "Production balance — Heavy Tee Blanks (50%)", amount: 3750, status: "pending", date: "Mar 8" },
+  { id: 4, projectId: 1, vendor: "Ateliê Nova", description: "Production deposit — FW26 Hoodie Program", amount: 4200, status: "pending", date: "Mar 7" },
+  { id: 5, projectId: 3, vendor: "Brooklyn Garment Dist.", description: "Sampling fee — Selvedge Denim Jean", amount: 600, status: "pending", date: "Mar 5" },
+];
+
 interface BriefData {
   labelName: string;
   category: string;
@@ -115,10 +134,12 @@ interface ProjectsContextType {
   threads: ProjectThread[];
   conversations: Conversation[];
   messages: Record<number, ConversationMessage[]>;
+  invoices: Invoice[];
   addProjectFromBrief: (vendor: { id: number; name: string; region: string; category: string; match: number }, brief: BriefData) => number;
   addDirectProject: (vendorName: string, brief: BriefData) => number;
   addMessage: (convoId: number, msg: ConversationMessage) => void;
   getProject: (id: string) => ProjectThread | undefined;
+  payInvoice: (invoiceId: number) => void;
 }
 
 const ProjectsContext = createContext<ProjectsContextType | null>(null);
@@ -130,6 +151,7 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
   const [threads, setThreads] = useState<ProjectThread[]>(SEED_THREADS);
   const [conversations, setConversations] = useState<Conversation[]>(SEED_CONVERSATIONS);
   const [messages, setMessages] = useState<Record<number, ConversationMessage[]>>(SEED_MESSAGES);
+  const [invoices, setInvoices] = useState<Invoice[]>(SEED_INVOICES);
 
   const addProjectFromBrief = useCallback((
     vendor: { id: number; name: string; region: string; category: string; match: number },
@@ -249,8 +271,15 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
     return threads.find((t) => t.id === Number(id));
   }, [threads]);
 
+  const payInvoice = useCallback((invoiceId: number) => {
+    const today = new Date().toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    setInvoices((prev) =>
+      prev.map((inv) => inv.id === invoiceId ? { ...inv, status: "paid" as const, paidDate: today } : inv)
+    );
+  }, []);
+
   return (
-    <ProjectsContext.Provider value={{ threads, conversations, messages, addProjectFromBrief, addDirectProject, addMessage, getProject }}>
+    <ProjectsContext.Provider value={{ threads, conversations, messages, invoices, addProjectFromBrief, addDirectProject, addMessage, getProject, payInvoice }}>
       {children}
     </ProjectsContext.Provider>
   );
