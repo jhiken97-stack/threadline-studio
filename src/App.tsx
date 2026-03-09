@@ -26,6 +26,7 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <VendorActionsProvider>
+        <ProjectsProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
