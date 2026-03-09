@@ -63,11 +63,20 @@ export function SiteHeader() {
               <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-signal" />
             </Button>
           </Link>
-          <Link to="/join">
-            <Button variant="editorial" size="sm">
-              Join <ArrowUpRight className="ml-1 h-3 w-3" />
-            </Button>
-          </Link>
+          {isLoggedIn ? (
+            <div className="flex items-center gap-3">
+              <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{userName}</span>
+              <Button variant="ghost" size="sm" onClick={logout} className="font-mono text-[10px]">
+                Log out
+              </Button>
+            </div>
+          ) : (
+            <Link to="/join">
+              <Button variant="editorial" size="sm">
+                Join <ArrowUpRight className="ml-1 h-3 w-3" />
+              </Button>
+            </Link>
+          )}
         </div>
 
         <button
