@@ -9,6 +9,7 @@ import Vendors from "./pages/Vendors";
 import Join from "./pages/Join";
 import BriefBuilder from "./pages/BriefBuilder";
 import Workbench from "./pages/Workbench";
+import HowItWorks from "./pages/HowItWorks";
 import ForManufacturers from "./pages/ForManufacturers";
 import NotFound from "./pages/NotFound";
 
