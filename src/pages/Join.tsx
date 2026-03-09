@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ArrowUpRight, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/auth";
 
 export default function Join() {
   const [submitted, setSubmitted] = useState(false);
