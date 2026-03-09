@@ -9,6 +9,7 @@ import Vendors from "./pages/Vendors";
 import Join from "./pages/Join";
 import BriefBuilder from "./pages/BriefBuilder";
 import Workbench from "./pages/Workbench";
+import ProjectDetail from "./pages/ProjectDetail";
 import HowItWorks from "./pages/HowItWorks";
 import ForManufacturers from "./pages/ForManufacturers";
 import Messages from "./pages/Messages";
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="/join" element={<Join />} />
             <Route path="/brief" element={<BriefBuilder />} />
             <Route path="/workbench" element={<Workbench />} />
+            <Route path="/workbench/:id" element={<ProjectDetail />} />
             <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/manufacturers" element={<ForManufacturers />} />
             <Route path="/messages" element={<Messages />} />

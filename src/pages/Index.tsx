@@ -69,45 +69,83 @@ export default function Index() {
 
   return (
     <div>
-      {/* HERO + SEARCH */}
-      <section className="border-b border-foreground/10">
-        <div className="container py-16 md:py-24">
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-4">
-            Manufacturing Discovery Platform
-          </p>
-          <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-800 uppercase leading-[0.9] tracking-tight mb-6">
-            Find the right factory.
-            <br />
-            <span className="text-signal">Ship product.</span>
-          </h1>
-          <p className="font-body text-sm text-muted-foreground max-w-lg mb-8">
-            Vetted manufacturers across US, Portugal, and China — built for independent labels serious about quality production.
-          </p>
+      {/* HERO — full-width image with overlay */}
+      <section className="relative">
+        <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+          <img
+            src={fashionHoodie}
+            alt="Fashion production"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-foreground/70" />
+        </div>
+        <div className="absolute inset-0 flex items-center">
+          <div className="container">
+            <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-background/60 mb-4">
+              Your shortcut to manufacturing
+            </p>
+            <h1 className="font-display text-3xl md:text-5xl lg:text-6xl font-800 uppercase leading-[0.9] tracking-tight mb-4 text-background">
+              Bring your
+              <br />
+              clothing ideas
+              <br />
+              <span className="text-signal">to life.</span>
+            </h1>
+            <p className="font-body text-sm text-background/70 max-w-md mb-8">
+              We connect new clothing brands with vetted manufacturers — and guide you through every step, from first sample to finished product.
+            </p>
 
-          {/* Search Module */}
-          <div className="max-w-2xl">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && navigate(`/vendors?q=${encodeURIComponent(searchQuery)}`)}
-                placeholder="Search by product, category, MOQ, or country…"
-                className="w-full h-12 pl-11 pr-4 bg-background border border-foreground/15 font-body text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:border-foreground/40 transition-colors"
-              />
+            {/* Search Module */}
+            <div className="max-w-xl">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && navigate(`/vendors?q=${encodeURIComponent(searchQuery)}`)}
+                  placeholder="Search by product, category, MOQ, or country…"
+                  className="w-full h-12 pl-11 pr-4 bg-background border border-foreground/15 font-body text-sm placeholder:text-muted-foreground/60 focus:outline-none focus:border-foreground/40 transition-colors"
+                />
+              </div>
+              <div className="flex flex-wrap gap-2 mt-3">
+                {SEARCH_SUGGESTIONS.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setSearchQuery(s)}
+                    className="font-mono text-[10px] px-2.5 py-1 border border-background/20 text-background/60 hover:text-background hover:border-background/40 transition-colors uppercase tracking-wider"
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
             </div>
-            <div className="flex flex-wrap gap-2 mt-3">
-              {SEARCH_SUGGESTIONS.map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setSearchQuery(s)}
-                  className="font-mono text-[10px] px-2.5 py-1 border border-foreground/10 text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors uppercase tracking-wider"
-                >
-                  {s}
-                </button>
-              ))}
-            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* HOW IT WORKS — quick overview */}
+      <section className="border-b border-foreground/10 bg-muted/30">
+        <div className="container py-8">
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="font-display text-sm font-700 uppercase tracking-tight">How Threadline works</h2>
+            <Link to="/how-it-works" className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+              Full guide <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { step: "01", title: "Find a manufacturer", desc: "Browse vetted factories by category, country, and budget" },
+              { step: "02", title: "Submit your project", desc: "Tell us what you want to make — we'll handle the rest" },
+              { step: "03", title: "Get samples made", desc: "Review physical samples before committing to a full order" },
+              { step: "04", title: "Receive your product", desc: "We track production and shipping so you don't have to guess" },
+            ].map((item) => (
+              <div key={item.step} className="p-4 border border-foreground/10 bg-background">
+                <span className="font-mono text-[9px] text-muted-foreground/40 block mb-2">{item.step}</span>
+                <h3 className="font-body text-sm font-600 mb-1">{item.title}</h3>
+                <p className="font-mono text-[10px] text-muted-foreground leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -190,7 +228,7 @@ export default function Index() {
         <div className="container py-10">
           <h2 className="font-display text-sm font-700 uppercase tracking-[0.15em] mb-1">Manufacturer Regions</h2>
           <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider mb-5">
-            Where our manufacturers are based — brands can source from any region
+            Where our manufacturers are based — your brand can be located anywhere
           </p>
           <div className="grid md:grid-cols-3 gap-px bg-foreground/10">
             {GEO_MODULES.map((geo) => (
@@ -212,20 +250,20 @@ export default function Index() {
       <section className="bg-foreground text-background">
         <div className="container py-12">
           <h2 className="font-display text-xl md:text-3xl font-800 uppercase tracking-tight mb-2">
-            Ready to source?
+            Ready to start your brand?
           </h2>
           <p className="font-mono text-[10px] text-background/40 uppercase tracking-wider mb-5">
-            Submit a brief and get matched with vetted manufacturers.
+            Tell us what you want to make — we'll help you find the right manufacturer and guide you through the process.
           </p>
           <div className="flex gap-3">
             <Link to="/brief">
               <Button variant="signal" size="lg">
-                Build Production Brief <ArrowUpRight className="ml-1 h-4 w-4" />
+                Start Your First Project <ArrowUpRight className="ml-1 h-4 w-4" />
               </Button>
             </Link>
             <Link to="/vendors">
               <Button variant="outline" size="lg" className="border-background/30 text-background hover:bg-background hover:text-foreground">
-                Browse Vendors
+                Browse Manufacturers
               </Button>
             </Link>
           </div>
@@ -278,8 +316,8 @@ function ManufacturerCard({ manufacturer: m }: { manufacturer: typeof FEATURED_M
         <button className="font-mono text-[10px] text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider flex items-center gap-1">
           <GitCompare className="h-3 w-3" /> Compare
         </button>
-        <Link to="/vendors" className="font-mono text-[10px] text-muted-foreground hover:text-foreground transition-colors uppercase tracking-wider flex items-center gap-1 ml-auto">
-          View Profile <ArrowRight className="h-3 w-3" />
+        <Link to={`/brief?vendor=${m.id}`} className="font-mono text-[10px] text-signal hover:text-signal/80 transition-colors uppercase tracking-wider flex items-center gap-1 ml-auto">
+          Start Project <ArrowRight className="h-3 w-3" />
         </Link>
       </div>
     </div>
