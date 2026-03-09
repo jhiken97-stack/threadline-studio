@@ -28,6 +28,7 @@ const App = () => (
             <Route path="/join" element={<Join />} />
             <Route path="/brief" element={<BriefBuilder />} />
             <Route path="/workbench" element={<Workbench />} />
+            <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/manufacturers" element={<ForManufacturers />} />
             <Route path="*" element={<NotFound />} />
           </Routes>

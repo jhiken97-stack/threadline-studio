@@ -7,6 +7,7 @@ const primaryNav = [
   { label: "Explore Vendors", path: "/vendors" },
   { label: "Build Brief", path: "/brief" },
   { label: "Workbench", path: "/workbench" },
+  { label: "How It Works", path: "/how-it-works" },
 ];
 
 export function SiteHeader() {
