@@ -130,23 +130,6 @@ export default function BriefBuilder() {
     }
   };
 
-  // Matching animation — runs 7 seconds then reveals results
-  useEffect(() => {
-    if (!submitted || submitPhase !== "matching") return;
-    const duration = 7000;
-    const interval = 50;
-    let elapsed = 0;
-    const timer = setInterval(() => {
-      elapsed += interval;
-      const progress = Math.min((elapsed / duration) * 100, 100);
-      setMatchProgress(progress);
-      if (elapsed >= duration) {
-        clearInterval(timer);
-        setSubmitPhase("results");
-      }
-    }, interval);
-    return () => clearInterval(timer);
-  }, [submitted, submitPhase]);
 
   const handleSendRequest = (vendor: typeof MATCHED_VENDORS[0]) => {
     addProjectFromBrief(vendor, briefData);
