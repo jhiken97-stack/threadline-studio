@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { Menu, X, ArrowUpRight } from "lucide-react";
+import { Menu, X, ArrowUpRight, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const primaryNav = [
@@ -17,12 +17,10 @@ export function SiteHeader() {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-foreground/10">
       <div className="container flex items-center justify-between h-14">
-        {/* Logo */}
         <Link to="/" className="font-display font-800 text-lg tracking-[0.2em] uppercase">
           THREADLINE
         </Link>
 
-        {/* Desktop nav */}
         <nav className="hidden md:flex items-center gap-8">
           {primaryNav.map((item) => (
             <Link
@@ -43,8 +41,13 @@ export function SiteHeader() {
           </Link>
         </nav>
 
-        {/* Desktop CTA */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-2">
+          <Link to="/messages">
+            <Button variant="ghost" size="icon" className="relative">
+              <MessageSquare className="h-4 w-4" />
+              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-signal" />
+            </Button>
+          </Link>
           <Link to="/join">
             <Button variant="editorial" size="sm">
               Join <ArrowUpRight className="ml-1 h-3 w-3" />
@@ -52,7 +55,6 @@ export function SiteHeader() {
           </Link>
         </div>
 
-        {/* Mobile toggle */}
         <button
           className="md:hidden p-2"
           onClick={() => setMobileOpen(!mobileOpen)}
@@ -62,7 +64,6 @@ export function SiteHeader() {
         </button>
       </div>
 
-      {/* Mobile menu */}
       {mobileOpen && (
         <div className="md:hidden border-t border-foreground/10 bg-background">
           <nav className="container py-6 flex flex-col gap-4">
@@ -76,6 +77,13 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
+            <Link
+              to="/messages"
+              onClick={() => setMobileOpen(false)}
+              className="font-display text-2xl font-bold uppercase tracking-wide flex items-center gap-2"
+            >
+              Messages <span className="w-2 h-2 bg-signal" />
+            </Link>
             <div className="divider-editorial my-2" />
             <Link
               to="/manufacturers"

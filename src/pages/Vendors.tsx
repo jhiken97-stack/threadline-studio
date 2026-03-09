@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Lock, ArrowUpRight, Grid, List } from "lucide-react";
+import { Lock, ArrowUpRight, Grid, List, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const REGIONS = ["All", "US", "PT", "CN"] as const;
 const CATEGORIES = ["All", "Cut & Sew", "Heavyweight Jersey", "Fleece", "Knitwear", "Denim", "Private Label"] as const;
 const TIERS = ["All", "Premium", "Luxury"] as const;
-const MOQ_RANGES = ["All", "50–200", "200–500", "500–1000", "1000+"] as const;
-const LEAD_TIMES = ["All", "2–4 weeks", "4–8 weeks", "8–12 weeks"] as const;
 
 interface Vendor {
   id: number;
@@ -16,22 +14,42 @@ interface Vendor {
   category: string;
   tier: string;
   summary: string;
-  moq: string;
-  leadTime: string;
-  capabilities: string;
-  responsiveness: string;
 }
 
 const VENDORS: Vendor[] = [
-  { id: 1, name: "Ateliê Nova", region: "PT", category: "Cut & Sew", tier: "Premium", summary: "Lisbon-based atelier specializing in premium cut-and-sew for contemporary labels.", moq: "100–300", leadTime: "4–6 weeks", capabilities: "Pattern making, grading, sampling", responsiveness: "High" },
-  { id: 2, name: "Shenzhen Textile Co.", region: "CN", category: "Heavyweight Jersey", tier: "Luxury", summary: "Large-scale heavyweight jersey production with luxury finishing.", moq: "500–2000", leadTime: "6–8 weeks", capabilities: "Enzyme wash, garment dye, custom trims", responsiveness: "Medium" },
-  { id: 3, name: "Brooklyn Garment Dist.", region: "US", category: "Denim", tier: "Premium", summary: "Brooklyn denim specialist with heritage construction methods.", moq: "50–200", leadTime: "3–5 weeks", capabilities: "Selvedge, distressing, custom rivets", responsiveness: "High" },
-  { id: 4, name: "Porto Fleece Works", region: "PT", category: "Fleece", tier: "Premium", summary: "Porto-based fleece manufacturer with organic certification.", moq: "200–500", leadTime: "4–6 weeks", capabilities: "Organic cotton fleece, heavyweight, brushed finish", responsiveness: "High" },
-  { id: 5, name: "Guangzhou Knit Mill", region: "CN", category: "Knitwear", tier: "Luxury", summary: "Precision knitwear mill supporting complex patterns and yarns.", moq: "300–1000", leadTime: "6–10 weeks", capabilities: "Intarsia, jacquard, merino, cashmere blend", responsiveness: "Medium" },
-  { id: 6, name: "LA Cut House", region: "US", category: "Private Label", tier: "Premium", summary: "Full-service private label production based in Los Angeles.", moq: "100–500", leadTime: "3–5 weeks", capabilities: "Full package, labeling, custom packaging", responsiveness: "High" },
-  { id: 7, name: "Fábrica do Minho", region: "PT", category: "Knitwear", tier: "Luxury", summary: "Northern Portugal knitwear factory with 40+ years of heritage craft.", moq: "150–400", leadTime: "5–7 weeks", capabilities: "Hand-linked finishing, gauge range 3–14", responsiveness: "Medium" },
-  { id: 8, name: "Dongguan Dye Works", region: "CN", category: "Cut & Sew", tier: "Premium", summary: "Specializing in garment-dyed cut and sew with extensive color lab.", moq: "500–3000", leadTime: "5–8 weeks", capabilities: "Garment dye, vintage wash, overdye", responsiveness: "Medium" },
-  { id: 9, name: "Portland Sew Co.", region: "US", category: "Cut & Sew", tier: "Premium", summary: "Small-batch cut and sew with focus on streetwear silhouettes.", moq: "25–150", leadTime: "2–4 weeks", capabilities: "Small batch, streetwear focus, quick turn", responsiveness: "High" },
+  // US (10)
+  { id: 1, name: "Brooklyn Garment Dist.", region: "US", category: "Denim", tier: "Premium", summary: "Brooklyn denim specialist with heritage construction methods." },
+  { id: 2, name: "LA Cut House", region: "US", category: "Private Label", tier: "Premium", summary: "Full-service private label production based in Los Angeles." },
+  { id: 3, name: "Portland Sew Co.", region: "US", category: "Cut & Sew", tier: "Premium", summary: "Small-batch cut and sew with focus on streetwear silhouettes." },
+  { id: 4, name: "SF Knitwear Studio", region: "US", category: "Knitwear", tier: "Luxury", summary: "San Francisco-based luxury knitwear with sustainable sourcing." },
+  { id: 5, name: "Chicago Fleece Mill", region: "US", category: "Fleece", tier: "Premium", summary: "Midweight and heavyweight fleece specialist for contemporary brands." },
+  { id: 6, name: "NYC Atelier Group", region: "US", category: "Cut & Sew", tier: "Luxury", summary: "High-end cut and sew atelier serving luxury streetwear labels." },
+  { id: 7, name: "Dallas Denim Works", region: "US", category: "Denim", tier: "Premium", summary: "Large-scale denim production with custom wash capabilities." },
+  { id: 8, name: "Miami Private Label Co.", region: "US", category: "Private Label", tier: "Premium", summary: "Turn-key private label solutions with fast turnaround." },
+  { id: 9, name: "Seattle Textile Lab", region: "US", category: "Heavyweight Jersey", tier: "Premium", summary: "Heavyweight jersey and terry specializing in oversized cuts." },
+  { id: 10, name: "Austin Garment Works", region: "US", category: "Cut & Sew", tier: "Premium", summary: "Boutique cut and sew shop with rapid prototyping capability." },
+  // PT (10)
+  { id: 11, name: "Ateliê Nova", region: "PT", category: "Cut & Sew", tier: "Premium", summary: "Lisbon-based atelier specializing in premium cut-and-sew for contemporary labels." },
+  { id: 12, name: "Porto Fleece Works", region: "PT", category: "Fleece", tier: "Premium", summary: "Porto-based fleece manufacturer with organic certification." },
+  { id: 13, name: "Fábrica do Minho", region: "PT", category: "Knitwear", tier: "Luxury", summary: "Northern Portugal knitwear factory with 40+ years of heritage craft." },
+  { id: 14, name: "Lisboa Denim House", region: "PT", category: "Denim", tier: "Luxury", summary: "Premium Portuguese denim with artisanal wash and finish techniques." },
+  { id: 15, name: "Braga Jersey Co.", region: "PT", category: "Heavyweight Jersey", tier: "Premium", summary: "Heavyweight jersey production with enzyme wash specialization." },
+  { id: 16, name: "Guimarães Textiles", region: "PT", category: "Cut & Sew", tier: "Premium", summary: "Heritage textile house producing for European fashion brands since 1978." },
+  { id: 17, name: "Coimbra Knit Studio", region: "PT", category: "Knitwear", tier: "Premium", summary: "Modern knitwear production with Italian yarn partnerships." },
+  { id: 18, name: "Algarve Private Label", region: "PT", category: "Private Label", tier: "Premium", summary: "Full-package private label with in-house design consultation." },
+  { id: 19, name: "Setúbal Fleece Mill", region: "PT", category: "Fleece", tier: "Luxury", summary: "Organic fleece specialist with GOTS and OEKO-TEX certifications." },
+  { id: 20, name: "Aveiro Garment Lab", region: "PT", category: "Cut & Sew", tier: "Luxury", summary: "Precision garment production for luxury streetwear and contemporary labels." },
+  // CN (10)
+  { id: 21, name: "Shenzhen Textile Co.", region: "CN", category: "Heavyweight Jersey", tier: "Luxury", summary: "Large-scale heavyweight jersey production with luxury finishing." },
+  { id: 22, name: "Guangzhou Knit Mill", region: "CN", category: "Knitwear", tier: "Luxury", summary: "Precision knitwear mill supporting complex patterns and yarns." },
+  { id: 23, name: "Dongguan Dye Works", region: "CN", category: "Cut & Sew", tier: "Premium", summary: "Specializing in garment-dyed cut and sew with extensive color lab." },
+  { id: 24, name: "Shanghai Cut & Sew", region: "CN", category: "Cut & Sew", tier: "Luxury", summary: "Luxury-tier cut and sew with international quality certifications." },
+  { id: 25, name: "Hangzhou Denim Co.", region: "CN", category: "Denim", tier: "Premium", summary: "Selvedge and raw denim production with Japanese-style finishing." },
+  { id: 26, name: "Ningbo Fleece Group", region: "CN", category: "Fleece", tier: "Premium", summary: "High-volume fleece production with polar and sherpa capabilities." },
+  { id: 27, name: "Foshan Private Label", region: "CN", category: "Private Label", tier: "Premium", summary: "End-to-end private label manufacturing with packaging solutions." },
+  { id: 28, name: "Qingdao Jersey Works", region: "CN", category: "Heavyweight Jersey", tier: "Premium", summary: "Midweight to heavyweight jersey with garment dye expertise." },
+  { id: 29, name: "Suzhou Knitwear Lab", region: "CN", category: "Knitwear", tier: "Premium", summary: "Technical knitwear with seamless and whole-garment capabilities." },
+  { id: 30, name: "Xiamen Garment Co.", region: "CN", category: "Cut & Sew", tier: "Premium", summary: "Scale cut and sew production with integrated quality control." },
 ];
 
 export default function Vendors() {
@@ -65,16 +83,10 @@ export default function Vendors() {
             <FilterGroup label="Category" options={CATEGORIES} value={category} onChange={setCategory} />
             <FilterGroup label="Tier" options={TIERS} value={tier} onChange={setTier} />
             <div className="ml-auto flex items-center gap-1">
-              <button
-                onClick={() => setViewMode("grid")}
-                className={`p-2 transition-colors ${viewMode === "grid" ? "text-foreground" : "text-muted-foreground"}`}
-              >
+              <button onClick={() => setViewMode("grid")} className={`p-2 transition-colors ${viewMode === "grid" ? "text-foreground" : "text-muted-foreground"}`}>
                 <Grid className="h-4 w-4" />
               </button>
-              <button
-                onClick={() => setViewMode("list")}
-                className={`p-2 transition-colors ${viewMode === "list" ? "text-foreground" : "text-muted-foreground"}`}
-              >
+              <button onClick={() => setViewMode("list")} className={`p-2 transition-colors ${viewMode === "list" ? "text-foreground" : "text-muted-foreground"}`}>
                 <List className="h-4 w-4" />
               </button>
             </div>
@@ -88,18 +100,13 @@ export default function Vendors() {
           <p className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground mb-6">
             {filtered.length} vendor{filtered.length !== 1 ? "s" : ""} found
           </p>
-
           {viewMode === "grid" ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-foreground/10">
-              {filtered.map((vendor) => (
-                <VendorCard key={vendor.id} vendor={vendor} />
-              ))}
+              {filtered.map((vendor) => <VendorCard key={vendor.id} vendor={vendor} />)}
             </div>
           ) : (
             <div className="flex flex-col divide-y divide-foreground/10">
-              {filtered.map((vendor) => (
-                <VendorListItem key={vendor.id} vendor={vendor} />
-              ))}
+              {filtered.map((vendor) => <VendorListItem key={vendor.id} vendor={vendor} />)}
             </div>
           )}
         </div>
@@ -111,7 +118,7 @@ export default function Vendors() {
           <Lock className="h-6 w-6 mx-auto mb-4 text-muted-foreground" />
           <h2 className="font-display text-2xl font-800 uppercase tracking-tight mb-2">Full intelligence is gated</h2>
           <p className="font-mono text-xs text-muted-foreground uppercase tracking-wider mb-6 max-w-md mx-auto">
-            Sign up to unlock MOQ bands, lead times, capabilities, and contact details.
+            Sign up to unlock MOQ bands, lead times, capabilities, and in-app messaging.
           </p>
           <Link to="/join">
             <Button variant="editorial" size="lg">
@@ -125,10 +132,7 @@ export default function Vendors() {
 }
 
 function FilterGroup({ label, options, value, onChange }: {
-  label: string;
-  options: readonly string[];
-  value: string;
-  onChange: (v: string) => void;
+  label: string; options: readonly string[]; value: string; onChange: (v: string) => void;
 }) {
   return (
     <div className="flex items-center gap-2">
@@ -168,12 +172,16 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
       <h3 className="font-body text-sm font-600 mb-1">{vendor.name}</h3>
       <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider mb-3">{vendor.category} · {vendor.tier}</p>
       <p className="font-body text-xs text-muted-foreground leading-relaxed mb-4">{vendor.summary}</p>
-
-      {/* Gated fields */}
       <div className="space-y-2">
         <GatedField label="MOQ Range" />
         <GatedField label="Lead Time" />
         <GatedField label="Capabilities" />
+        <div className="flex items-center justify-between py-1.5 border-t border-dashed border-foreground/8">
+          <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">Message Vendor</span>
+          <span className="flex items-center gap-1 font-mono text-[10px] text-muted-foreground/40">
+            <MessageSquare className="h-2.5 w-2.5" /> Sign up
+          </span>
+        </div>
       </div>
     </div>
   );

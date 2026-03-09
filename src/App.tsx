@@ -11,6 +11,7 @@ import BriefBuilder from "./pages/BriefBuilder";
 import Workbench from "./pages/Workbench";
 import HowItWorks from "./pages/HowItWorks";
 import ForManufacturers from "./pages/ForManufacturers";
+import Messages from "./pages/Messages";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/workbench" element={<Workbench />} />
             <Route path="/how-it-works" element={<HowItWorks />} />
             <Route path="/manufacturers" element={<ForManufacturers />} />
+            <Route path="/messages" element={<Messages />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </SiteLayout>
