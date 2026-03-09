@@ -120,6 +120,7 @@ export default function HowItWorks() {
         </div>
       </section>
 
+      <section className="bg-foreground text-background">
         <div className="container py-14">
           <h2 className="font-display text-2xl md:text-3xl font-800 uppercase tracking-tight mb-2">Ready to get started?</h2>
           <p className="font-body text-sm text-background/60 mb-6">
