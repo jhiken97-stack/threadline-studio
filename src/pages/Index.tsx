@@ -75,21 +75,40 @@ export default function Index() {
     setSelectedRegion("");
   };
 
+  const [activeClip, setActiveClip] = useState(0);
+  const [fadeIn, setFadeIn] = useState(true);
+
+  const advanceClip = useCallback(() => {
+    setFadeIn(false);
+    setTimeout(() => {
+      setActiveClip((prev) => (prev + 1) % RUNWAY_CLIPS.length);
+      setFadeIn(true);
+    }, 400);
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(advanceClip, 4000);
+    return () => clearInterval(interval);
+  }, [advanceClip]);
+
   return (
     <div>
-      {/* HERO — full-width video with overlay */}
+      {/* HERO — fast-paced runway montage */}
       <section className="relative">
-        <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover"
-            poster={fashionHoodie}
-          >
-            <source src="/hero-fashion.mp4" type="video/mp4" />
-          </video>
+        <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden bg-foreground">
+          {RUNWAY_CLIPS.map((clip, i) => (
+            <video
+              key={i}
+              autoPlay
+              loop
+              muted
+              playsInline
+              src={clip}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+                i === activeClip && fadeIn ? "opacity-100" : "opacity-0"
+              }`}
+            />
+          ))}
           <div className="absolute inset-0 bg-foreground/70" />
         </div>
         <div className="absolute inset-0 flex items-center">
