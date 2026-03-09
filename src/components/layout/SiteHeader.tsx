@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Menu, X, ArrowUpRight, MessageSquare, Bookmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useVendorActions } from "@/lib/vendors";
+import { useAuth } from "@/lib/auth";
 
 const primaryNav = [
   { label: "Explore Vendors", path: "/vendors" },
