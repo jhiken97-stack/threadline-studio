@@ -15,6 +15,7 @@ const COUNTRIES = [
   { code: "US", name: "United States" },
   { code: "PT", name: "Portugal" },
   { code: "CN", name: "China" },
+  { code: "IN", name: "India" },
 ];
 
 const STEPS = ["Your Brand", "What You're Making", "Files & Tech Packs", "Your Priorities", "Review & Submit"];
