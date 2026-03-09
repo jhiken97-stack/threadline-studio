@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowRight, AlertCircle, CheckCircle2 } from "lucide-react";
+import { ArrowRight, AlertCircle, MessageSquare } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
@@ -35,7 +35,6 @@ export default function Workbench() {
 
   return (
     <div>
-      {/* Header */}
       <section className="border-b border-foreground/10">
         <div className="container py-10">
           <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-2">Your Dashboard</p>
@@ -43,7 +42,6 @@ export default function Workbench() {
         </div>
       </section>
 
-      {/* How it works strip */}
       <section className="border-b border-foreground/10 bg-muted/30">
         <div className="container py-6">
           <div className="flex items-center justify-between mb-4">
@@ -67,11 +65,9 @@ export default function Workbench() {
                   <span className={`font-mono text-[9px] uppercase tracking-widest block mb-1 ${isActive ? "text-background/60" : "text-muted-foreground/50"}`}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className={`font-body text-xs font-600 block ${isActive ? "" : ""}`}>{s.label}</span>
+                  <span className="font-body text-xs font-600 block">{s.label}</span>
                   {count > 0 && (
-                    <span className={`font-mono text-[9px] mt-1 block ${isActive ? "text-signal" : "text-signal"}`}>
-                      {count} active
-                    </span>
+                    <span className="font-mono text-[9px] mt-1 block text-signal">{count} active</span>
                   )}
                 </button>
               );
@@ -85,7 +81,6 @@ export default function Workbench() {
         </div>
       </section>
 
-      {/* Content */}
       <div className="container py-8">
         {filtered.length === 0 ? (
           <div className="text-center py-16">
@@ -104,21 +99,18 @@ export default function Workbench() {
                     {thread.priority && <AlertCircle className="h-3.5 w-3.5 text-signal flex-shrink-0" />}
                     <div className="min-w-0">
                       <h3 className="font-body text-sm font-600">{thread.product}</h3>
-                      <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">
-                        {thread.vendor}
-                      </p>
+                      <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">{thread.vendor}</p>
                     </div>
                   </div>
-                  {/* Mini progress */}
                   <div className="flex items-center gap-1 flex-shrink-0">
                     {STAGES.map((s, i) => (
-                      <div
-                        key={s.key}
-                        className={`h-1 w-4 ${i <= stageIndex ? "bg-foreground" : "bg-foreground/10"}`}
-                      />
+                      <div key={s.key} className={`h-1 w-4 ${i <= stageIndex ? "bg-foreground" : "bg-foreground/10"}`} />
                     ))}
                   </div>
                   <div className="flex items-center gap-3 flex-shrink-0">
+                    <Link to="/messages" className="font-mono text-[10px] text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
+                      <MessageSquare className="h-3 w-3" /> Message
+                    </Link>
                     <span className="font-mono text-[10px] px-2 py-0.5 bg-foreground text-background uppercase">{thread.region}</span>
                     <span className="font-mono text-[10px] px-2 py-0.5 border border-foreground/15 uppercase tracking-wider text-muted-foreground">
                       {STAGES[stageIndex]?.label}
