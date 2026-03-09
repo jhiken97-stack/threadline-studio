@@ -1,18 +1,21 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
-import { Menu, X, ArrowUpRight, MessageSquare } from "lucide-react";
+import { Menu, X, ArrowUpRight, MessageSquare, Bookmark } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useVendorActions } from "@/lib/vendors";
 
 const primaryNav = [
   { label: "Explore Vendors", path: "/vendors" },
   { label: "Build Brief", path: "/brief" },
   { label: "Workbench", path: "/workbench" },
   { label: "How It Works", path: "/how-it-works" },
+  { label: "Concierge", path: "/concierge" },
 ];
 
 export function SiteHeader() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const { savedIds } = useVendorActions();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-foreground/10">
@@ -42,6 +45,16 @@ export function SiteHeader() {
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
+          {savedIds.length > 0 && (
+            <Link to="/saved">
+              <Button variant="ghost" size="icon" className="relative">
+                <Bookmark className="h-4 w-4" />
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-signal text-signal-foreground text-[9px] font-mono flex items-center justify-center">
+                  {savedIds.length}
+                </span>
+              </Button>
+            </Link>
+          )}
           <Link to="/messages">
             <Button variant="ghost" size="icon" className="relative">
               <MessageSquare className="h-4 w-4" />
@@ -77,6 +90,13 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
+            <Link
+              to="/saved"
+              onClick={() => setMobileOpen(false)}
+              className="font-display text-2xl font-bold uppercase tracking-wide flex items-center gap-2"
+            >
+              Saved {savedIds.length > 0 && <span className="font-mono text-sm text-signal">{savedIds.length}</span>}
+            </Link>
             <Link
               to="/messages"
               onClick={() => setMobileOpen(false)}
