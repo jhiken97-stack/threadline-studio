@@ -43,6 +43,17 @@ export const VENDORS: Vendor[] = [
   { id: 28, name: "Qingdao Jersey Works", region: "CN", category: "Heavyweight Jersey", tier: "Premium", summary: "Midweight to heavyweight jersey with garment dye expertise." },
   { id: 29, name: "Suzhou Knitwear Lab", region: "CN", category: "Knitwear", tier: "Premium", summary: "Technical knitwear with seamless and whole-garment capability." },
   { id: 30, name: "Xiamen Garment Co.", region: "CN", category: "Cut & Sew", tier: "Premium", summary: "Scale cut and sew with integrated quality control." },
+  // IN (10)
+  { id: 31, name: "Mumbai Cotton Works", region: "IN", category: "Cut & Sew", tier: "Premium", summary: "Organic cotton specialists with vertically integrated spinning and sewing." },
+  { id: 32, name: "Tirupur Knit Exports", region: "IN", category: "Knitwear", tier: "Premium", summary: "India's knitwear capital — high-volume knits with GOTS certification." },
+  { id: 33, name: "Jaipur Textile House", region: "IN", category: "Private Label", tier: "Premium", summary: "Full-package private label with hand block print and embroidery capabilities." },
+  { id: 34, name: "Bangalore Denim Mill", region: "IN", category: "Denim", tier: "Premium", summary: "Premium denim production with sustainable water recycling systems." },
+  { id: 35, name: "Delhi Garment Studio", region: "IN", category: "Tailoring", tier: "Luxury", summary: "Luxury tailoring and structured garments with hand-finishing expertise." },
+  { id: 36, name: "Noida Activewear Co.", region: "IN", category: "Activewear", tier: "Premium", summary: "Performance fabrics and activewear with moisture-wicking technology." },
+  { id: 37, name: "Ahmedabad Jersey Lab", region: "IN", category: "Heavyweight Jersey", tier: "Premium", summary: "Heavyweight organic jersey with enzyme wash and vintage finishing." },
+  { id: 38, name: "Coimbatore Fleece Mill", region: "IN", category: "Fleece", tier: "Premium", summary: "Brushed and unbrushed fleece in organic cotton and recycled poly blends." },
+  { id: 39, name: "Ludhiana Knit Works", region: "IN", category: "Knitwear", tier: "Luxury", summary: "Heritage knitwear factory specializing in cashmere blends and jacquards." },
+  { id: 40, name: "Surat Embroidery House", region: "IN", category: "Accessories", tier: "Premium", summary: "Embellishment and embroidery specialist for luxury detailing and patches." },
 ];
 
 interface VendorActions {

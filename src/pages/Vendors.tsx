@@ -4,8 +4,8 @@ import { Lock, ArrowUpRight, ArrowRight, Grid, List, Bookmark, BookmarkCheck, Gi
 import { Button } from "@/components/ui/button";
 import { VENDORS, useVendorActions, type Vendor } from "@/lib/vendors";
 
-const REGIONS = ["All", "US", "PT", "CN"] as const;
-const CATEGORIES = ["All", "Cut & Sew", "Heavyweight Jersey", "Fleece", "Knitwear", "Denim", "Private Label"] as const;
+const REGIONS = ["All", "US", "PT", "CN", "IN"] as const;
+const CATEGORIES = ["All", "Cut & Sew", "Heavyweight Jersey", "Fleece", "Knitwear", "Denim", "Private Label", "Outerwear", "Activewear", "Swimwear", "Leather Goods", "Tailoring", "Accessories"] as const;
 const TIERS = ["All", "Premium", "Luxury"] as const;
 
 export default function Vendors() {

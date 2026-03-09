@@ -49,6 +49,7 @@ const GEO_MODULES = [
   { code: "US", name: "United States", count: 10, specialties: "Denim · Private Label · Cut & Sew" },
   { code: "PT", name: "Portugal", count: 10, specialties: "Premium Knits · Fleece · Cut & Sew" },
   { code: "CN", name: "China", count: 10, specialties: "Heavyweight Jersey · Knitwear · Scale" },
+  { code: "IN", name: "India", count: 10, specialties: "Cotton · Knitwear · Tailoring · Embroidery" },
 ];
 
 export default function Index() {
