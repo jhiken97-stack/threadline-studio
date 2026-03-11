@@ -189,7 +189,7 @@ function SubStepRow({ sub, invoice, payingId, paidId, onPay }: {
         )}
       </div>
 
-      {hasInvoice && invoice && (
+      {showInvoice && invoice && (
         <div className="ml-7 mt-1 mb-2 p-4 border border-foreground/10 bg-background">
           <div className="flex items-center gap-2 mb-2">
             <span className="font-mono text-[9px] px-2 py-0.5 bg-signal/10 text-signal uppercase tracking-wider">Invoice</span>
