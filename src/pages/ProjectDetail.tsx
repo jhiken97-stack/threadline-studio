@@ -9,8 +9,8 @@ const STAGES = [
   { key: "brief", label: "Brief Sent", icon: FileText, help: "Your project details have been shared with the manufacturer. They'll review and respond soon." },
   { key: "matched", label: "Vendor Matched", icon: Check, help: "A manufacturer has accepted your project. You can now discuss details and request samples." },
   { key: "sample", label: "Sampling", icon: Package, help: "Your manufacturer is creating sample pieces. Once you receive them, you'll approve or request changes before bulk production." },
-  { key: "production", label: "In Production", icon: Clock, help: "Your approved design is being manufactured in bulk. This is the longest stage — your manufacturer will keep you updated." },
-  { key: "shipped", label: "Shipping & QA", icon: Truck, help: "Your finished products are being quality-checked and shipped to you. Almost there!" },
+  { key: "production", label: "In Production", icon: Clock, help: "Your approved design is being manufactured in bulk. After production, a final quality check is performed and the remaining balance is due before shipping." },
+  { key: "shipped", label: "Shipping", icon: Truck, help: "Your finished products have passed QA and are on their way to you." },
   { key: "complete", label: "Delivered", icon: Check, help: "Your order has arrived! Review your experience and reorder when you're ready for your next drop." },
 ];
 
