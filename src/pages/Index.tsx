@@ -308,8 +308,7 @@ export default function Index() {
                 </div>
               );
               return item.link ? <Link key={item.title} to={item.link}>{content}</Link> : content;
-            })}
-            })}
+          </div>
           </div>
         </div>
       </section>
