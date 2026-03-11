@@ -144,11 +144,9 @@ export default function ProjectDetail() {
                 )}
               </div>
             </div>
-            <Link to="/messages">
-              <Button variant="editorial" size="sm">
-                <MessageSquare className="h-3.5 w-3.5 mr-1.5" /> Message Vendor
-              </Button>
-            </Link>
+            <Button variant="editorial" size="sm" onClick={() => setChatOpen(true)}>
+              <MessageSquare className="h-3.5 w-3.5 mr-1.5" /> Message Vendor
+            </Button>
           </div>
         </div>
       </section>
