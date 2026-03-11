@@ -37,9 +37,9 @@ const PROTECTIONS = [
 
 const HOW_ESCROW_WORKS = [
   { step: "01", title: "You pay the invoice", desc: "Funds are held securely by Threadline — not sent to the manufacturer yet." },
-  { step: "02", title: "Manufacturer fulfills the order", desc: "Production, quality checks, and shipping proceed as agreed." },
-  { step: "03", title: "You receive & inspect", desc: "Check your delivery against the approved samples and project specs." },
-  { step: "04", title: "You approve — funds released", desc: "Once you confirm everything is correct, the manufacturer receives payment." },
+  { step: "02", title: "Manufacturer fulfills the order", desc: "Production, quality checks, and shipping proceed as agreed. A tracking number is provided." },
+  { step: "03", title: "Tracking confirms delivery", desc: "We monitor the tracking number automatically. When it shows delivered, funds are released." },
+  { step: "04", title: "Quality dispute window", desc: "You have 48 hours after delivery to open a dispute if the product doesn't match approved samples." },
 ];
 
 
