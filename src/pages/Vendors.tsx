@@ -83,6 +83,22 @@ export default function Vendors() {
         </div>
       </section>
 
+      {/* Buyer Protection Banner */}
+      <section className="border-t border-foreground/10 bg-signal/5">
+        <div className="container py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <ShieldCheck className="h-4 w-4 text-signal" />
+            <div>
+              <span className="font-body text-xs font-600">Buyer Protection on every project</span>
+              <span className="font-mono text-[10px] text-muted-foreground ml-2">Payment escrow · Quality guarantee · Dispute resolution</span>
+            </div>
+          </div>
+          <Link to="/buyer-protection" className="font-mono text-[10px] text-signal uppercase tracking-wider hover:text-signal/80 transition-colors flex items-center gap-1">
+            Learn more <ArrowRight className="h-3 w-3" />
+          </Link>
+        </div>
+      </section>
+
       {/* Gated CTA */}
       <section className="border-t border-foreground/10 bg-muted/50">
         <div className="container py-12 text-center">

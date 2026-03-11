@@ -294,19 +294,21 @@ export default function Index() {
           </p>
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-px bg-foreground/10">
             {[
+              { icon: ShieldCheck, title: "Buyer Protection", desc: "Every payment is held in escrow until you approve. Quality guaranteed against approved samples.", link: "/buyer-protection" },
               { icon: MessageSquare, title: "Communication", desc: "Message manufacturers directly — all conversations saved in one thread" },
               { icon: CreditCard, title: "Payments & Invoices", desc: "Pay securely through the platform with transparent invoicing — just a 1% fee on each side" },
               { icon: ClipboardList, title: "Order Updates", desc: "Track production milestones from sampling to delivery in real time" },
-              { icon: Bell, title: "Notifications", desc: "Get notified at every stage — no chasing emails or wondering what's next" },
             ].map((item) => {
               const Icon = item.icon;
-              return (
-                <div key={item.title} className="bg-background p-6">
+              const content = (
+                <div key={item.title} className={`bg-background p-6 ${item.link ? "hover:bg-muted/40 transition-colors" : ""}`}>
                   <Icon className="h-5 w-5 text-signal mb-3" />
                   <h3 className="font-body text-sm font-600 mb-1">{item.title}</h3>
                   <p className="font-mono text-[10px] text-muted-foreground leading-relaxed">{item.desc}</p>
                 </div>
               );
+              return item.link ? <Link key={item.title} to={item.link}>{content}</Link> : content;
+            })}
             })}
           </div>
         </div>

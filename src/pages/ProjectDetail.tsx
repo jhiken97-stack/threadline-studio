@@ -192,8 +192,12 @@ export default function ProjectDetail() {
                         </div>
                         <div className="min-w-0">
                           <span className="font-body text-sm font-600 block">{inv.description}</span>
-                          <span className="font-mono text-[9px] text-muted-foreground">
-                            {inv.status === "paid" ? `Paid ${inv.paidDate}` : "Awaiting payment"}
+                          <span className="font-mono text-[9px] text-muted-foreground flex items-center gap-1.5">
+                            {inv.status === "paid" ? `Paid ${inv.paidDate}` : (
+                              <>
+                                <ShieldCheck className="h-3 w-3 text-signal" /> Held in escrow
+                              </>
+                            )}
                           </span>
                         </div>
                       </div>
