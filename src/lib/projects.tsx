@@ -137,6 +137,16 @@ const SEED_MESSAGES: Record<number, ConversationMessage[]> = {
     { id: 1, sender: "vendor", text: "Thank you for the brief. Your fleece specs align well with our organic line.", time: "3 days ago" },
     { id: 2, sender: "vendor", text: "We can accommodate your timeline. Let's discuss specs.", time: "2 days ago" },
   ],
+  5: [
+    { id: 1, sender: "brand", text: "Production is done — when can we expect shipment?", time: "3 days ago" },
+    { id: 2, sender: "vendor", text: "QC completed. Shipping via air freight tomorrow morning.", time: "2 days ago" },
+    { id: 3, sender: "vendor", text: "Shipment is in transit — expected delivery in 3 days.", time: "6 hours ago" },
+  ],
+  6: [
+    { id: 1, sender: "vendor", text: "All 400 units have shipped from Osaka. Tracking number attached.", time: "1 month ago" },
+    { id: 2, sender: "brand", text: "Everything arrived in great condition. Really happy with the quality!", time: "2 weeks ago" },
+    { id: 3, sender: "vendor", text: "Thank you! Looking forward to your next order.", time: "5 days ago" },
+  ],
 };
 
 const SEED_INVOICES: Invoice[] = [
