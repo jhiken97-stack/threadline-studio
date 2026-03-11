@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, MessageSquare, Check, Clock, Package, Truck, FileText, AlertCircle, CreditCard } from "lucide-react";
+import { ArrowLeft, MessageSquare, Check, Clock, Package, Truck, FileText, AlertCircle, CreditCard, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useProjects, Invoice } from "@/lib/projects";
+import { BuyerProtectionBadge } from "@/components/BuyerProtectionBadge";
 
 const STAGES = [
   { key: "brief", label: "Brief Sent", icon: FileText, help: "Your project details have been shared with the manufacturer. They'll review and respond soon." },
