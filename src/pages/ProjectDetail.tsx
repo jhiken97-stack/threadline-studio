@@ -164,7 +164,7 @@ export default function ProjectDetail() {
 
             // Invoice item
             const inv = item.data as Invoice;
-            const fee = inv.amount * 0.01;
+            const fee = inv.amount * 0.025;
             const totalWithFee = inv.amount + fee;
             const isPaying = payingId === inv.id;
             const justPaid = paidId === inv.id;
@@ -247,7 +247,7 @@ export default function ProjectDetail() {
             <BuyerProtectionBadge variant="block" />
             <div className="p-4 border border-foreground/10 bg-muted/30">
               <p className="font-mono text-[9px] text-muted-foreground leading-relaxed">
-                <span className="text-signal font-600">Platform fee:</span> 1% is added to your invoice total at checkout. 1% is deducted from the vendor's payout. No hidden charges.
+                <span className="text-signal font-600">Platform fee:</span> 2.5% is added to your invoice total at checkout. 2.5% is deducted from the vendor's payout. No hidden charges.
               </p>
             </div>
           </div>
