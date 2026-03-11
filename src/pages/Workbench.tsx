@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowRight, AlertCircle, ChevronRight } from "lucide-react";
+import { ArrowRight, AlertCircle, ChevronRight, Package, MapPin, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
@@ -21,22 +21,39 @@ export default function Workbench() {
 
   return (
     <div>
+      {/* Header */}
       <section className="border-b border-foreground/10">
-        <div className="container py-10">
-          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-2">Your Projects</p>
-          <h1 className="font-display text-3xl md:text-4xl font-800 uppercase tracking-tight">Workbench</h1>
-          <p className="font-body text-sm text-muted-foreground mt-2 max-w-2xl">
+        <div className="container py-12 md:py-16">
+          <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-3">Dashboard</p>
+          <h1 className="font-display text-4xl md:text-5xl font-800 uppercase tracking-tight">Workbench</h1>
+          <p className="font-body text-base text-muted-foreground mt-3 max-w-2xl">
             Track every project from first idea to finished product. Click any project to see full details and next steps.
           </p>
         </div>
       </section>
 
-      {/* Project list */}
-      <div className="container py-8">
+      {/* Summary bar */}
+      <section className="border-b border-foreground/10">
+        <div className="container py-4 flex items-center gap-6">
+          <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+            {threads.length} {threads.length === 1 ? "project" : "projects"}
+          </span>
+          <span className="h-3 w-px bg-foreground/10" />
+          <span className="font-mono text-[10px] uppercase tracking-widest text-signal">
+            {threads.filter(t => t.priority).length} need attention
+          </span>
+        </div>
+      </section>
+
+      {/* Project tiles */}
+      <div className="container py-10">
         {filtered.length === 0 ? (
-          <div className="text-center py-16">
-            <p className="font-body text-sm text-muted-foreground mb-2">No projects at this stage yet</p>
-            <p className="font-mono text-[10px] text-muted-foreground/60 uppercase tracking-wider mb-6">Start by browsing manufacturers or submitting a project brief</p>
+          <div className="text-center py-20">
+            <Package className="h-8 w-8 text-muted-foreground/30 mx-auto mb-4" />
+            <p className="font-body text-base text-muted-foreground mb-1">No projects yet</p>
+            <p className="font-mono text-[10px] text-muted-foreground/50 uppercase tracking-wider mb-8">
+              Start by browsing manufacturers or submitting a project brief
+            </p>
             <div className="flex gap-3 justify-center">
               <Link to="/vendors">
                 <Button variant="editorial" size="lg">Browse Manufacturers</Button>
@@ -47,43 +64,67 @@ export default function Workbench() {
             </div>
           </div>
         ) : (
-          <div className="flex flex-col divide-y divide-foreground/10 border-t border-foreground/10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {filtered.map((thread) => {
               const stageIndex = STAGES.findIndex(s => s.key === thread.stage);
+              const stageLabel = STAGES[stageIndex]?.label;
               return (
                 <Link
                   key={thread.id}
                   to={`/workbench/${thread.id}`}
-                  className="py-5 flex flex-col md:flex-row md:items-center gap-4 group hover:bg-muted/30 -mx-4 px-4 transition-colors cursor-pointer"
+                  className="group border border-foreground/10 hover:border-foreground/40 bg-background hover:bg-muted/20 transition-all p-6 flex flex-col gap-5 relative"
                 >
-                  <div className="flex items-center gap-3 flex-1 min-w-0">
-                    {thread.priority && (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <AlertCircle className="h-3.5 w-3.5 text-signal flex-shrink-0" />
-                        </TooltipTrigger>
-                        <TooltipContent side="top">
-                          <span className="font-mono text-[10px] uppercase tracking-wider">Action required</span>
-                        </TooltipContent>
-                      </Tooltip>
-                    )}
-                    <div className="min-w-0">
-                      <h3 className="font-body text-sm font-600">{thread.product}</h3>
-                      <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">{thread.vendor}</p>
-                    </div>
+                  {/* Priority badge */}
+                  {thread.priority && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span className="absolute top-4 right-4 flex items-center gap-1.5 px-2 py-1 bg-signal/10 border border-signal/20 cursor-default">
+                          <AlertCircle className="h-3 w-3 text-signal" />
+                          <span className="font-mono text-[9px] uppercase tracking-wider text-signal font-600">Action needed</span>
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent side="left">
+                        <span className="font-mono text-[10px] uppercase tracking-wider">Action required — review pending items</span>
+                      </TooltipContent>
+                    </Tooltip>
+                  )}
+
+                  {/* Title block */}
+                  <div>
+                    <h3 className="font-display text-lg md:text-xl font-700 uppercase tracking-tight leading-tight pr-32">
+                      {thread.product}
+                    </h3>
+                    <p className="font-body text-sm text-muted-foreground mt-1">{thread.vendor}</p>
                   </div>
-                  <div className="flex items-center gap-1 flex-shrink-0">
+
+                  {/* Progress bar */}
+                  <div className="flex items-center gap-0.5 w-full">
                     {STAGES.map((s, i) => (
-                      <div key={s.key} className={`h-1 w-4 ${i <= stageIndex ? "bg-foreground" : "bg-foreground/10"}`} />
+                      <div
+                        key={s.key}
+                        className={`h-1 flex-1 transition-colors ${
+                          i <= stageIndex ? "bg-foreground" : "bg-foreground/8"
+                        }`}
+                      />
                     ))}
                   </div>
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    <span className="font-mono text-[10px] px-2 py-0.5 bg-foreground text-background uppercase">{thread.region}</span>
-                    <span className="font-mono text-[10px] px-2 py-0.5 border border-foreground/15 uppercase tracking-wider text-muted-foreground">
-                      {STAGES[stageIndex]?.label}
-                    </span>
-                    <span className="font-mono text-[10px] text-muted-foreground/40">{thread.updated}</span>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground/30 group-hover:text-foreground transition-colors" />
+
+                  {/* Meta row */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <span className="flex items-center gap-1">
+                        <MapPin className="h-3 w-3 text-muted-foreground/50" />
+                        <span className="font-mono text-[10px] uppercase font-600">{thread.region}</span>
+                      </span>
+                      <span className="font-mono text-[10px] px-2 py-0.5 border border-foreground/15 uppercase tracking-wider text-muted-foreground">
+                        {stageLabel}
+                      </span>
+                      <span className="flex items-center gap-1 text-muted-foreground/40">
+                        <Clock className="h-3 w-3" />
+                        <span className="font-mono text-[10px]">{thread.updated}</span>
+                      </span>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground/20 group-hover:text-foreground transition-colors" />
                   </div>
                 </Link>
               );
@@ -92,11 +133,11 @@ export default function Workbench() {
         )}
       </div>
 
-      {/* Pipeline overview — moved below projects */}
-      <section className="border-t border-foreground/10 bg-muted/30">
-        <div className="container py-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Where your projects stand</h2>
+      {/* Pipeline overview — reference section at bottom */}
+      <section className="border-t border-foreground/10 bg-muted/20">
+        <div className="container py-8">
+          <div className="flex items-center justify-between mb-5">
+            <h2 className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Pipeline stages</h2>
             <Link to="/how-it-works" className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors flex items-center gap-1">
               How does this work? <ArrowRight className="h-3 w-3" />
             </Link>
@@ -125,7 +166,7 @@ export default function Workbench() {
             })}
           </div>
           {activeStage && (
-            <p className="font-body text-xs text-muted-foreground mt-3">
+            <p className="font-body text-xs text-muted-foreground mt-3 max-w-2xl">
               {STAGES.find(s => s.key === activeStage)?.description}
             </p>
           )}
