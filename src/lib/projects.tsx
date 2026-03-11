@@ -81,6 +81,29 @@ const SEED_THREADS: ProjectThread[] = [
       { stage: "brief", date: "Mar 5", note: "Brief submitted — awaiting vendor review" },
     ],
   },
+  {
+    id: 5, vendor: "Istanbul Knits Co.", product: "Merino Wool Cardigan", stage: "shipped", region: "TR", updated: "6h ago", priority: true,
+    category: "Knitwear", labelName: "My Brand", quantity: "250", tier: "Premium", matchScore: 91,
+    timeline: [
+      { stage: "brief", date: "Jan 5", note: "Brief submitted for merino wool cardigan program" },
+      { stage: "matched", date: "Jan 8", note: "Istanbul Knits matched — 91% match, knitwear specialist" },
+      { stage: "sample", date: "Jan 22", note: "Samples approved on first round — excellent construction" },
+      { stage: "production", date: "Feb 10", note: "Bulk production completed — 250 units, 2 colorways" },
+      { stage: "shipped", date: "Mar 1", note: "Final QC passed. Shipped via air freight — tracking: TK-88291" },
+    ],
+  },
+  {
+    id: 6, vendor: "Kyoto Textile Lab", product: "SS25 Linen Camp Shirt", stage: "complete", region: "JP", updated: "5d ago", priority: false,
+    category: "Shirting", labelName: "My Brand", quantity: "400", tier: "Luxury", matchScore: 96,
+    timeline: [
+      { stage: "brief", date: "Nov 15", note: "Brief submitted for linen camp collar shirt" },
+      { stage: "matched", date: "Nov 18", note: "Kyoto Textile Lab matched — 96% match, premium Japanese linen" },
+      { stage: "sample", date: "Dec 5", note: "Samples received and approved after minor collar adjustment" },
+      { stage: "production", date: "Jan 10", note: "Production completed — 400 units across 4 colorways" },
+      { stage: "shipped", date: "Feb 1", note: "Shipped from Osaka port, cleared customs Feb 12" },
+      { stage: "complete", date: "Feb 15", note: "Delivery confirmed — all 400 units received in perfect condition" },
+    ],
+  },
 ];
 
 const SEED_CONVERSATIONS: Conversation[] = [
