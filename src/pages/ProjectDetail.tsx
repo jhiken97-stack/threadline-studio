@@ -393,7 +393,7 @@ export default function ProjectDetail() {
             const isCurrent = stageIdx === currentStageIndex;
             const isFuture = stageIdx > currentStageIndex;
             const expanded = isExpanded(stage.key);
-            const subSteps = getSubStepStatuses(stage.key, project.stage, stageIdx, currentStageIndex);
+            const subSteps = getSubStepStatuses(stage.key, project.stage, stageIdx, currentStageIndex, projectInvoices);
             
             const timelineEntries = project.timeline.filter(t => t.stage === stage.key);
 
