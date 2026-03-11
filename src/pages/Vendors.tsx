@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Lock, ArrowUpRight, ArrowRight, Grid, List, Bookmark, BookmarkCheck, GitCompare } from "lucide-react";
+import { Lock, ArrowUpRight, ArrowRight, Grid, List, Bookmark, BookmarkCheck, GitCompare, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { VENDORS, useVendorActions, type Vendor } from "@/lib/vendors";
 
