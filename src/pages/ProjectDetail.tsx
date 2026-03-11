@@ -338,7 +338,7 @@ export default function ProjectDetail() {
             const isFuture = stageIdx > currentStageIndex;
             const expanded = isExpanded(stage.key);
             const subSteps = getSubStepStatuses(stage.key, project.stage, stageIdx, currentStageIndex);
-            const _unused = stageIdx; // invoices now matched per sub-step
+            
             const timelineEntries = project.timeline.filter(t => t.stage === stage.key);
 
             return (
