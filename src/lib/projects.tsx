@@ -48,7 +48,7 @@ export interface Invoice {
 // Seed data
 const SEED_THREADS: ProjectThread[] = [
   {
-    id: 1, vendor: "Ateliê Nova", product: "FW26 Hoodie Program", stage: "sample", region: "PT", updated: "2h ago", priority: true,
+    id: 1, vendor: "Ateliê Nova", product: "FW26 Hoodie Program", stage: "sample", region: "PT", updated: "2h ago", priority: true, // Samples delivered — needs brand approval
     category: "Cut & Sew", labelName: "My Brand", quantity: "200-300", tier: "Premium", matchScore: 94,
     timeline: [
       { stage: "brief", date: "Feb 12", note: "Brief submitted with hoodie specs and colorways" },
@@ -67,7 +67,7 @@ const SEED_THREADS: ProjectThread[] = [
     ],
   },
   {
-    id: 3, vendor: "Brooklyn Garment Dist.", product: "Selvedge Denim Jean", stage: "matched", region: "US", updated: "1d ago", priority: true,
+    id: 3, vendor: "Brooklyn Garment Dist.", product: "Selvedge Denim Jean", stage: "matched", region: "US", updated: "1d ago", priority: true, // Vendor responded — brand needs to confirm terms
     category: "Denim", labelName: "My Brand", quantity: "300", tier: "Premium", matchScore: 82,
     timeline: [
       { stage: "brief", date: "Mar 1", note: "Brief submitted for selvedge denim program" },
@@ -82,7 +82,7 @@ const SEED_THREADS: ProjectThread[] = [
     ],
   },
   {
-    id: 5, vendor: "Istanbul Knits Co.", product: "Merino Wool Cardigan", stage: "shipped", region: "TR", updated: "6h ago", priority: true,
+    id: 5, vendor: "Istanbul Knits Co.", product: "Merino Wool Cardigan", stage: "shipped", region: "TR", updated: "6h ago", priority: false, // In transit — no action needed yet
     category: "Knitwear", labelName: "My Brand", quantity: "250", tier: "Premium", matchScore: 91,
     timeline: [
       { stage: "brief", date: "Jan 5", note: "Brief submitted for merino wool cardigan program" },
