@@ -164,7 +164,7 @@ export default function ProjectDetail() {
 
             // Invoice item
             const inv = item.data as Invoice;
-            const fee = inv.amount * 0.01;
+            const fee = inv.amount * 0.025;
             const totalWithFee = inv.amount + fee;
             const isPaying = payingId === inv.id;
             const justPaid = paidId === inv.id;
