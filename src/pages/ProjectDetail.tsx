@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, MessageSquare, Check, Clock, Package, Truck, FileText, AlertCircle, CreditCard, ShieldCheck, ChevronDown, ChevronRight, Circle } from "lucide-react";
+import { ArrowLeft, MessageSquare, Check, Clock, Package, Truck, FileText, AlertCircle, CreditCard, ShieldCheck, ChevronDown, ChevronRight, Circle, X, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useProjects, Invoice } from "@/lib/projects";
 import { BuyerProtectionBadge } from "@/components/BuyerProtectionBadge";
