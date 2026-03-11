@@ -124,59 +124,6 @@ export default function BuyerProtection() {
         </div>
       </section>
 
-      {/* On-platform vs Off-platform comparison */}
-      <section className="border-b border-foreground/10">
-        <div className="container py-12">
-          <h2 className="font-display text-sm font-700 uppercase tracking-[0.15em] mb-2">Why Stay On-Platform?</h2>
-          <p className="font-body text-sm text-muted-foreground max-w-lg mb-8">
-            Paying through Threadline costs just 1% — and gives you protections you can't get anywhere else.
-          </p>
-          <div className="max-w-xl">
-            <div className="grid grid-cols-3 gap-0 border border-foreground/10">
-              {/* Header */}
-              <div className="p-3 bg-muted/50 border-b border-r border-foreground/10" />
-              <div className="p-3 bg-signal/5 border-b border-r border-foreground/10 text-center">
-                <ShieldCheck className="h-4 w-4 text-signal mx-auto mb-1" />
-                <span className="font-mono text-[10px] uppercase tracking-wider text-signal">On Threadline</span>
-              </div>
-              <div className="p-3 bg-muted/50 border-b border-foreground/10 text-center">
-                <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">Off-platform</span>
-              </div>
-              {/* Rows */}
-              {COMPARISON.map((row, i) => (
-                <>
-                  <div key={`f-${i}`} className="p-3 border-b border-r border-foreground/10">
-                    <span className="font-mono text-[10px] uppercase tracking-wider text-foreground/70">{row.feature}</span>
-                  </div>
-                  <div key={`on-${i}`} className="p-3 border-b border-r border-foreground/10 text-center">
-                    {typeof row.onPlatform === "boolean" ? (
-                      row.onPlatform ? (
-                        <span className="font-mono text-[10px] text-signal">✓</span>
-                      ) : (
-                        <span className="font-mono text-[10px] text-muted-foreground/30">✗</span>
-                      )
-                    ) : (
-                      <span className="font-mono text-[10px] text-signal font-600">{row.onPlatform}</span>
-                    )}
-                  </div>
-                  <div key={`off-${i}`} className="p-3 border-b border-foreground/10 text-center">
-                    {typeof row.offPlatform === "boolean" ? (
-                      row.offPlatform ? (
-                        <span className="font-mono text-[10px] text-signal">✓</span>
-                      ) : (
-                        <span className="font-mono text-[10px] text-muted-foreground/30">✗</span>
-                      )
-                    ) : (
-                      <span className="font-mono text-[10px] text-muted-foreground">{row.offPlatform}</span>
-                    )}
-                  </div>
-                </>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* CTA */}
       <section className="bg-foreground text-background">
         <div className="container py-14">

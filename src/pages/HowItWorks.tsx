@@ -116,7 +116,7 @@ export default function HowItWorks() {
       <section className="border-b border-foreground/10">
         <div className="container py-12">
           <h2 className="font-display text-sm font-700 uppercase tracking-[0.15em] mb-2">Simple, Transparent Pricing</h2>
-          <p className="font-body text-sm text-muted-foreground max-w-lg mb-8">
+          <p className="font-body text-sm text-muted-foreground max-w-2xl mb-8">
             No subscriptions. No hidden fees. Threadline only makes money when your project moves forward.
           </p>
           <div className="grid sm:grid-cols-3 gap-px bg-foreground/10 max-w-3xl">
