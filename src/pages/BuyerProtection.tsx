@@ -67,7 +67,7 @@ export default function BuyerProtection() {
             <br />
             <span className="text-muted-foreground">until you're satisfied.</span>
           </h1>
-          <p className="font-body text-sm text-muted-foreground max-w-lg">
+           <p className="font-body text-sm text-muted-foreground max-w-2xl">
             Every transaction on Threadline is protected. We hold your payment in escrow, guarantee quality against approved samples, and mediate any disputes — so you can focus on building your brand, not worrying about risk.
           </p>
         </div>
