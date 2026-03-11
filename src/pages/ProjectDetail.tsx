@@ -297,19 +297,9 @@ export default function ProjectDetail() {
     }, 2000);
   };
 
-  // Match invoices to specific sub-step labels
+  // Match invoices to specific sub-step labels (reuses the top-level helper)
   const getSubStepInvoice = (stageKey: string, subLabel: string): Invoice | undefined => {
-    const label = subLabel.toLowerCase();
-    return projectInvoices.find(inv => {
-      const desc = inv.description.toLowerCase();
-      if (label.includes("samples paid")) return desc.includes("sampl");
-      if (label.includes("production deposit")) return desc.includes("deposit");
-      if (label.includes("production balance")) {
-        // Match "balance" or any production invoice that isn't a deposit (covers "full" payments too)
-        return desc.includes("balance") || (desc.includes("production") && !desc.includes("deposit"));
-      }
-      return false;
-    });
+    return findInvoiceForStep(stageKey, subLabel, projectInvoices);
   };
 
   return (
