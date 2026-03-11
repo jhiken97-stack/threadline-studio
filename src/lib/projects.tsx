@@ -111,6 +111,8 @@ const SEED_CONVERSATIONS: Conversation[] = [
   { id: 2, vendor: "Brooklyn Garment Dist.", region: "US", project: "Selvedge Denim Jean", lastMessage: "Updated pricing for 300-unit run attached.", time: "5h ago", unread: true, projectId: 3 },
   { id: 3, vendor: "Shenzhen Textile Co.", region: "CN", project: "Heavy Tee Blanks", lastMessage: "Fabric swatch options ready for review.", time: "1d ago", unread: false, projectId: 2 },
   { id: 4, vendor: "Porto Fleece Works", region: "PT", project: "Organic Fleece Crew", lastMessage: "We can accommodate your timeline. Let's discuss specs.", time: "2d ago", unread: false, projectId: 4 },
+  { id: 5, vendor: "Istanbul Knits Co.", region: "TR", project: "Merino Wool Cardigan", lastMessage: "Shipment is in transit — expected delivery in 3 days.", time: "6h ago", unread: true, projectId: 5 },
+  { id: 6, vendor: "Kyoto Textile Lab", region: "JP", project: "SS25 Linen Camp Shirt", lastMessage: "Thank you! Looking forward to your next order.", time: "5d ago", unread: false, projectId: 6 },
 ];
 
 const SEED_MESSAGES: Record<number, ConversationMessage[]> = {
