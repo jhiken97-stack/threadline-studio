@@ -231,7 +231,10 @@ export default function ProjectDetail() {
       const desc = inv.description.toLowerCase();
       if (label.includes("samples paid")) return desc.includes("sampl");
       if (label.includes("production deposit")) return desc.includes("deposit");
-      if (label.includes("production balance")) return desc.includes("balance") || (desc.includes("production") && !desc.includes("deposit") && inv.status === "pending");
+      if (label.includes("production balance")) {
+        // Match "balance" or any production invoice that isn't a deposit (covers "full" payments too)
+        return desc.includes("balance") || (desc.includes("production") && !desc.includes("deposit"));
+      }
       return false;
     });
   };
