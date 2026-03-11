@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, MessageSquare, Check, Clock, Package, Truck, FileText, AlertCircle, CreditCard } from "lucide-react";
+import { ArrowLeft, MessageSquare, Check, Clock, Package, Truck, FileText, AlertCircle, CreditCard, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useProjects, Invoice } from "@/lib/projects";
+import { BuyerProtectionBadge } from "@/components/BuyerProtectionBadge";
 
 const STAGES = [
   { key: "brief", label: "Brief Sent", icon: FileText, help: "Your project details have been shared with the manufacturer. They'll review and respond soon." },
@@ -191,8 +192,12 @@ export default function ProjectDetail() {
                         </div>
                         <div className="min-w-0">
                           <span className="font-body text-sm font-600 block">{inv.description}</span>
-                          <span className="font-mono text-[9px] text-muted-foreground">
-                            {inv.status === "paid" ? `Paid ${inv.paidDate}` : "Awaiting payment"}
+                          <span className="font-mono text-[9px] text-muted-foreground flex items-center gap-1.5">
+                            {inv.status === "paid" ? `Paid ${inv.paidDate}` : (
+                              <>
+                                <ShieldCheck className="h-3 w-3 text-signal" /> Held in escrow
+                              </>
+                            )}
                           </span>
                         </div>
                       </div>
@@ -236,12 +241,15 @@ export default function ProjectDetail() {
           })}
         </div>
 
-        {/* Fee note */}
+        {/* Buyer Protection + Fee note */}
         {projectInvoices.length > 0 && (
-          <div className="p-4 border border-foreground/10 bg-muted/30 mt-2 mb-6">
-            <p className="font-mono text-[9px] text-muted-foreground leading-relaxed">
-              <span className="text-signal font-600">Platform fee:</span> 1% is added to your invoice total at checkout. 1% is deducted from the vendor's payout. No hidden charges.
-            </p>
+          <div className="space-y-2 mt-2 mb-6">
+            <BuyerProtectionBadge variant="block" />
+            <div className="p-4 border border-foreground/10 bg-muted/30">
+              <p className="font-mono text-[9px] text-muted-foreground leading-relaxed">
+                <span className="text-signal font-600">Platform fee:</span> 1% is added to your invoice total at checkout. 1% is deducted from the vendor's payout. No hidden charges.
+              </p>
+            </div>
           </div>
         )}
 

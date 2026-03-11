@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowUpRight, Search, FileText, Users, Package, Factory, Truck } from "lucide-react";
+import { ArrowUpRight, Search, FileText, Users, Package, Factory, Truck, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const STEPS = [
@@ -85,6 +85,31 @@ export default function HowItWorks() {
             </div>
           );
         })}
+      </section>
+
+      {/* BUYER PROTECTION */}
+      <section className="border-b border-foreground/10 bg-signal/5">
+        <div className="container py-12">
+          <div className="flex items-start gap-4">
+            <ShieldCheck className="h-6 w-6 text-signal flex-shrink-0 mt-1" />
+            <div>
+              <h2 className="font-display text-sm font-700 uppercase tracking-[0.15em] mb-2">Buyer Protection on Every Project</h2>
+              <p className="font-body text-sm text-muted-foreground max-w-lg mb-4">
+                Every payment you make on Threadline is held in escrow until you approve. If the delivered product doesn't match your approved samples, we guarantee a resolution — including refunds and redos.
+              </p>
+              <div className="flex flex-wrap gap-6 mb-4">
+                {["Payment held until you approve", "Quality guaranteed vs. samples", "Dispute resolution in 7 days"].map((item) => (
+                  <span key={item} className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-wider text-foreground/70">
+                    <span className="w-1.5 h-1.5 bg-signal" /> {item}
+                  </span>
+                ))}
+              </div>
+              <Link to="/buyer-protection" className="font-mono text-[10px] text-signal uppercase tracking-wider hover:text-signal/80 transition-colors flex items-center gap-1">
+                Full protection details <ArrowUpRight className="h-3 w-3" />
+              </Link>
+            </div>
+          </div>
+        </div>
       </section>
 
       {/* PRICING TRANSPARENCY */}
