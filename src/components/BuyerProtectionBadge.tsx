@@ -26,7 +26,7 @@ export function BuyerProtectionBadge({ variant = "inline", className = "" }: Buy
           <div>
             <h4 className="font-body text-sm font-600 mb-0.5">Buyer Protection Included</h4>
             <p className="font-mono text-[10px] text-muted-foreground leading-relaxed">
-              Your payment is held in escrow until you approve. Quality guarantee &amp; dispute resolution included.
+              Your payment is held in escrow until confirmed delivery. Quality guarantee &amp; dispute resolution included.
             </p>
           </div>
         </div>

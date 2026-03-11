@@ -6,7 +6,7 @@ const PROTECTIONS = [
   {
     icon: Lock,
     title: "Payment Escrow",
-    description: "When you pay an invoice on Threadline, your funds are held securely until you confirm you've received what was agreed. The manufacturer doesn't get paid until you approve.",
+    description: "When you pay an invoice on Threadline, your funds are held securely until you confirm delivery. The manufacturer doesn't get paid until you've received your order.",
     details: [
       "Funds held from the moment you pay",
       "Released only after you confirm delivery & quality",
@@ -59,7 +59,7 @@ export default function BuyerProtection() {
             <span className="text-muted-foreground">until you're satisfied.</span>
           </h1>
            <p className="font-body text-sm text-muted-foreground max-w-2xl">
-            Every transaction on Threadline is protected. We hold your payment in escrow, guarantee quality against approved samples, and mediate any disputes — so you can focus on building your brand, not worrying about risk.
+            Every transaction on Threadline is protected. We hold your payment in escrow until confirmed delivery, guarantee quality against approved samples, and mediate any disputes — so you can focus on building your brand, not worrying about risk.
           </p>
         </div>
       </section>
