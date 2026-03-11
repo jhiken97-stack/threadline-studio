@@ -109,7 +109,7 @@ export default function BuyerProtection() {
       <section className="border-b border-foreground/10 bg-muted/30">
         <div className="container py-12">
           <h2 className="font-display text-sm font-700 uppercase tracking-[0.15em] mb-2">How Escrow Works</h2>
-          <p className="font-body text-sm text-muted-foreground max-w-lg mb-8">
+          <p className="font-body text-sm text-muted-foreground max-w-2xl mb-8">
             Your payment follows a simple, secure flow. You stay in control at every step.
           </p>
           <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-px bg-foreground/10">
