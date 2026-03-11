@@ -220,24 +220,30 @@ function SubStepRow({ sub, invoice, payingId, paidId, onPay }: {
                 </span>
               </div>
               {invoice.status === "pending" ? (
-                <Button
-                  variant="signal"
-                  size="sm"
-                  disabled={isPaying}
-                  onClick={(e) => { e.stopPropagation(); onPay(invoice); }}
-                  className="min-w-[110px]"
-                >
-                  {isPaying ? (
-                    <span className="flex items-center gap-1.5">
-                      <span className="w-3 h-3 border-2 border-background/30 border-t-background rounded-full animate-spin" />
-                      Processing…
-                    </span>
-                  ) : (
-                    <>
-                      <CreditCard className="h-3.5 w-3.5 mr-1.5" /> Pay
-                    </>
-                  )}
-                </Button>
+                sub.status === "upcoming" ? (
+                  <span className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground/50 min-w-[110px] text-center">
+                    Locked — complete prior steps
+                  </span>
+                ) : (
+                  <Button
+                    variant="signal"
+                    size="sm"
+                    disabled={isPaying}
+                    onClick={(e) => { e.stopPropagation(); onPay(invoice); }}
+                    className="min-w-[110px]"
+                  >
+                    {isPaying ? (
+                      <span className="flex items-center gap-1.5">
+                        <span className="w-3 h-3 border-2 border-background/30 border-t-background rounded-full animate-spin" />
+                        Processing…
+                      </span>
+                    ) : (
+                      <>
+                        <CreditCard className="h-3.5 w-3.5 mr-1.5" /> Pay
+                      </>
+                    )}
+                  </Button>
+                )
               ) : (
                 <span className="font-mono text-[10px] uppercase tracking-widest text-foreground/50 min-w-[80px] text-center">
                   {justPaid ? "✓ Sent" : "Paid"}
