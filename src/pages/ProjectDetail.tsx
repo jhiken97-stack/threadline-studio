@@ -180,7 +180,7 @@ function SubStepRow({ sub, invoice, payingId, paidId, onPay }: {
             In progress
           </span>
         )}
-        {hasInvoice && (
+        {showInvoice && (
           <span className={`font-mono text-[9px] px-1.5 py-0.5 uppercase tracking-wider ${
             invoice.status === "paid" ? "bg-foreground/5 text-muted-foreground" : "bg-signal/10 text-signal"
           }`}>
