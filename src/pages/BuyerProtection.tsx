@@ -6,7 +6,7 @@ const PROTECTIONS = [
   {
     icon: Lock,
     title: "Payment Escrow",
-    description: "When you pay an invoice on Threadline, your funds are held securely until you confirm you've received what was agreed. The manufacturer doesn't get paid until you approve.",
+    description: "When you pay an invoice on Threadline, your funds are held securely until you confirm delivery. The manufacturer doesn't get paid until you've received your order.",
     details: [
       "Funds held from the moment you pay",
       "Released only after you confirm delivery & quality",
