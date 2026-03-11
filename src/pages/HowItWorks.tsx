@@ -121,21 +121,21 @@ export default function HowItWorks() {
           </p>
           <div className="grid sm:grid-cols-3 gap-px bg-foreground/10 max-w-3xl">
             <div className="bg-background p-6">
-              <span className="font-display text-3xl font-800 text-signal block mb-1">1%</span>
+              <span className="font-display text-3xl font-800 text-signal block mb-1">2.5%</span>
               <h3 className="font-body text-sm font-600 mb-1">Brand Fee</h3>
               <p className="font-mono text-[10px] text-muted-foreground leading-relaxed">
-                Added to your invoice total at checkout. On a $5,000 order, that's $50.
+                Added to your invoice total at checkout. On a $5,000 order, that's $125.
               </p>
             </div>
             <div className="bg-background p-6">
-              <span className="font-display text-3xl font-800 text-signal block mb-1">1%</span>
+              <span className="font-display text-3xl font-800 text-signal block mb-1">2.5%</span>
               <h3 className="font-body text-sm font-600 mb-1">Vendor Fee</h3>
               <p className="font-mono text-[10px] text-muted-foreground leading-relaxed">
-                Deducted from the vendor's payout. Manufacturers keep 99% of every payment.
+                Deducted from the vendor's payout. Manufacturers keep 97.5% of every payment.
               </p>
             </div>
             <div className="bg-background p-6">
-              <span className="font-display text-3xl font-800 text-foreground block mb-1">2%</span>
+              <span className="font-display text-3xl font-800 text-foreground block mb-1">5%</span>
               <h3 className="font-body text-sm font-600 mb-1">Total Platform Fee</h3>
               <p className="font-mono text-[10px] text-muted-foreground leading-relaxed">
                 That's it. No markups on manufacturing costs, no monthly charges.

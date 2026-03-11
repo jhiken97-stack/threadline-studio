@@ -296,7 +296,7 @@ export default function Index() {
             {[
               { icon: ShieldCheck, title: "Buyer Protection", desc: "Every payment is held in escrow until you approve. Quality guaranteed against approved samples.", link: "/buyer-protection" },
               { icon: MessageSquare, title: "Communication", desc: "Message manufacturers directly — all conversations saved in one thread" },
-              { icon: CreditCard, title: "Payments & Invoices", desc: "Pay securely through the platform with transparent invoicing — just a 1% fee on each side" },
+              { icon: CreditCard, title: "Payments & Invoices", desc: "Pay securely through the platform with transparent invoicing — just a 2.5% fee on each side" },
               { icon: ClipboardList, title: "Order Updates", desc: "Track production milestones from sampling to delivery in real time" },
             ].map((item) => {
               const Icon = item.icon;
