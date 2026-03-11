@@ -97,16 +97,35 @@ export default function Workbench() {
                     <p className="font-body text-sm text-muted-foreground mt-1">{thread.vendor}</p>
                   </div>
 
-                  {/* Progress bar */}
-                  <div className="flex items-center gap-0.5 w-full">
-                    {STAGES.map((s, i) => (
-                      <div
-                        key={s.key}
-                        className={`h-1 flex-1 transition-colors ${
-                          i <= stageIndex ? "bg-foreground" : "bg-foreground/8"
-                        }`}
-                      />
-                    ))}
+                  {/* Stage stepper */}
+                  <div className="flex items-center gap-0 w-full">
+                    {STAGES.map((s, i) => {
+                      const isCompleted = i < stageIndex;
+                      const isCurrent = i === stageIndex;
+                      const isFuture = i > stageIndex;
+                      return (
+                        <div key={s.key} className="flex-1 flex flex-col items-center gap-1.5 relative">
+                          {/* Connector line */}
+                          {i > 0 && (
+                            <div className={`absolute top-[7px] -left-1/2 w-full h-px ${isFuture ? "bg-foreground/10" : "bg-foreground"}`} />
+                          )}
+                          {/* Dot */}
+                          <div className={`relative z-10 rounded-full transition-all ${
+                            isCurrent
+                              ? "h-3.5 w-3.5 bg-foreground ring-4 ring-foreground/10"
+                              : isCompleted
+                                ? "h-2.5 w-2.5 bg-foreground"
+                                : "h-2.5 w-2.5 bg-foreground/15"
+                          }`} />
+                          {/* Label */}
+                          <span className={`font-mono text-[8px] uppercase tracking-wider leading-none text-center ${
+                            isCurrent ? "text-foreground font-700" : isCompleted ? "text-muted-foreground" : "text-muted-foreground/40"
+                          }`}>
+                            {s.label}
+                          </span>
+                        </div>
+                      );
+                    })}
                   </div>
 
                   {/* Meta row */}
