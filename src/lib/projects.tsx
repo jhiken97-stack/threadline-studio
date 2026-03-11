@@ -155,6 +155,10 @@ const SEED_INVOICES: Invoice[] = [
   { id: 3, projectId: 2, vendor: "Shenzhen Textile Co.", description: "Production balance — Heavy Tee Blanks (50%)", amount: 3750, status: "pending", date: "Mar 8" },
   { id: 4, projectId: 1, vendor: "Ateliê Nova", description: "Production deposit — FW26 Hoodie Program", amount: 4200, status: "pending", date: "Mar 7" },
   { id: 5, projectId: 3, vendor: "Brooklyn Garment Dist.", description: "Sampling fee — Selvedge Denim Jean", amount: 600, status: "pending", date: "Mar 5" },
+  { id: 6, projectId: 5, vendor: "Istanbul Knits Co.", description: "Sampling fee — Merino Wool Cardigan", amount: 350, status: "paid", date: "Jan 22", paidDate: "Jan 23" },
+  { id: 7, projectId: 5, vendor: "Istanbul Knits Co.", description: "Production — Merino Wool Cardigan (full)", amount: 8500, status: "paid", date: "Feb 10", paidDate: "Feb 11" },
+  { id: 8, projectId: 6, vendor: "Kyoto Textile Lab", description: "Sampling fee — Linen Camp Shirt", amount: 500, status: "paid", date: "Dec 5", paidDate: "Dec 6" },
+  { id: 9, projectId: 6, vendor: "Kyoto Textile Lab", description: "Production — SS25 Linen Camp Shirt (full)", amount: 12000, status: "paid", date: "Jan 10", paidDate: "Jan 11" },
 ];
 
 interface BriefData {
