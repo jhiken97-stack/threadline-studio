@@ -47,24 +47,97 @@ const SUB_STEPS: Record<string, { label: string; steps: string[] }> = {
   },
 };
 
-function getSubStepStatuses(stageKey: string, currentStageKey: string, stageIndex: number, currentStageIndex: number): SubStep[] {
+function isPaymentStep(label: string): boolean {
+  const l = label.toLowerCase();
+  return l.includes("paid") || l.includes("payment") || l.includes("deposit") || l.includes("balance");
+}
+
+function getSubStepStatuses(
+  stageKey: string,
+  currentStageKey: string,
+  stageIndex: number,
+  currentStageIndex: number,
+  projectInvoices: Invoice[]
+): SubStep[] {
   const substeps = SUB_STEPS[stageKey];
   if (!substeps) return [];
 
-  return substeps.steps.map((label, i) => {
-    if (stageIndex < currentStageIndex) {
-      // Completed stage — all sub-steps done
-      return { label, status: "done" as const };
-    } else if (stageIndex === currentStageIndex) {
-      // Current stage — simulate partial progress based on timeline entries
-      // Mark roughly half as done, one as current, rest upcoming
-      const progressPoint = Math.max(0, Math.floor(substeps.steps.length * 0.4));
-      if (i < progressPoint) return { label, status: "done" as const };
-      if (i === progressPoint) return { label, status: "current" as const };
-      return { label, status: "upcoming" as const };
+  if (stageIndex < currentStageIndex) {
+    // Completed stage — all sub-steps done
+    return substeps.steps.map((label) => ({ label, status: "done" as const }));
+  }
+
+  if (stageIndex > currentStageIndex) {
+    // Future stage — all upcoming
+    return substeps.steps.map((label) => ({ label, status: "upcoming" as const }));
+  }
+
+  // Current stage — determine progress sequentially
+  // A step is "done" only if all prior steps are also "done"
+  // Payment steps are "done" only if their linked invoice is paid
+  // Non-payment steps use a heuristic based on timeline progress, but respect sequential order
+  const totalSteps = substeps.steps.length;
+  const baseProgress = Math.max(0, Math.floor(totalSteps * 0.4));
+
+  const results: SubStep[] = [];
+  let blocked = false; // once a step is not done, all subsequent are blocked
+
+  for (let i = 0; i < totalSteps; i++) {
+    const label = substeps.steps[i];
+
+    if (blocked) {
+      results.push({ label, status: "upcoming" });
+      continue;
     }
-    // Future stage
-    return { label, status: "upcoming" as const };
+
+    if (isPaymentStep(label)) {
+      // Check if the matching invoice is paid
+      const matchingInvoice = findInvoiceForStep(stageKey, label, projectInvoices);
+      if (matchingInvoice && matchingInvoice.status === "paid") {
+        results.push({ label, status: "done" });
+      } else if (matchingInvoice) {
+        // Invoice exists but not paid — this is the current step
+        results.push({ label, status: "current" });
+        blocked = true;
+      } else {
+        // No invoice yet — use base progress heuristic
+        if (i < baseProgress) {
+          results.push({ label, status: "done" });
+        } else if (i === baseProgress) {
+          results.push({ label, status: "current" });
+          blocked = true;
+        } else {
+          results.push({ label, status: "upcoming" });
+          blocked = true;
+        }
+      }
+    } else {
+      // Non-payment step — use base progress heuristic
+      if (i < baseProgress) {
+        results.push({ label, status: "done" });
+      } else if (i === baseProgress) {
+        results.push({ label, status: "current" });
+        blocked = true;
+      } else {
+        results.push({ label, status: "upcoming" });
+        blocked = true;
+      }
+    }
+  }
+
+  return results;
+}
+
+function findInvoiceForStep(stageKey: string, subLabel: string, projectInvoices: Invoice[]): Invoice | undefined {
+  const label = subLabel.toLowerCase();
+  return projectInvoices.find(inv => {
+    const desc = inv.description.toLowerCase();
+    if (label.includes("samples paid")) return desc.includes("sampl");
+    if (label.includes("production deposit")) return desc.includes("deposit");
+    if (label.includes("production balance")) {
+      return desc.includes("balance") || (desc.includes("production") && !desc.includes("deposit"));
+    }
+    return false;
   });
 }
 
@@ -147,24 +220,30 @@ function SubStepRow({ sub, invoice, payingId, paidId, onPay }: {
                 </span>
               </div>
               {invoice.status === "pending" ? (
-                <Button
-                  variant="signal"
-                  size="sm"
-                  disabled={isPaying}
-                  onClick={(e) => { e.stopPropagation(); onPay(invoice); }}
-                  className="min-w-[110px]"
-                >
-                  {isPaying ? (
-                    <span className="flex items-center gap-1.5">
-                      <span className="w-3 h-3 border-2 border-background/30 border-t-background rounded-full animate-spin" />
-                      Processing…
-                    </span>
-                  ) : (
-                    <>
-                      <CreditCard className="h-3.5 w-3.5 mr-1.5" /> Pay
-                    </>
-                  )}
-                </Button>
+                sub.status === "upcoming" ? (
+                  <span className="font-mono text-[9px] uppercase tracking-wider text-muted-foreground/50 min-w-[110px] text-center">
+                    Locked — complete prior steps
+                  </span>
+                ) : (
+                  <Button
+                    variant="signal"
+                    size="sm"
+                    disabled={isPaying}
+                    onClick={(e) => { e.stopPropagation(); onPay(invoice); }}
+                    className="min-w-[110px]"
+                  >
+                    {isPaying ? (
+                      <span className="flex items-center gap-1.5">
+                        <span className="w-3 h-3 border-2 border-background/30 border-t-background rounded-full animate-spin" />
+                        Processing…
+                      </span>
+                    ) : (
+                      <>
+                        <CreditCard className="h-3.5 w-3.5 mr-1.5" /> Pay
+                      </>
+                    )}
+                  </Button>
+                )
               ) : (
                 <span className="font-mono text-[10px] uppercase tracking-widest text-foreground/50 min-w-[80px] text-center">
                   {justPaid ? "✓ Sent" : "Paid"}
@@ -224,19 +303,9 @@ export default function ProjectDetail() {
     }, 2000);
   };
 
-  // Match invoices to specific sub-step labels
+  // Match invoices to specific sub-step labels (reuses the top-level helper)
   const getSubStepInvoice = (stageKey: string, subLabel: string): Invoice | undefined => {
-    const label = subLabel.toLowerCase();
-    return projectInvoices.find(inv => {
-      const desc = inv.description.toLowerCase();
-      if (label.includes("samples paid")) return desc.includes("sampl");
-      if (label.includes("production deposit")) return desc.includes("deposit");
-      if (label.includes("production balance")) {
-        // Match "balance" or any production invoice that isn't a deposit (covers "full" payments too)
-        return desc.includes("balance") || (desc.includes("production") && !desc.includes("deposit"));
-      }
-      return false;
-    });
+    return findInvoiceForStep(stageKey, subLabel, projectInvoices);
   };
 
   return (
@@ -330,7 +399,7 @@ export default function ProjectDetail() {
             const isCurrent = stageIdx === currentStageIndex;
             const isFuture = stageIdx > currentStageIndex;
             const expanded = isExpanded(stage.key);
-            const subSteps = getSubStepStatuses(stage.key, project.stage, stageIdx, currentStageIndex);
+            const subSteps = getSubStepStatuses(stage.key, project.stage, stageIdx, currentStageIndex, projectInvoices);
             
             const timelineEntries = project.timeline.filter(t => t.stage === stage.key);
 
