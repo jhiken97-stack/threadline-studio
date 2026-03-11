@@ -148,7 +148,8 @@ function SubStepRow({ sub, invoice, payingId, paidId, onPay }: {
   paidId: number | null;
   onPay: (inv: Invoice) => void;
 }) {
-  const hasInvoice = !!invoice;
+  // Only show invoice when this step has been reached (done or current)
+  const showInvoice = !!invoice && sub.status !== "upcoming";
   const isPaying = invoice ? payingId === invoice.id : false;
   const justPaid = invoice ? paidId === invoice.id : false;
 
