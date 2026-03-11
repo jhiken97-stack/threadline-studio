@@ -81,6 +81,29 @@ const SEED_THREADS: ProjectThread[] = [
       { stage: "brief", date: "Mar 5", note: "Brief submitted — awaiting vendor review" },
     ],
   },
+  {
+    id: 5, vendor: "Istanbul Knits Co.", product: "Merino Wool Cardigan", stage: "shipped", region: "TR", updated: "6h ago", priority: true,
+    category: "Knitwear", labelName: "My Brand", quantity: "250", tier: "Premium", matchScore: 91,
+    timeline: [
+      { stage: "brief", date: "Jan 5", note: "Brief submitted for merino wool cardigan program" },
+      { stage: "matched", date: "Jan 8", note: "Istanbul Knits matched — 91% match, knitwear specialist" },
+      { stage: "sample", date: "Jan 22", note: "Samples approved on first round — excellent construction" },
+      { stage: "production", date: "Feb 10", note: "Bulk production completed — 250 units, 2 colorways" },
+      { stage: "shipped", date: "Mar 1", note: "Final QC passed. Shipped via air freight — tracking: TK-88291" },
+    ],
+  },
+  {
+    id: 6, vendor: "Kyoto Textile Lab", product: "SS25 Linen Camp Shirt", stage: "complete", region: "JP", updated: "5d ago", priority: false,
+    category: "Shirting", labelName: "My Brand", quantity: "400", tier: "Luxury", matchScore: 96,
+    timeline: [
+      { stage: "brief", date: "Nov 15", note: "Brief submitted for linen camp collar shirt" },
+      { stage: "matched", date: "Nov 18", note: "Kyoto Textile Lab matched — 96% match, premium Japanese linen" },
+      { stage: "sample", date: "Dec 5", note: "Samples received and approved after minor collar adjustment" },
+      { stage: "production", date: "Jan 10", note: "Production completed — 400 units across 4 colorways" },
+      { stage: "shipped", date: "Feb 1", note: "Shipped from Osaka port, cleared customs Feb 12" },
+      { stage: "complete", date: "Feb 15", note: "Delivery confirmed — all 400 units received in perfect condition" },
+    ],
+  },
 ];
 
 const SEED_CONVERSATIONS: Conversation[] = [
@@ -88,6 +111,8 @@ const SEED_CONVERSATIONS: Conversation[] = [
   { id: 2, vendor: "Brooklyn Garment Dist.", region: "US", project: "Selvedge Denim Jean", lastMessage: "Updated pricing for 300-unit run attached.", time: "5h ago", unread: true, projectId: 3 },
   { id: 3, vendor: "Shenzhen Textile Co.", region: "CN", project: "Heavy Tee Blanks", lastMessage: "Fabric swatch options ready for review.", time: "1d ago", unread: false, projectId: 2 },
   { id: 4, vendor: "Porto Fleece Works", region: "PT", project: "Organic Fleece Crew", lastMessage: "We can accommodate your timeline. Let's discuss specs.", time: "2d ago", unread: false, projectId: 4 },
+  { id: 5, vendor: "Istanbul Knits Co.", region: "TR", project: "Merino Wool Cardigan", lastMessage: "Shipment is in transit — expected delivery in 3 days.", time: "6h ago", unread: true, projectId: 5 },
+  { id: 6, vendor: "Kyoto Textile Lab", region: "JP", project: "SS25 Linen Camp Shirt", lastMessage: "Thank you! Looking forward to your next order.", time: "5d ago", unread: false, projectId: 6 },
 ];
 
 const SEED_MESSAGES: Record<number, ConversationMessage[]> = {
@@ -112,6 +137,16 @@ const SEED_MESSAGES: Record<number, ConversationMessage[]> = {
     { id: 1, sender: "vendor", text: "Thank you for the brief. Your fleece specs align well with our organic line.", time: "3 days ago" },
     { id: 2, sender: "vendor", text: "We can accommodate your timeline. Let's discuss specs.", time: "2 days ago" },
   ],
+  5: [
+    { id: 1, sender: "brand", text: "Production is done — when can we expect shipment?", time: "3 days ago" },
+    { id: 2, sender: "vendor", text: "QC completed. Shipping via air freight tomorrow morning.", time: "2 days ago" },
+    { id: 3, sender: "vendor", text: "Shipment is in transit — expected delivery in 3 days.", time: "6 hours ago" },
+  ],
+  6: [
+    { id: 1, sender: "vendor", text: "All 400 units have shipped from Osaka. Tracking number attached.", time: "1 month ago" },
+    { id: 2, sender: "brand", text: "Everything arrived in great condition. Really happy with the quality!", time: "2 weeks ago" },
+    { id: 3, sender: "vendor", text: "Thank you! Looking forward to your next order.", time: "5 days ago" },
+  ],
 };
 
 const SEED_INVOICES: Invoice[] = [
@@ -120,6 +155,10 @@ const SEED_INVOICES: Invoice[] = [
   { id: 3, projectId: 2, vendor: "Shenzhen Textile Co.", description: "Production balance — Heavy Tee Blanks (50%)", amount: 3750, status: "pending", date: "Mar 8" },
   { id: 4, projectId: 1, vendor: "Ateliê Nova", description: "Production deposit — FW26 Hoodie Program", amount: 4200, status: "pending", date: "Mar 7" },
   { id: 5, projectId: 3, vendor: "Brooklyn Garment Dist.", description: "Sampling fee — Selvedge Denim Jean", amount: 600, status: "pending", date: "Mar 5" },
+  { id: 6, projectId: 5, vendor: "Istanbul Knits Co.", description: "Sampling fee — Merino Wool Cardigan", amount: 350, status: "paid", date: "Jan 22", paidDate: "Jan 23" },
+  { id: 7, projectId: 5, vendor: "Istanbul Knits Co.", description: "Production — Merino Wool Cardigan (full)", amount: 8500, status: "paid", date: "Feb 10", paidDate: "Feb 11" },
+  { id: 8, projectId: 6, vendor: "Kyoto Textile Lab", description: "Sampling fee — Linen Camp Shirt", amount: 500, status: "paid", date: "Dec 5", paidDate: "Dec 6" },
+  { id: 9, projectId: 6, vendor: "Kyoto Textile Lab", description: "Production — SS25 Linen Camp Shirt (full)", amount: 12000, status: "paid", date: "Jan 10", paidDate: "Jan 11" },
 ];
 
 interface BriefData {

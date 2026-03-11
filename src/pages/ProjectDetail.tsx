@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, MessageSquare, Check, Clock, Package, Truck, FileText, AlertCircle, CreditCard, ShieldCheck, ChevronDown, ChevronRight, Circle } from "lucide-react";
+import { ArrowLeft, MessageSquare, Check, Clock, Package, Truck, FileText, AlertCircle, CreditCard, ShieldCheck, ChevronDown, ChevronRight, Circle, X, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useProjects, Invoice } from "@/lib/projects";
 import { BuyerProtectionBadge } from "@/components/BuyerProtectionBadge";
@@ -70,11 +70,14 @@ function getSubStepStatuses(stageKey: string, currentStageKey: string, stageInde
 
 export default function ProjectDetail() {
   const { id } = useParams();
-  const { getProject, conversations, invoices, payInvoice } = useProjects();
+  const { getProject, conversations, messages, invoices, payInvoice, addMessage } = useProjects();
   const project = getProject(id || "");
   const [payingId, setPayingId] = useState<number | null>(null);
   const [paidId, setPaidId] = useState<number | null>(null);
   const [expandedStages, setExpandedStages] = useState<Record<string, boolean>>({});
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatInput, setChatInput] = useState("");
+  const chatEndRef = useRef<HTMLDivElement>(null);
 
   if (!project) {
     return (
@@ -141,11 +144,9 @@ export default function ProjectDetail() {
                 )}
               </div>
             </div>
-            <Link to="/messages">
-              <Button variant="editorial" size="sm">
-                <MessageSquare className="h-3.5 w-3.5 mr-1.5" /> Message Vendor
-              </Button>
-            </Link>
+            <Button variant="editorial" size="sm" onClick={() => setChatOpen(true)}>
+              <MessageSquare className="h-3.5 w-3.5 mr-1.5" /> Message Vendor
+            </Button>
           </div>
         </div>
       </section>
@@ -403,16 +404,120 @@ export default function ProjectDetail() {
 
         {/* Actions */}
         <div className="flex gap-3 pt-6 border-t border-foreground/10">
-          <Link to="/messages">
-            <Button variant="editorial">
-              <MessageSquare className="h-4 w-4 mr-1.5" /> Message {project.vendor}
-            </Button>
-          </Link>
+          <Button variant="editorial" onClick={() => setChatOpen(true)}>
+            <MessageSquare className="h-4 w-4 mr-1.5" /> Message {project.vendor}
+          </Button>
           <Link to="/workbench">
             <Button variant="ghost">Back to All Projects</Button>
           </Link>
         </div>
       </section>
+
+      {/* Chat popup */}
+      {chatOpen && <ChatPopup
+        vendorName={project.vendor}
+        projectId={project.id}
+        conversations={conversations}
+        messages={messages}
+        addMessage={addMessage}
+        onClose={() => setChatOpen(false)}
+      />}
+    </div>
+  );
+}
+
+function ChatPopup({
+  vendorName,
+  projectId,
+  conversations,
+  messages,
+  addMessage,
+  onClose,
+}: {
+  vendorName: string;
+  projectId: number;
+  conversations: any[];
+  messages: Record<number, any[]>;
+  addMessage: (convoId: number, msg: any) => void;
+  onClose: () => void;
+}) {
+  const [input, setInput] = useState("");
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  const convo = conversations.find(c => c.projectId === projectId);
+  const convoId = convo?.id;
+  const chatMessages = convoId ? (messages[convoId] || []) : [];
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatMessages.length]);
+
+  const handleSend = () => {
+    if (!input.trim() || !convoId) return;
+    addMessage(convoId, {
+      id: Date.now(),
+      sender: "brand" as const,
+      text: input.trim(),
+      time: "Just now",
+    });
+    setInput("");
+  };
+
+  return (
+    <div className="fixed bottom-6 right-6 z-50 w-[380px] h-[480px] flex flex-col border border-foreground/15 bg-background shadow-2xl">
+      {/* Chat header */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-foreground/10 bg-muted/30">
+        <div>
+          <span className="font-display text-sm font-700 uppercase tracking-tight">{vendorName}</span>
+          <span className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground block">Direct message</span>
+        </div>
+        <button onClick={onClose} className="p-1 hover:bg-foreground/5 transition-colors">
+          <X className="h-4 w-4 text-muted-foreground" />
+        </button>
+      </div>
+
+      {/* Messages */}
+      <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3">
+        {chatMessages.length === 0 && (
+          <p className="font-mono text-[10px] text-muted-foreground/50 uppercase tracking-wider text-center py-8">
+            No messages yet — start the conversation
+          </p>
+        )}
+        {chatMessages.map((msg: any) => (
+          <div key={msg.id} className={`flex ${msg.sender === "brand" ? "justify-end" : "justify-start"}`}>
+            <div className={`max-w-[80%] px-3 py-2 ${
+              msg.sender === "brand"
+                ? "bg-foreground text-background"
+                : "bg-muted/50 border border-foreground/10"
+            }`}>
+              <p className="font-body text-xs leading-relaxed">{msg.text}</p>
+              <span className={`font-mono text-[8px] block mt-1 ${
+                msg.sender === "brand" ? "text-background/50" : "text-muted-foreground/50"
+              }`}>{msg.time}</span>
+            </div>
+          </div>
+        ))}
+        <div ref={chatEndRef} />
+      </div>
+
+      {/* Input */}
+      <div className="border-t border-foreground/10 px-3 py-3 flex items-center gap-2">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleSend()}
+          placeholder="Type a message…"
+          className="flex-1 bg-transparent font-body text-sm outline-none placeholder:text-muted-foreground/40"
+        />
+        <button
+          onClick={handleSend}
+          disabled={!input.trim()}
+          className="p-2 bg-foreground text-background disabled:opacity-30 transition-opacity hover:opacity-80"
+        >
+          <Send className="h-3.5 w-3.5" />
+        </button>
+      </div>
     </div>
   );
 }
