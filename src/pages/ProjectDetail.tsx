@@ -43,7 +43,7 @@ const SUB_STEPS: Record<string, { label: string; steps: string[] }> = {
   },
   complete: {
     label: "Complete",
-    steps: ["Delivery confirmed", "Escrow released", "Review submitted"],
+    steps: ["Tracking shows delivered", "Escrow auto-released", "Dispute window (48h)", "Review submitted"],
   },
 };
 
