@@ -175,7 +175,7 @@ function SubStepRow({ sub, invoice, payingId, paidId, onPay }: {
         }`}>
           {sub.label}
         </span>
-        {sub.status === "current" && !hasInvoice && (
+        {sub.status === "current" && !showInvoice && (
           <span className="font-mono text-[8px] uppercase tracking-widest px-1.5 py-0.5 bg-signal/10 text-signal border border-signal/20">
             In progress
           </span>
