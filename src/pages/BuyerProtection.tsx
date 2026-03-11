@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ShieldCheck, Lock, RefreshCw, Scale, ArrowUpRight, CreditCard, Package, MessageSquare } from "lucide-react";
+import { ShieldCheck, Lock, Scale, ArrowUpRight, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const PROTECTIONS = [
