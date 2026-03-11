@@ -49,6 +49,7 @@ const App = () => (
               <Route path="/compare" element={<CompareVendors />} />
               <Route path="/concierge" element={<Concierge />} />
               <Route path="/sourcing-guide" element={<SourcingGuide />} />
+              <Route path="/buyer-protection" element={<BuyerProtection />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </SiteLayout>
