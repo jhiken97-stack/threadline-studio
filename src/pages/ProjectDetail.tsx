@@ -70,11 +70,14 @@ function getSubStepStatuses(stageKey: string, currentStageKey: string, stageInde
 
 export default function ProjectDetail() {
   const { id } = useParams();
-  const { getProject, conversations, invoices, payInvoice } = useProjects();
+  const { getProject, conversations, messages, invoices, payInvoice, addMessage } = useProjects();
   const project = getProject(id || "");
   const [payingId, setPayingId] = useState<number | null>(null);
   const [paidId, setPaidId] = useState<number | null>(null);
   const [expandedStages, setExpandedStages] = useState<Record<string, boolean>>({});
+  const [chatOpen, setChatOpen] = useState(false);
+  const [chatInput, setChatInput] = useState("");
+  const chatEndRef = useRef<HTMLDivElement>(null);
 
   if (!project) {
     return (
