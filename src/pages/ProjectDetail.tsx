@@ -397,13 +397,6 @@ export default function ProjectDetail() {
                     <div className="space-y-0">
                       {subSteps.map((sub, si) => {
                         const invoice = getSubStepInvoice(stage.key, sub.label);
-                        const isPaymentStep = !!invoice;
-                        const [invoiceExpanded, setInvoiceExpanded] = [
-                          // Use a simple approach - payment steps auto-expand if pending
-                          invoice?.status === "pending" || false,
-                          () => {},
-                        ];
-
                         return (
                           <div key={si}>
                             <SubStepRow
