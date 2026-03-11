@@ -6,10 +6,10 @@ const PROTECTIONS = [
   {
     icon: Lock,
     title: "Payment Escrow",
-    description: "When you pay an invoice on Threadline, your funds are held securely until you confirm delivery. The manufacturer doesn't get paid until you've received your order.",
+    description: "When you pay an invoice on Threadline, your funds are held securely until tracking confirms delivery. The manufacturer doesn't get paid until the shipment shows as delivered — just like eBay or Grailed.",
     details: [
       "Funds held from the moment you pay",
-      "Released only after you confirm delivery & quality",
+      "Released automatically when tracking confirms delivery",
       "If something goes wrong, your money stays protected",
     ],
   },
@@ -37,9 +37,9 @@ const PROTECTIONS = [
 
 const HOW_ESCROW_WORKS = [
   { step: "01", title: "You pay the invoice", desc: "Funds are held securely by Threadline — not sent to the manufacturer yet." },
-  { step: "02", title: "Manufacturer fulfills the order", desc: "Production, quality checks, and shipping proceed as agreed." },
-  { step: "03", title: "You receive & inspect", desc: "Check your delivery against the approved samples and project specs." },
-  { step: "04", title: "You approve — funds released", desc: "Once you confirm everything is correct, the manufacturer receives payment." },
+  { step: "02", title: "Manufacturer fulfills the order", desc: "Production, quality checks, and shipping proceed as agreed. A tracking number is provided." },
+  { step: "03", title: "Tracking confirms delivery", desc: "We monitor the tracking number automatically. When it shows delivered, funds are released." },
+  { step: "04", title: "Quality dispute window", desc: "You have 48 hours after delivery to open a dispute if the product doesn't match approved samples." },
 ];
 
 
@@ -59,7 +59,7 @@ export default function BuyerProtection() {
             <span className="text-muted-foreground">until you're satisfied.</span>
           </h1>
            <p className="font-body text-sm text-muted-foreground max-w-2xl">
-            Every transaction on Threadline is protected. We hold your payment in escrow until confirmed delivery, guarantee quality against approved samples, and mediate any disputes — so you can focus on building your brand, not worrying about risk.
+            Every transaction on Threadline is protected. We hold your payment in escrow until tracking confirms delivery, guarantee quality against approved samples, and mediate any disputes — so you can focus on building your brand, not worrying about risk.
           </p>
         </div>
       </section>
