@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ArrowUpRight, Search, FileText, Users, Package, Factory, Truck } from "lucide-react";
+import { ArrowUpRight, Search, FileText, Users, Package, Factory, Truck, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const STEPS = [
