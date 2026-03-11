@@ -114,11 +114,14 @@ export default function ProjectDetail() {
     }, 2000);
   };
 
-  // Get invoices for a given stage
-  const getStageInvoices = (stageKey: string) => {
-    return projectInvoices.filter(inv => {
-      if (stageKey === "sample") return inv.description.toLowerCase().includes("sampl");
-      if (stageKey === "production") return inv.description.toLowerCase().includes("production");
+  // Match invoices to specific sub-step labels
+  const getSubStepInvoice = (stageKey: string, subLabel: string): Invoice | undefined => {
+    const label = subLabel.toLowerCase();
+    return projectInvoices.find(inv => {
+      const desc = inv.description.toLowerCase();
+      if (label.includes("samples paid")) return desc.includes("sampl");
+      if (label.includes("production deposit")) return desc.includes("deposit");
+      if (label.includes("production balance")) return desc.includes("balance") || (desc.includes("production") && !desc.includes("deposit") && inv.status === "pending");
       return false;
     });
   };
