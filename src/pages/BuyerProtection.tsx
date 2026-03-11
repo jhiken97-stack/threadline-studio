@@ -42,15 +42,6 @@ const HOW_ESCROW_WORKS = [
   { step: "04", title: "You approve — funds released", desc: "Once you confirm everything is correct, the manufacturer receives payment." },
 ];
 
-const COMPARISON = [
-  { feature: "Payment protection", onPlatform: true, offPlatform: false },
-  { feature: "Quality guarantee", onPlatform: true, offPlatform: false },
-  { feature: "Dispute resolution", onPlatform: true, offPlatform: false },
-  { feature: "Verified manufacturers", onPlatform: true, offPlatform: false },
-  { feature: "Production tracking", onPlatform: true, offPlatform: false },
-  { feature: "Message history saved", onPlatform: true, offPlatform: false },
-  { feature: "Platform fee", onPlatform: "1%", offPlatform: "0%" },
-];
 
 export default function BuyerProtection() {
   return (
