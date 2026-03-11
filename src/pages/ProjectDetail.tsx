@@ -148,7 +148,8 @@ function SubStepRow({ sub, invoice, payingId, paidId, onPay }: {
   paidId: number | null;
   onPay: (inv: Invoice) => void;
 }) {
-  const hasInvoice = !!invoice;
+  // Only show invoice when this step has been reached (done or current)
+  const showInvoice = !!invoice && sub.status !== "upcoming";
   const isPaying = invoice ? payingId === invoice.id : false;
   const justPaid = invoice ? paidId === invoice.id : false;
 
@@ -174,12 +175,12 @@ function SubStepRow({ sub, invoice, payingId, paidId, onPay }: {
         }`}>
           {sub.label}
         </span>
-        {sub.status === "current" && !hasInvoice && (
+        {sub.status === "current" && !showInvoice && (
           <span className="font-mono text-[8px] uppercase tracking-widest px-1.5 py-0.5 bg-signal/10 text-signal border border-signal/20">
             In progress
           </span>
         )}
-        {hasInvoice && (
+        {showInvoice && (
           <span className={`font-mono text-[9px] px-1.5 py-0.5 uppercase tracking-wider ${
             invoice.status === "paid" ? "bg-foreground/5 text-muted-foreground" : "bg-signal/10 text-signal"
           }`}>
@@ -188,7 +189,7 @@ function SubStepRow({ sub, invoice, payingId, paidId, onPay }: {
         )}
       </div>
 
-      {hasInvoice && invoice && (
+      {showInvoice && invoice && (
         <div className="ml-7 mt-1 mb-2 p-4 border border-foreground/10 bg-background">
           <div className="flex items-center gap-2 mb-2">
             <span className="font-mono text-[9px] px-2 py-0.5 bg-signal/10 text-signal uppercase tracking-wider">Invoice</span>
