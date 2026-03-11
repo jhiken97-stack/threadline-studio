@@ -35,11 +35,11 @@ const SUB_STEPS: Record<string, { label: string; steps: string[] }> = {
   },
   production: {
     label: "Production",
-    steps: ["Production deposit paid", "Production started", "Mid-production update", "Production complete"],
+    steps: ["Production deposit paid (50%)", "Production started", "Mid-production update", "Production complete", "Final quality check", "Production balance paid (50%)"],
   },
   shipped: {
-    label: "Shipping & QA",
-    steps: ["Final quality check", "Tracking number provided", "Order shipped", "In transit", "Tracking shows delivered"],
+    label: "Shipping",
+    steps: ["Tracking number provided", "Order shipped", "In transit", "Tracking shows delivered"],
   },
   complete: {
     label: "Complete",
