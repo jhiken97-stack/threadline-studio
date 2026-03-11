@@ -273,36 +273,29 @@ export default function ProjectDetail() {
                 {/* Expanded sub-steps */}
                 {expanded && !isFuture && (
                   <div className="ml-[11px] pl-6 border-l border-foreground/10 pb-4 space-y-1">
-                    {/* Sub-step checklist */}
+                    {/* Sub-step checklist with inline invoices */}
                     <div className="space-y-0">
-                      {subSteps.map((sub, si) => (
-                        <div key={si} className="flex items-center gap-3 py-1.5">
-                          <div className={`w-4 h-4 flex items-center justify-center flex-shrink-0 rounded-full ${
-                            sub.status === "done"
-                              ? "bg-foreground text-background"
-                              : sub.status === "current"
-                                ? "border-2 border-signal bg-signal/10"
-                                : "border border-foreground/15 bg-background"
-                          }`}>
-                            {sub.status === "done" && <Check className="h-2.5 w-2.5" />}
-                            {sub.status === "current" && <Circle className="h-1.5 w-1.5 fill-signal text-signal" />}
+                      {subSteps.map((sub, si) => {
+                        const invoice = getSubStepInvoice(stage.key, sub.label);
+                        const isPaymentStep = !!invoice;
+                        const [invoiceExpanded, setInvoiceExpanded] = [
+                          // Use a simple approach - payment steps auto-expand if pending
+                          invoice?.status === "pending" || false,
+                          () => {},
+                        ];
+
+                        return (
+                          <div key={si}>
+                            <SubStepRow
+                              sub={sub}
+                              invoice={invoice}
+                              payingId={payingId}
+                              paidId={paidId}
+                              onPay={handlePay}
+                            />
                           </div>
-                          <span className={`font-body text-sm ${
-                            sub.status === "done"
-                              ? "text-muted-foreground line-through"
-                              : sub.status === "current"
-                                ? "text-foreground font-600"
-                                : "text-muted-foreground/50"
-                          }`}>
-                            {sub.label}
-                          </span>
-                          {sub.status === "current" && (
-                            <span className="font-mono text-[8px] uppercase tracking-widest px-1.5 py-0.5 bg-signal/10 text-signal border border-signal/20">
-                              In progress
-                            </span>
-                          )}
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
 
                     {/* Timeline notes for this stage */}
@@ -318,74 +311,6 @@ export default function ProjectDetail() {
                         ))}
                       </div>
                     )}
-
-                    {/* Invoices for this stage */}
-                    {stageInvoices.map((inv) => {
-                      const fee = inv.amount * 0.025;
-                      const totalWithFee = inv.amount + fee;
-                      const isPaying = payingId === inv.id;
-                      const justPaid = paidId === inv.id;
-
-                      return (
-                        <div key={inv.id} className="mt-2 p-4 border border-foreground/10 bg-background">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="font-mono text-[9px] px-2 py-0.5 bg-signal/10 text-signal uppercase tracking-wider">Invoice</span>
-                            <span className="font-mono text-[9px] text-muted-foreground">{inv.date}</span>
-                          </div>
-                          <div className="flex items-center justify-between gap-4">
-                            <div className="flex items-center gap-3 min-w-0">
-                              <div className={`w-7 h-7 flex items-center justify-center flex-shrink-0 ${
-                                inv.status === "paid" ? "bg-foreground text-background" : "bg-signal/10 text-signal"
-                              }`}>
-                                {inv.status === "paid" ? <Check className="h-3 w-3" /> : <Clock className="h-3 w-3" />}
-                              </div>
-                              <div className="min-w-0">
-                                <span className="font-body text-sm font-600 block">{inv.description}</span>
-                                <span className="font-mono text-[9px] text-muted-foreground flex items-center gap-1.5">
-                                  {inv.status === "paid" ? `Paid ${inv.paidDate}` : (
-                                    <>
-                                      <ShieldCheck className="h-3 w-3 text-signal" /> Held in escrow
-                                    </>
-                                  )}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-4 flex-shrink-0">
-                              <div className="text-right">
-                                <span className="font-display text-base font-800 block">${inv.amount.toLocaleString()}</span>
-                                <span className="font-mono text-[9px] text-muted-foreground">
-                                  +${fee.toFixed(2)} fee = ${totalWithFee.toFixed(2)}
-                                </span>
-                              </div>
-                              {inv.status === "pending" ? (
-                                <Button
-                                  variant="signal"
-                                  size="sm"
-                                  disabled={isPaying}
-                                  onClick={() => handlePay(inv)}
-                                  className="min-w-[110px]"
-                                >
-                                  {isPaying ? (
-                                    <span className="flex items-center gap-1.5">
-                                      <span className="w-3 h-3 border-2 border-background/30 border-t-background rounded-full animate-spin" />
-                                      Processing…
-                                    </span>
-                                  ) : (
-                                    <>
-                                      <CreditCard className="h-3.5 w-3.5 mr-1.5" /> Pay
-                                    </>
-                                  )}
-                                </Button>
-                              ) : (
-                                <span className="font-mono text-[10px] uppercase tracking-widest text-foreground/50 min-w-[80px] text-center">
-                                  {justPaid ? "✓ Sent" : "Paid"}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    })}
                   </div>
                 )}
               </div>
