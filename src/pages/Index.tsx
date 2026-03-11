@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowUpRight, ArrowRight, Lock, Bookmark, BookmarkCheck, GitCompare, Factory, FileText, Package, Truck, Search, MessageSquare, CreditCard, ClipboardList, Bell } from "lucide-react";
+import { ArrowUpRight, ArrowRight, Lock, Bookmark, BookmarkCheck, GitCompare, Factory, FileText, Package, Truck, Search, MessageSquare, CreditCard, ClipboardList, Bell, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useVendorActions } from "@/lib/vendors";
