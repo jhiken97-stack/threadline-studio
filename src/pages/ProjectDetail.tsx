@@ -39,7 +39,7 @@ const SUB_STEPS: Record<string, { label: string; steps: string[] }> = {
   },
   shipped: {
     label: "Shipping & QA",
-    steps: ["Final quality check", "Order shipped", "In transit", "Delivered & confirmed"],
+    steps: ["Final quality check", "Tracking number provided", "Order shipped", "In transit", "Tracking shows delivered"],
   },
   complete: {
     label: "Complete",

@@ -95,7 +95,7 @@ export default function HowItWorks() {
             <div>
               <h2 className="font-display text-sm font-700 uppercase tracking-[0.15em] mb-2">Buyer Protection on Every Project</h2>
               <p className="font-body text-sm text-muted-foreground max-w-2xl mb-4">
-                Every payment you make on Threadline is held in escrow until confirmed delivery. If the delivered product doesn't match your approved samples, we guarantee a resolution — including refunds and redos.
+                Every payment you make on Threadline is held in escrow until tracking confirms delivery. If the delivered product doesn't match your approved samples, you have 48 hours to open a dispute — including refunds and redos.
               </p>
               <div className="flex flex-wrap gap-6 mb-4">
                 {["Payment held until you approve", "Quality guaranteed vs. samples", "Dispute resolution in 7 days"].map((item) => (
