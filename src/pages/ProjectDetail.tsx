@@ -237,12 +237,15 @@ export default function ProjectDetail() {
           })}
         </div>
 
-        {/* Fee note */}
+        {/* Buyer Protection + Fee note */}
         {projectInvoices.length > 0 && (
-          <div className="p-4 border border-foreground/10 bg-muted/30 mt-2 mb-6">
-            <p className="font-mono text-[9px] text-muted-foreground leading-relaxed">
-              <span className="text-signal font-600">Platform fee:</span> 1% is added to your invoice total at checkout. 1% is deducted from the vendor's payout. No hidden charges.
-            </p>
+          <div className="space-y-2 mt-2 mb-6">
+            <BuyerProtectionBadge variant="block" />
+            <div className="p-4 border border-foreground/10 bg-muted/30">
+              <p className="font-mono text-[9px] text-muted-foreground leading-relaxed">
+                <span className="text-signal font-600">Platform fee:</span> 1% is added to your invoice total at checkout. 1% is deducted from the vendor's payout. No hidden charges.
+              </p>
+            </div>
           </div>
         )}
 
