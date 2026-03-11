@@ -68,6 +68,126 @@ function getSubStepStatuses(stageKey: string, currentStageKey: string, stageInde
   });
 }
 
+function SubStepRow({ sub, invoice, payingId, paidId, onPay }: {
+  sub: SubStep;
+  invoice?: Invoice;
+  payingId: number | null;
+  paidId: number | null;
+  onPay: (inv: Invoice) => void;
+}) {
+  const [expanded, setExpanded] = useState(false);
+  const hasInvoice = !!invoice;
+  const isPaying = invoice ? payingId === invoice.id : false;
+  const justPaid = invoice ? paidId === invoice.id : false;
+
+  return (
+    <div>
+      <div
+        className={`flex items-center gap-3 py-1.5 ${hasInvoice ? "cursor-pointer" : ""}`}
+        onClick={() => hasInvoice && setExpanded(!expanded)}
+      >
+        <div className={`w-4 h-4 flex items-center justify-center flex-shrink-0 rounded-full ${
+          sub.status === "done"
+            ? "bg-foreground text-background"
+            : sub.status === "current"
+              ? "border-2 border-signal bg-signal/10"
+              : "border border-foreground/15 bg-background"
+        }`}>
+          {sub.status === "done" && <Check className="h-2.5 w-2.5" />}
+          {sub.status === "current" && <Circle className="h-1.5 w-1.5 fill-signal text-signal" />}
+        </div>
+        <span className={`font-body text-sm flex-1 ${
+          sub.status === "done"
+            ? "text-muted-foreground line-through"
+            : sub.status === "current"
+              ? "text-foreground font-600"
+              : "text-muted-foreground/50"
+        }`}>
+          {sub.label}
+        </span>
+        {sub.status === "current" && !hasInvoice && (
+          <span className="font-mono text-[8px] uppercase tracking-widest px-1.5 py-0.5 bg-signal/10 text-signal border border-signal/20">
+            In progress
+          </span>
+        )}
+        {hasInvoice && (
+          <div className="flex items-center gap-2">
+            <span className={`font-mono text-[9px] px-1.5 py-0.5 uppercase tracking-wider ${
+              invoice.status === "paid" ? "bg-foreground/5 text-muted-foreground" : "bg-signal/10 text-signal"
+            }`}>
+              {invoice.status === "paid" ? "Paid" : `$${invoice.amount.toLocaleString()} due`}
+            </span>
+            {expanded
+              ? <ChevronDown className="h-3 w-3 text-muted-foreground" />
+              : <ChevronRight className="h-3 w-3 text-muted-foreground" />
+            }
+          </div>
+        )}
+      </div>
+
+      {hasInvoice && expanded && invoice && (
+        <div className="ml-7 mt-1 mb-2 p-4 border border-foreground/10 bg-background">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="font-mono text-[9px] px-2 py-0.5 bg-signal/10 text-signal uppercase tracking-wider">Invoice</span>
+            <span className="font-mono text-[9px] text-muted-foreground">{invoice.date}</span>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className={`w-7 h-7 flex items-center justify-center flex-shrink-0 ${
+                invoice.status === "paid" ? "bg-foreground text-background" : "bg-signal/10 text-signal"
+              }`}>
+                {invoice.status === "paid" ? <Check className="h-3 w-3" /> : <Clock className="h-3 w-3" />}
+              </div>
+              <div className="min-w-0">
+                <span className="font-body text-sm font-600 block">{invoice.description}</span>
+                <span className="font-mono text-[9px] text-muted-foreground flex items-center gap-1.5">
+                  {invoice.status === "paid" ? `Paid ${invoice.paidDate}` : (
+                    <>
+                      <ShieldCheck className="h-3 w-3 text-signal" /> Held in escrow
+                    </>
+                  )}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center gap-4 flex-shrink-0">
+              <div className="text-right">
+                <span className="font-display text-base font-800 block">${invoice.amount.toLocaleString()}</span>
+                <span className="font-mono text-[9px] text-muted-foreground">
+                  +${(invoice.amount * 0.025).toFixed(2)} fee = ${(invoice.amount * 1.025).toFixed(2)}
+                </span>
+              </div>
+              {invoice.status === "pending" ? (
+                <Button
+                  variant="signal"
+                  size="sm"
+                  disabled={isPaying}
+                  onClick={(e) => { e.stopPropagation(); onPay(invoice); }}
+                  className="min-w-[110px]"
+                >
+                  {isPaying ? (
+                    <span className="flex items-center gap-1.5">
+                      <span className="w-3 h-3 border-2 border-background/30 border-t-background rounded-full animate-spin" />
+                      Processing…
+                    </span>
+                  ) : (
+                    <>
+                      <CreditCard className="h-3.5 w-3.5 mr-1.5" /> Pay
+                    </>
+                  )}
+                </Button>
+              ) : (
+                <span className="font-mono text-[10px] uppercase tracking-widest text-foreground/50 min-w-[80px] text-center">
+                  {justPaid ? "✓ Sent" : "Paid"}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function ProjectDetail() {
   const { id } = useParams();
   const { getProject, conversations, messages, invoices, payInvoice, addMessage } = useProjects();
