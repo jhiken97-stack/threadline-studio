@@ -6,10 +6,10 @@ const PROTECTIONS = [
   {
     icon: Lock,
     title: "Payment Escrow",
-    description: "When you pay an invoice on Threadline, your funds are held securely until you confirm delivery. The manufacturer doesn't get paid until you've received your order.",
+    description: "When you pay an invoice on Threadline, your funds are held securely until tracking confirms delivery. The manufacturer doesn't get paid until the shipment shows as delivered — just like eBay or Grailed.",
     details: [
       "Funds held from the moment you pay",
-      "Released only after you confirm delivery & quality",
+      "Released automatically when tracking confirms delivery",
       "If something goes wrong, your money stays protected",
     ],
   },
