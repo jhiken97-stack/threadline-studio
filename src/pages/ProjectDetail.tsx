@@ -151,7 +151,8 @@ function SubStepRow({ sub, invoice, payingId, paidId, onPay }: {
   paidId: number | null;
   onPay: (inv: Invoice) => void;
 }) {
-  // Only show invoice when this step has been reached (done or current)
+  const [invoiceOpen, setInvoiceOpen] = useState(false);
+  // Show invoice for done and current steps (not upcoming/future)
   const showInvoice = !!invoice && sub.status !== "upcoming";
   const isPaying = invoice ? payingId === invoice.id : false;
   const justPaid = invoice ? paidId === invoice.id : false;
@@ -184,16 +185,21 @@ function SubStepRow({ sub, invoice, payingId, paidId, onPay }: {
           </span>
         )}
         {showInvoice && (
-          <span className={`font-mono text-[9px] px-1.5 py-0.5 uppercase tracking-wider ${
-            invoice.status === "paid" ? "bg-foreground/5 text-muted-foreground" : "bg-signal/10 text-signal"
-          }`}>
+          <button
+            onClick={() => setInvoiceOpen(!invoiceOpen)}
+            className={`font-mono text-[9px] px-1.5 py-0.5 uppercase tracking-wider flex items-center gap-1 hover:opacity-80 transition-opacity ${
+              invoice.status === "paid" ? "bg-foreground/5 text-muted-foreground" : "bg-signal/10 text-signal"
+            }`}
+          >
+            <CreditCard className="h-2.5 w-2.5" />
             {invoice.status === "paid" ? "Paid" : `$${invoice.amount.toLocaleString()} due`}
-          </span>
+            <ChevronDown className={`h-2.5 w-2.5 transition-transform ${invoiceOpen ? "rotate-180" : ""}`} />
+          </button>
         )}
       </div>
 
-      {showInvoice && invoice && (
-        <div className="ml-7 mt-1 mb-2 p-4 border border-foreground/10 bg-background">
+      {showInvoice && invoiceOpen && invoice && (
+        <div className="ml-7 mt-1 mb-2 p-4 border border-foreground/10 bg-background animate-in slide-in-from-top-1 duration-150">
           <div className="flex items-center gap-2 mb-2">
             <span className="font-mono text-[9px] px-2 py-0.5 bg-signal/10 text-signal uppercase tracking-wider">Invoice</span>
             <span className="font-mono text-[9px] text-muted-foreground">{invoice.date}</span>
