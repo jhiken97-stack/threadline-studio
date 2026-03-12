@@ -7,7 +7,8 @@ import { QualityScale } from "@/components/QualityScale";
 
 const REGIONS = ["All", "US", "PT", "CN", "IN"] as const;
 const CATEGORIES = ["All", "Cut & Sew", "Heavyweight Jersey", "Fleece", "Knitwear", "Denim", "Private Label", "Outerwear", "Activewear", "Swimwear", "Leather Goods", "Tailoring", "Accessories"] as const;
-const QUALITY_FILTERS = ["All", "Cost-focused", "Balanced", "Quality-focused"] as const;
+const QUALITY_FILTERS = ["All", "Low-cost", "Cost-focused", "Balanced", "Quality-focused", "Top quality"] as const;
+const QUALITY_MAP: Record<string, number> = { "Low-cost": 1, "Cost-focused": 2, "Balanced": 3, "Quality-focused": 4, "Top quality": 5 };
 
 export default function Vendors() {
   const [region, setRegion] = useState("All");
@@ -19,11 +20,7 @@ export default function Vendors() {
   const filtered = VENDORS.filter((v) => {
     if (region !== "All" && v.region !== region) return false;
     if (category !== "All" && v.category !== category) return false;
-    if (quality !== "All") {
-      if (quality === "Cost-focused" && v.qualityVsCost > 2) return false;
-      if (quality === "Balanced" && (v.qualityVsCost < 3 || v.qualityVsCost > 3)) return false;
-      if (quality === "Quality-focused" && v.qualityVsCost < 4) return false;
-    }
+    if (quality !== "All" && v.qualityVsCost !== QUALITY_MAP[quality]) return false;
     return true;
   });
 
