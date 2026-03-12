@@ -29,12 +29,12 @@ const REGIONS_OPTIONS = [
 ] as const;
 
 const FEATURED_MANUFACTURERS = [
-  { id: 1, name: "Ateliê Nova", region: "PT", categories: ["Cut & Sew"], tier: "Premium", moqRange: "100-300", image: fashionHoodie },
-  { id: 2, name: "Shenzhen Textile Co.", region: "CN", categories: ["Heavyweight Jersey"], tier: "Luxury", moqRange: "300-500", image: fashionTee },
-  { id: 3, name: "Brooklyn Garment Dist.", region: "US", categories: ["Denim"], tier: "Premium", moqRange: "100-300", image: fashionDenim },
-  { id: 4, name: "Porto Fleece Works", region: "PT", categories: ["Fleece"], tier: "Premium", moqRange: "0-100", image: fashionFleece },
-  { id: 5, name: "Guangzhou Knit Mill", region: "CN", categories: ["Knitwear"], tier: "Luxury", moqRange: "500+", image: fashionHoodie },
-  { id: 6, name: "LA Cut House", region: "US", categories: ["Private Label"], tier: "Premium", moqRange: "0-100", image: fashionTee },
+  { id: 1, name: "Ateliê Nova", region: "PT", categories: ["Cut & Sew"], qualityVsCost: 3, moqRange: "100-300", image: fashionHoodie },
+  { id: 2, name: "Shenzhen Textile Co.", region: "CN", categories: ["Heavyweight Jersey"], qualityVsCost: 4, moqRange: "300-500", image: fashionTee },
+  { id: 3, name: "Brooklyn Garment Dist.", region: "US", categories: ["Denim"], qualityVsCost: 3, moqRange: "100-300", image: fashionDenim },
+  { id: 4, name: "Porto Fleece Works", region: "PT", categories: ["Fleece"], qualityVsCost: 3, moqRange: "0-100", image: fashionFleece },
+  { id: 5, name: "Guangzhou Knit Mill", region: "CN", categories: ["Knitwear"], qualityVsCost: 4, moqRange: "500+", image: fashionHoodie },
+  { id: 6, name: "LA Cut House", region: "US", categories: ["Private Label"], qualityVsCost: 3, moqRange: "0-100", image: fashionTee },
 ];
 
 const HOW_IT_WORKS_STEPS = [
