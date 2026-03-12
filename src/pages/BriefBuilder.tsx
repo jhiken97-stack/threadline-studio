@@ -336,25 +336,6 @@ export default function BriefBuilder() {
                   ))}
                 </div>
               </div>
-              <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2">Quality Level</span>
-                <div className="flex gap-2">
-                  {TIERS.map((t) => (
-                    <button
-                      key={t}
-                      onClick={() => setForm({ ...form, tier: t })}
-                      className={`font-mono text-[10px] px-3 py-1.5 uppercase tracking-wider transition-all ${
-                        form.tier === t ? "bg-foreground text-background" : "border border-foreground/20 hover:border-foreground/40"
-                      }`}
-                    >
-                      {t}
-                    </button>
-                  ))}
-                </div>
-                <p className="font-mono text-[10px] text-muted-foreground/60 mt-1.5">
-                  Premium = great quality, lower MOQs. Luxury = highest-end materials and construction.
-                </p>
-              </div>
               <BriefField label="How many units do you need?" value={form.quantity} onChange={(v) => setForm({ ...form, quantity: v })} placeholder="e.g. 200–500 (it's okay to estimate)" />
               <BriefField label="When do you need samples by?" value={form.sampleTimeline} onChange={(v) => setForm({ ...form, sampleTimeline: v })} placeholder="e.g. 4 weeks, no rush, ASAP" />
             </div>
