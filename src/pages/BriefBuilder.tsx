@@ -11,7 +11,7 @@ const CATEGORIES = [
   "Private Label", "Outerwear", "Activewear", "Swimwear", "Leather Goods",
   "Tailoring", "Accessories",
 ];
-const TIERS = ["Premium", "Luxury"];
+// Quality level is now handled by the qualityVsCost scale in the Priorities step
 const COUNTRIES = [
   { code: "US", name: "United States" },
   { code: "PT", name: "Portugal" },
@@ -45,7 +45,7 @@ export default function BriefBuilder() {
   const [form, setForm] = useState({
     labelName: "",
     category: "",
-    tier: "",
+    qualityVsCostLevel: 3,
     quantity: "",
     sampleTimeline: "",
     countries: [] as string[],
@@ -114,7 +114,7 @@ export default function BriefBuilder() {
   const briefData = {
     labelName: form.labelName,
     category: form.category,
-    tier: form.tier,
+    qualityVsCost: form.qualityVsCost,
     quantity: form.quantity,
     description: form.description,
   };
@@ -336,25 +336,6 @@ export default function BriefBuilder() {
                   ))}
                 </div>
               </div>
-              <div>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-muted-foreground block mb-2">Quality Level</span>
-                <div className="flex gap-2">
-                  {TIERS.map((t) => (
-                    <button
-                      key={t}
-                      onClick={() => setForm({ ...form, tier: t })}
-                      className={`font-mono text-[10px] px-3 py-1.5 uppercase tracking-wider transition-all ${
-                        form.tier === t ? "bg-foreground text-background" : "border border-foreground/20 hover:border-foreground/40"
-                      }`}
-                    >
-                      {t}
-                    </button>
-                  ))}
-                </div>
-                <p className="font-mono text-[10px] text-muted-foreground/60 mt-1.5">
-                  Premium = great quality, lower MOQs. Luxury = highest-end materials and construction.
-                </p>
-              </div>
               <BriefField label="How many units do you need?" value={form.quantity} onChange={(v) => setForm({ ...form, quantity: v })} placeholder="e.g. 200–500 (it's okay to estimate)" />
               <BriefField label="When do you need samples by?" value={form.sampleTimeline} onChange={(v) => setForm({ ...form, sampleTimeline: v })} placeholder="e.g. 4 weeks, no rush, ASAP" />
             </div>
@@ -448,7 +429,7 @@ export default function BriefBuilder() {
                 {vendorName && <ReviewRow label="Manufacturer" value={vendorName} />}
                 <ReviewRow label="Brand" value={form.labelName || "—"} />
                 <ReviewRow label="Product Type" value={form.category || "—"} />
-                <ReviewRow label="Quality Level" value={form.tier || "—"} />
+                <ReviewRow label="Quality Priority" value={form.qualityVsCost <= 2 ? "Cost-focused" : form.qualityVsCost >= 4 ? "Quality-focused" : "Balanced"} />
                 <ReviewRow label="Quantity" value={form.quantity || "—"} />
                 <ReviewRow label="Sample Timeline" value={form.sampleTimeline || "—"} />
                 <ReviewRow label="Files" value={form.files.length > 0 ? `${form.files.length} file${form.files.length > 1 ? "s" : ""} attached` : "None"} />

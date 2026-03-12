@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Bookmark, X, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useVendorActions, VENDORS } from "@/lib/vendors";
+import { QualityScale } from "@/components/QualityScale";
 
 export default function SavedVendors() {
   const { savedIds, toggleSave } = useVendorActions();
@@ -64,7 +65,7 @@ export default function SavedVendors() {
                       >
                         Start Project <ArrowRight className="h-3 w-3" />
                       </Link>
-                      <span className="font-mono text-[10px] px-2 py-0.5 border border-foreground/15 uppercase tracking-wider text-muted-foreground ml-auto">{vendor.tier}</span>
+                      <QualityScale value={vendor.qualityVsCost} />
                     </div>
                   </div>
                 ))}

@@ -2,11 +2,12 @@ import { Link } from "react-router-dom";
 import { GitCompare, X, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useVendorActions, VENDORS } from "@/lib/vendors";
+import { QualityScale } from "@/components/QualityScale";
 
 const COMPARE_FIELDS = [
   { label: "Region", key: "region" as const },
   { label: "Category", key: "category" as const },
-  { label: "Quality Tier", key: "tier" as const },
+  { label: "Quality Priority", key: "qualityVsCost" as const },
   { label: "MOQ Range", gated: true },
   { label: "Lead Time", gated: true },
   { label: "Capabilities", gated: true },
@@ -86,8 +87,10 @@ export default function CompareVendors() {
                         <td className="p-4 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">{field.label}</td>
                         {vendors.map((v) => (
                           <td key={v.id} className="p-4">
-                            {field.gated ? (
+                          {field.gated ? (
                               <span className="font-mono text-[10px] text-muted-foreground/40 uppercase tracking-wider">Sign up to view</span>
+                            ) : field.key === "qualityVsCost" ? (
+                              <QualityScale value={v[field.key] as number} />
                             ) : (
                               <span className="font-body text-sm">{v[field.key]}</span>
                             )}

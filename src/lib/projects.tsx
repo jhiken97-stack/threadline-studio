@@ -11,7 +11,7 @@ export interface ProjectThread {
   category: string;
   labelName: string;
   quantity: string;
-  tier: string;
+  qualityVsCost?: number;
   matchScore?: number;
   timeline: { stage: string; date: string; note: string }[];
 }
@@ -49,7 +49,7 @@ export interface Invoice {
 const SEED_THREADS: ProjectThread[] = [
   {
     id: 1, vendor: "Ateliê Nova", product: "FW26 Hoodie Program", stage: "sample", region: "PT", updated: "2h ago", priority: true, // Samples delivered — needs brand approval
-    category: "Cut & Sew", labelName: "My Brand", quantity: "200-300", tier: "Premium", matchScore: 94,
+    category: "Cut & Sew", labelName: "My Brand", quantity: "200-300", qualityVsCost: 3, matchScore: 94,
     timeline: [
       { stage: "brief", date: "Feb 12", note: "Brief submitted with hoodie specs and colorways" },
       { stage: "matched", date: "Feb 14", note: "Ateliê Nova accepted — 94% match score" },
@@ -58,7 +58,7 @@ const SEED_THREADS: ProjectThread[] = [
   },
   {
     id: 2, vendor: "Shenzhen Textile Co.", product: "Heavy Tee Blanks", stage: "production", region: "CN", updated: "5h ago", priority: false,
-    category: "Heavyweight Jersey", labelName: "My Brand", quantity: "500", tier: "Luxury",
+    category: "Heavyweight Jersey", labelName: "My Brand", quantity: "500", qualityVsCost: 4,
     timeline: [
       { stage: "brief", date: "Jan 20", note: "Brief submitted for 420gsm tee blanks" },
       { stage: "matched", date: "Jan 22", note: "Shenzhen Textile matched — premium heavyweight specialist" },
@@ -68,7 +68,7 @@ const SEED_THREADS: ProjectThread[] = [
   },
   {
     id: 3, vendor: "Brooklyn Garment Dist.", product: "Selvedge Denim Jean", stage: "matched", region: "US", updated: "1d ago", priority: true, // Vendor responded — brand needs to confirm terms
-    category: "Denim", labelName: "My Brand", quantity: "300", tier: "Premium", matchScore: 82,
+    category: "Denim", labelName: "My Brand", quantity: "300", qualityVsCost: 3, matchScore: 82,
     timeline: [
       { stage: "brief", date: "Mar 1", note: "Brief submitted for selvedge denim program" },
       { stage: "matched", date: "Mar 3", note: "Brooklyn Garment matched — discussing construction details" },
@@ -76,14 +76,14 @@ const SEED_THREADS: ProjectThread[] = [
   },
   {
     id: 4, vendor: "Porto Fleece Works", product: "Organic Fleece Crew", stage: "brief", region: "PT", updated: "3d ago", priority: false,
-    category: "Fleece", labelName: "My Brand", quantity: "100", tier: "Premium", matchScore: 87,
+    category: "Fleece", labelName: "My Brand", quantity: "100", qualityVsCost: 3, matchScore: 87,
     timeline: [
       { stage: "brief", date: "Mar 5", note: "Brief submitted — awaiting vendor review" },
     ],
   },
   {
     id: 5, vendor: "Istanbul Knits Co.", product: "Merino Wool Cardigan", stage: "shipped", region: "TR", updated: "6h ago", priority: false, // In transit — no action needed yet
-    category: "Knitwear", labelName: "My Brand", quantity: "250", tier: "Premium", matchScore: 91,
+    category: "Knitwear", labelName: "My Brand", quantity: "250", qualityVsCost: 3, matchScore: 91,
     timeline: [
       { stage: "brief", date: "Jan 5", note: "Brief submitted for merino wool cardigan program" },
       { stage: "matched", date: "Jan 8", note: "Istanbul Knits matched — 91% match, knitwear specialist" },
@@ -94,7 +94,7 @@ const SEED_THREADS: ProjectThread[] = [
   },
   {
     id: 6, vendor: "Kyoto Textile Lab", product: "SS25 Linen Camp Shirt", stage: "complete", region: "JP", updated: "5d ago", priority: false,
-    category: "Shirting", labelName: "My Brand", quantity: "400", tier: "Luxury", matchScore: 96,
+    category: "Shirting", labelName: "My Brand", quantity: "400", qualityVsCost: 5, matchScore: 96,
     timeline: [
       { stage: "brief", date: "Nov 15", note: "Brief submitted for linen camp collar shirt" },
       { stage: "matched", date: "Nov 18", note: "Kyoto Textile Lab matched — 96% match, premium Japanese linen" },
@@ -164,7 +164,7 @@ const SEED_INVOICES: Invoice[] = [
 interface BriefData {
   labelName: string;
   category: string;
-  tier: string;
+  qualityVsCost?: number;
   quantity: string;
   description: string;
 }
@@ -212,7 +212,7 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
       category: brief.category,
       labelName: brief.labelName,
       quantity: brief.quantity,
-      tier: brief.tier,
+      qualityVsCost: brief.qualityVsCost,
       matchScore: vendor.match,
       timeline: [
         { stage: "brief", date: today, note: `Brief submitted to ${vendor.name} — ${vendor.match}% match` },
@@ -263,7 +263,7 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
       category: brief.category,
       labelName: brief.labelName,
       quantity: brief.quantity,
-      tier: brief.tier,
+      qualityVsCost: brief.qualityVsCost,
       timeline: [
         { stage: "brief", date: today, note: `Brief submitted directly to ${vendorName}` },
       ],

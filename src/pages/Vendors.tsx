@@ -3,22 +3,27 @@ import { Link } from "react-router-dom";
 import { Lock, ArrowUpRight, ArrowRight, Grid, List, Bookmark, BookmarkCheck, GitCompare, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { VENDORS, useVendorActions, type Vendor } from "@/lib/vendors";
+import { QualityScale } from "@/components/QualityScale";
 
 const REGIONS = ["All", "US", "PT", "CN", "IN"] as const;
 const CATEGORIES = ["All", "Cut & Sew", "Heavyweight Jersey", "Fleece", "Knitwear", "Denim", "Private Label", "Outerwear", "Activewear", "Swimwear", "Leather Goods", "Tailoring", "Accessories"] as const;
-const TIERS = ["All", "Premium", "Luxury"] as const;
+const QUALITY_FILTERS = ["All", "Cost-focused", "Balanced", "Quality-focused"] as const;
 
 export default function Vendors() {
   const [region, setRegion] = useState("All");
   const [category, setCategory] = useState("All");
-  const [tier, setTier] = useState("All");
+  const [quality, setQuality] = useState("All");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const { savedIds, compareIds } = useVendorActions();
 
   const filtered = VENDORS.filter((v) => {
     if (region !== "All" && v.region !== region) return false;
     if (category !== "All" && v.category !== category) return false;
-    if (tier !== "All" && v.tier !== tier) return false;
+    if (quality !== "All") {
+      if (quality === "Cost-focused" && v.qualityVsCost > 2) return false;
+      if (quality === "Balanced" && (v.qualityVsCost < 3 || v.qualityVsCost > 3)) return false;
+      if (quality === "Quality-focused" && v.qualityVsCost < 4) return false;
+    }
     return true;
   });
 
@@ -40,7 +45,7 @@ export default function Vendors() {
           <div className="flex flex-wrap items-center gap-5">
             <FilterGroup label="Region" options={REGIONS} value={region} onChange={setRegion} />
             <FilterGroup label="Category" options={CATEGORIES} value={category} onChange={setCategory} />
-            <FilterGroup label="Tier" options={TIERS} value={tier} onChange={setTier} />
+            <FilterGroup label="Priority" options={QUALITY_FILTERS} value={quality} onChange={setQuality} />
             <div className="ml-auto flex items-center gap-3">
               {savedIds.length > 0 && (
                 <Link to="/saved" className="font-mono text-[10px] text-signal uppercase tracking-wider flex items-center gap-1">
@@ -158,9 +163,13 @@ function VendorCard({ vendor }: { vendor: Vendor }) {
             <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">{vendor.category}</span>
           </div>
         </div>
-        <span className="font-mono text-[10px] px-2 py-0.5 border border-foreground/15 uppercase tracking-wider text-muted-foreground">{vendor.tier}</span>
       </div>
       <p className="font-body text-xs text-muted-foreground leading-relaxed mb-3">{vendor.summary}</p>
+
+      {/* Quality scale */}
+      <div className="mb-3">
+        <QualityScale value={vendor.qualityVsCost} />
+      </div>
       
       {/* Gated fields */}
       <div className="space-y-1">
@@ -212,7 +221,8 @@ function VendorListItem({ vendor }: { vendor: Vendor }) {
           <p className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider">{vendor.category}</p>
         </div>
       </div>
-      <div className="flex items-center gap-2 flex-shrink-0">
+      <div className="flex items-center gap-3 flex-shrink-0">
+        <QualityScale value={vendor.qualityVsCost} />
         <Link
           to={`/brief?vendor=${vendor.id}&vendorName=${encodeURIComponent(vendor.name)}`}
           className="font-mono text-[10px] text-signal hover:text-signal/80 transition-colors uppercase tracking-wider flex items-center gap-1"
@@ -235,7 +245,6 @@ function VendorListItem({ vendor }: { vendor: Vendor }) {
         >
           {isSaved(vendor.id) ? <BookmarkCheck className="h-3 w-3" /> : <Bookmark className="h-3 w-3" />}
         </button>
-        <span className="font-mono text-[10px] px-2 py-0.5 border border-foreground/15 uppercase tracking-wider text-muted-foreground">{vendor.tier}</span>
         <span className="font-mono text-[10px] px-2 py-0.5 bg-foreground text-background uppercase">{vendor.region}</span>
       </div>
     </div>
