@@ -164,7 +164,7 @@ const SEED_INVOICES: Invoice[] = [
 interface BriefData {
   labelName: string;
   category: string;
-  tier: string;
+  qualityVsCost?: number;
   quantity: string;
   description: string;
 }
