@@ -76,7 +76,7 @@ const SEED_THREADS: ProjectThread[] = [
   },
   {
     id: 4, vendor: "Porto Fleece Works", product: "Organic Fleece Crew", stage: "brief", region: "PT", updated: "3d ago", priority: false,
-    category: "Fleece", labelName: "My Brand", quantity: "100", tier: "Premium", matchScore: 87,
+    category: "Fleece", labelName: "My Brand", quantity: "100", qualityVsCost: 3, matchScore: 87,
     timeline: [
       { stage: "brief", date: "Mar 5", note: "Brief submitted — awaiting vendor review" },
     ],
