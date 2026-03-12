@@ -11,7 +11,7 @@ const CATEGORIES = [
   "Private Label", "Outerwear", "Activewear", "Swimwear", "Leather Goods",
   "Tailoring", "Accessories",
 ];
-const TIERS = ["Premium", "Luxury"];
+// Quality level is now handled by the qualityVsCost scale in the Priorities step
 const COUNTRIES = [
   { code: "US", name: "United States" },
   { code: "PT", name: "Portugal" },
