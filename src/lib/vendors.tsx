@@ -5,7 +5,7 @@ export interface Vendor {
   name: string;
   region: string;
   category: string;
-  tier: string;
+  qualityVsCost: number; // 1 = lower cost … 5 = top quality
   summary: string;
 }
 
