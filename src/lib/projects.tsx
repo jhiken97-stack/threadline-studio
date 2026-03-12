@@ -68,7 +68,7 @@ const SEED_THREADS: ProjectThread[] = [
   },
   {
     id: 3, vendor: "Brooklyn Garment Dist.", product: "Selvedge Denim Jean", stage: "matched", region: "US", updated: "1d ago", priority: true, // Vendor responded — brand needs to confirm terms
-    category: "Denim", labelName: "My Brand", quantity: "300", tier: "Premium", matchScore: 82,
+    category: "Denim", labelName: "My Brand", quantity: "300", qualityVsCost: 3, matchScore: 82,
     timeline: [
       { stage: "brief", date: "Mar 1", note: "Brief submitted for selvedge denim program" },
       { stage: "matched", date: "Mar 3", note: "Brooklyn Garment matched — discussing construction details" },
