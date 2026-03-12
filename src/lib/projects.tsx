@@ -58,7 +58,7 @@ const SEED_THREADS: ProjectThread[] = [
   },
   {
     id: 2, vendor: "Shenzhen Textile Co.", product: "Heavy Tee Blanks", stage: "production", region: "CN", updated: "5h ago", priority: false,
-    category: "Heavyweight Jersey", labelName: "My Brand", quantity: "500", tier: "Luxury",
+    category: "Heavyweight Jersey", labelName: "My Brand", quantity: "500", qualityVsCost: 4,
     timeline: [
       { stage: "brief", date: "Jan 20", note: "Brief submitted for 420gsm tee blanks" },
       { stage: "matched", date: "Jan 22", note: "Shenzhen Textile matched — premium heavyweight specialist" },
