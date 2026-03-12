@@ -83,7 +83,7 @@ const SEED_THREADS: ProjectThread[] = [
   },
   {
     id: 5, vendor: "Istanbul Knits Co.", product: "Merino Wool Cardigan", stage: "shipped", region: "TR", updated: "6h ago", priority: false, // In transit — no action needed yet
-    category: "Knitwear", labelName: "My Brand", quantity: "250", tier: "Premium", matchScore: 91,
+    category: "Knitwear", labelName: "My Brand", quantity: "250", qualityVsCost: 3, matchScore: 91,
     timeline: [
       { stage: "brief", date: "Jan 5", note: "Brief submitted for merino wool cardigan program" },
       { stage: "matched", date: "Jan 8", note: "Istanbul Knits matched — 91% match, knitwear specialist" },
