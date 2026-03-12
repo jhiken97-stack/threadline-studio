@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { GitCompare, X, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useVendorActions, VENDORS } from "@/lib/vendors";
+import { QualityScale } from "@/components/QualityScale";
 
 const COMPARE_FIELDS = [
   { label: "Region", key: "region" as const },
