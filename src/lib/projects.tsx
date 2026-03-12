@@ -49,7 +49,7 @@ export interface Invoice {
 const SEED_THREADS: ProjectThread[] = [
   {
     id: 1, vendor: "Ateliê Nova", product: "FW26 Hoodie Program", stage: "sample", region: "PT", updated: "2h ago", priority: true, // Samples delivered — needs brand approval
-    category: "Cut & Sew", labelName: "My Brand", quantity: "200-300", tier: "Premium", matchScore: 94,
+    category: "Cut & Sew", labelName: "My Brand", quantity: "200-300", qualityVsCost: 3, matchScore: 94,
     timeline: [
       { stage: "brief", date: "Feb 12", note: "Brief submitted with hoodie specs and colorways" },
       { stage: "matched", date: "Feb 14", note: "Ateliê Nova accepted — 94% match score" },
