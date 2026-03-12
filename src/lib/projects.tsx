@@ -11,7 +11,7 @@ export interface ProjectThread {
   category: string;
   labelName: string;
   quantity: string;
-  tier: string;
+  qualityVsCost?: number;
   matchScore?: number;
   timeline: { stage: string; date: string; note: string }[];
 }

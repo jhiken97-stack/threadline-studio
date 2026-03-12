@@ -429,7 +429,7 @@ export default function BriefBuilder() {
                 {vendorName && <ReviewRow label="Manufacturer" value={vendorName} />}
                 <ReviewRow label="Brand" value={form.labelName || "—"} />
                 <ReviewRow label="Product Type" value={form.category || "—"} />
-                <ReviewRow label="Quality Level" value={form.tier || "—"} />
+                <ReviewRow label="Quality Priority" value={form.qualityVsCost <= 2 ? "Cost-focused" : form.qualityVsCost >= 4 ? "Quality-focused" : "Balanced"} />
                 <ReviewRow label="Quantity" value={form.quantity || "—"} />
                 <ReviewRow label="Sample Timeline" value={form.sampleTimeline || "—"} />
                 <ReviewRow label="Files" value={form.files.length > 0 ? `${form.files.length} file${form.files.length > 1 ? "s" : ""} attached` : "None"} />
