@@ -5,6 +5,7 @@ import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import { useProjects } from "@/lib/projects";
 import { useAuth } from "@/lib/auth";
+import { qualityLabel } from "@/components/QualityScale";
 
 const CATEGORIES = [
   "Cut & Sew", "Heavyweight Jersey", "Fleece", "Knitwear", "Denim",
