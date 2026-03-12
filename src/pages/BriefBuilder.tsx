@@ -5,6 +5,7 @@ import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { Progress } from "@/components/ui/progress";
 import { useProjects } from "@/lib/projects";
 import { useAuth } from "@/lib/auth";
+import { qualityLabel } from "@/components/QualityScale";
 
 const CATEGORIES = [
   "Cut & Sew", "Heavyweight Jersey", "Fleece", "Knitwear", "Denim",
@@ -413,9 +414,7 @@ export default function BriefBuilder() {
                   <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider w-20">Top quality</span>
                 </div>
                 <p className="font-mono text-[10px] text-muted-foreground/60 mt-2 text-center">
-                  {form.qualityVsCost <= 2 ? "Got it — we'll focus on cost-effective manufacturers who still meet quality standards."
-                    : form.qualityVsCost >= 4 ? "Got it — we'll prioritize manufacturers known for exceptional quality and craftsmanship."
-                    : "A good balance — solid quality at a reasonable price point."}
+                  {[undefined, "Got it — we'll find the most affordable manufacturers available.", "Got it — we'll focus on cost-effective manufacturers who still meet quality standards.", "A good balance — solid quality at a reasonable price point.", "Got it — we'll prioritize manufacturers known for exceptional quality and craftsmanship.", "Got it — we'll match you with top-tier manufacturers offering the highest quality available."][form.qualityVsCost]}
                 </p>
               </div>
             </div>
@@ -429,12 +428,12 @@ export default function BriefBuilder() {
                 {vendorName && <ReviewRow label="Manufacturer" value={vendorName} />}
                 <ReviewRow label="Brand" value={form.labelName || "—"} />
                 <ReviewRow label="Product Type" value={form.category || "—"} />
-                <ReviewRow label="Quality Priority" value={form.qualityVsCost <= 2 ? "Cost-focused" : form.qualityVsCost >= 4 ? "Quality-focused" : "Balanced"} />
+                <ReviewRow label="Quality Priority" value={qualityLabel(form.qualityVsCost)} />
                 <ReviewRow label="Quantity" value={form.quantity || "—"} />
                 <ReviewRow label="Sample Timeline" value={form.sampleTimeline || "—"} />
                 <ReviewRow label="Files" value={form.files.length > 0 ? `${form.files.length} file${form.files.length > 1 ? "s" : ""} attached` : "None"} />
                 {!vendorId && <ReviewRow label="Location Preference" value={form.countries.join(", ") || "No preference"} />}
-                <ReviewRow label="Priority" value={form.qualityVsCost <= 2 ? "Cost-focused" : form.qualityVsCost >= 4 ? "Quality-focused" : "Balanced"} />
+                <ReviewRow label="Priority" value={qualityLabel(form.qualityVsCost)} />
               </div>
               <p className="font-body text-xs text-muted-foreground mt-2">
                 {vendorName

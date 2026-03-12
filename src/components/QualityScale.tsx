@@ -6,8 +6,8 @@ export function QualityScale({ value, size = "sm" }: { value: number; size?: "sm
   const h = size === "sm" ? "h-2" : "h-4";
   const gap = size === "sm" ? "gap-0.5" : "gap-1";
 
-  const label =
-    value <= 2 ? "Cost-focused" : value >= 4 ? "Quality-focused" : "Balanced";
+  const labels = ["Low-cost", "Cost-focused", "Balanced", "Quality-focused", "Top quality"];
+  const label = labels[value - 1] || "Balanced";
 
   return (
     <div className="flex items-center gap-2">
@@ -29,5 +29,6 @@ export function QualityScale({ value, size = "sm" }: { value: number; size?: "sm
 }
 
 export function qualityLabel(value: number): string {
-  return value <= 2 ? "Cost-focused" : value >= 4 ? "Quality-focused" : "Balanced";
+  const labels = ["Low-cost", "Cost-focused", "Balanced", "Quality-focused", "Top quality"];
+  return labels[value - 1] || "Balanced";
 }
