@@ -413,9 +413,7 @@ export default function BriefBuilder() {
                   <span className="font-mono text-[10px] text-muted-foreground uppercase tracking-wider w-20">Top quality</span>
                 </div>
                 <p className="font-mono text-[10px] text-muted-foreground/60 mt-2 text-center">
-                  {form.qualityVsCost <= 2 ? "Got it — we'll focus on cost-effective manufacturers who still meet quality standards."
-                    : form.qualityVsCost >= 4 ? "Got it — we'll prioritize manufacturers known for exceptional quality and craftsmanship."
-                    : "A good balance — solid quality at a reasonable price point."}
+                  {[undefined, "Got it — we'll find the most affordable manufacturers available.", "Got it — we'll focus on cost-effective manufacturers who still meet quality standards.", "A good balance — solid quality at a reasonable price point.", "Got it — we'll prioritize manufacturers known for exceptional quality and craftsmanship.", "Got it — we'll match you with top-tier manufacturers offering the highest quality available."][form.qualityVsCost]}
                 </p>
               </div>
             </div>
