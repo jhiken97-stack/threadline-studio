@@ -361,7 +361,7 @@ function ManufacturerCard({ manufacturer: m }: { manufacturer: typeof FEATURED_M
             ))}
           </div>
         </div>
-        <span className="font-mono text-[10px] px-2 py-0.5 border border-foreground/15 uppercase tracking-wider text-muted-foreground">{m.tier}</span>
+        <QualityScale value={m.qualityVsCost} />
       </div>
 
       {/* Gated preview fields */}

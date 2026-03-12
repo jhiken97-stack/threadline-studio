@@ -6,7 +6,7 @@ import { useVendorActions, VENDORS } from "@/lib/vendors";
 const COMPARE_FIELDS = [
   { label: "Region", key: "region" as const },
   { label: "Category", key: "category" as const },
-  { label: "Quality Tier", key: "tier" as const },
+  { label: "Quality Priority", key: "qualityVsCost" as const },
   { label: "MOQ Range", gated: true },
   { label: "Lead Time", gated: true },
   { label: "Capabilities", gated: true },
