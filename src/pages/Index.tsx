@@ -4,6 +4,7 @@ import { ArrowUpRight, ArrowRight, Lock, Bookmark, BookmarkCheck, GitCompare, Fa
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useVendorActions } from "@/lib/vendors";
+import { QualityScale } from "@/components/QualityScale";
 import fashionHoodie from "@/assets/fashion-hoodie.jpg";
 import fashionDenim from "@/assets/fashion-denim.jpg";
 import fashionFleece from "@/assets/fashion-fleece.jpg";
