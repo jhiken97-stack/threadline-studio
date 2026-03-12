@@ -263,7 +263,7 @@ export function ProjectsProvider({ children }: { children: ReactNode }) {
       category: brief.category,
       labelName: brief.labelName,
       quantity: brief.quantity,
-      tier: brief.tier,
+      qualityVsCost: brief.qualityVsCost,
       timeline: [
         { stage: "brief", date: today, note: `Brief submitted directly to ${vendorName}` },
       ],
