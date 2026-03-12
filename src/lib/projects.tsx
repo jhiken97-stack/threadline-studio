@@ -94,7 +94,7 @@ const SEED_THREADS: ProjectThread[] = [
   },
   {
     id: 6, vendor: "Kyoto Textile Lab", product: "SS25 Linen Camp Shirt", stage: "complete", region: "JP", updated: "5d ago", priority: false,
-    category: "Shirting", labelName: "My Brand", quantity: "400", tier: "Luxury", matchScore: 96,
+    category: "Shirting", labelName: "My Brand", quantity: "400", qualityVsCost: 5, matchScore: 96,
     timeline: [
       { stage: "brief", date: "Nov 15", note: "Brief submitted for linen camp collar shirt" },
       { stage: "matched", date: "Nov 18", note: "Kyoto Textile Lab matched — 96% match, premium Japanese linen" },
