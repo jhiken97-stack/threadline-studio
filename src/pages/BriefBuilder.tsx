@@ -114,7 +114,7 @@ export default function BriefBuilder() {
   const briefData = {
     labelName: form.labelName,
     category: form.category,
-    tier: form.tier,
+    qualityVsCost: form.qualityVsCost,
     quantity: form.quantity,
     description: form.description,
   };
