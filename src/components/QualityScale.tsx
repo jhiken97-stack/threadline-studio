@@ -29,5 +29,6 @@ export function QualityScale({ value, size = "sm" }: { value: number; size?: "sm
 }
 
 export function qualityLabel(value: number): string {
-  return value <= 2 ? "Cost-focused" : value >= 4 ? "Quality-focused" : "Balanced";
+  const labels = ["Low-cost", "Cost-focused", "Balanced", "Quality-focused", "Top quality"];
+  return labels[value - 1] || "Balanced";
 }

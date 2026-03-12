@@ -432,7 +432,7 @@ export default function BriefBuilder() {
                 <ReviewRow label="Sample Timeline" value={form.sampleTimeline || "—"} />
                 <ReviewRow label="Files" value={form.files.length > 0 ? `${form.files.length} file${form.files.length > 1 ? "s" : ""} attached` : "None"} />
                 {!vendorId && <ReviewRow label="Location Preference" value={form.countries.join(", ") || "No preference"} />}
-                <ReviewRow label="Priority" value={form.qualityVsCost <= 2 ? "Cost-focused" : form.qualityVsCost >= 4 ? "Quality-focused" : "Balanced"} />
+                <ReviewRow label="Priority" value={qualityLabel(form.qualityVsCost)} />
               </div>
               <p className="font-body text-xs text-muted-foreground mt-2">
                 {vendorName
