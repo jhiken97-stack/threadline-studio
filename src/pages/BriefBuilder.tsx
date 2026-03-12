@@ -45,7 +45,7 @@ export default function BriefBuilder() {
   const [form, setForm] = useState({
     labelName: "",
     category: "",
-    tier: "",
+    qualityVsCostLevel: 3,
     quantity: "",
     sampleTimeline: "",
     countries: [] as string[],
