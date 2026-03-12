@@ -134,11 +134,11 @@ function findInvoiceForStep(stageKey: string, subLabel: string, projectInvoices:
     const desc = inv.description.toLowerCase();
     if (label.includes("samples paid")) return desc.includes("sampl");
     if (label.includes("production deposit")) {
-      // Match deposit invoices, OR "full" production invoices (no separate deposit/balance split)
       return desc.includes("deposit") || (desc.includes("production") && !desc.includes("balance") && !desc.includes("sampl"));
     }
     if (label.includes("production balance")) {
-      return desc.includes("balance");
+      // Match balance invoices, OR "full" production invoices (single payment covers both)
+      return desc.includes("balance") || (desc.includes("production") && !desc.includes("deposit") && !desc.includes("sampl"));
     }
     return false;
   });
