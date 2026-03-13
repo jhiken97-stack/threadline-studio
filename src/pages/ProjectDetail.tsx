@@ -4,53 +4,7 @@ import { ArrowLeft, MessageSquare, Check, Clock, Package, Truck, FileText, Alert
 import { Button } from "@/components/ui/button";
 import { useProjects, Invoice } from "@/lib/projects";
 import { BuyerProtectionBadge } from "@/components/BuyerProtectionBadge";
-
-const STAGES = [
-  { key: "brief", label: "Brief Sent", icon: FileText, help: "Your project details have been shared with the manufacturer. They'll review and respond soon." },
-  { key: "matched", label: "Vendor Matched", icon: Check, help: "A manufacturer has accepted your project. You can now discuss details and request samples." },
-  { key: "sample", label: "Sampling", icon: Package, help: "Your manufacturer is creating sample pieces. Once you receive them, you'll approve or request changes before bulk production." },
-  { key: "production", label: "In Production", icon: Clock, help: "Your approved design is being manufactured in bulk. After production, a final quality check is performed and the remaining balance is due before shipping." },
-  { key: "shipped", label: "Shipping", icon: Truck, help: "Your finished products have passed QA and are on their way to you." },
-  { key: "complete", label: "Delivered", icon: Check, help: "Your order has arrived! Review your experience and reorder when you're ready for your next drop." },
-];
-
-interface SubStep {
-  label: string;
-  status: "done" | "current" | "upcoming";
-  note?: string;
-}
-
-const SUB_STEPS: Record<string, { label: string; steps: string[] }> = {
-  brief: {
-    label: "Briefing",
-    steps: ["Brief submitted", "Brief reviewed by vendor", "Brief accepted"],
-  },
-  matched: {
-    label: "Matching",
-    steps: ["Vendor paired", "Terms & specs discussed", "Terms agreed"],
-  },
-  sample: {
-    label: "Sampling",
-    steps: ["Sample request form", "Samples agreed upon", "Samples paid for", "Samples shipped", "Samples delivered"],
-  },
-  production: {
-    label: "Production",
-    steps: ["Production deposit paid (50%)", "Production started", "Mid-production update", "Production complete", "Final quality check", "Production balance paid (50%)"],
-  },
-  shipped: {
-    label: "Shipping",
-    steps: ["Tracking number provided", "Order shipped", "In transit", "Tracking shows delivered"],
-  },
-  complete: {
-    label: "Complete",
-    steps: ["Tracking shows delivered", "Escrow auto-released", "Dispute window (48h)", "Review submitted"],
-  },
-};
-
-function isPaymentStep(label: string): boolean {
-  const l = label.toLowerCase();
-  return l.includes("paid") || l.includes("payment") || l.includes("deposit") || l.includes("balance");
-}
+import { STAGES, SUB_STEPS, isPaymentStep } from "@/lib/project-stages";
 
 function getSubStepStatuses(
   stageKey: string,
