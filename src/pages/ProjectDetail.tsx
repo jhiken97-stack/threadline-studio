@@ -113,6 +113,7 @@ function SubStepRow({ sub, invoice, payingId, paidId, onPay }: {
   onPay: (inv: Invoice) => void;
 }) {
   const [invoiceOpen, setInvoiceOpen] = useState(false);
+  const { toast } = useToast();
   // Show invoice for done and current steps (not upcoming/future)
   const showInvoice = !!invoice && sub.status !== "upcoming";
   const isPaying = invoice ? payingId === invoice.id : false;

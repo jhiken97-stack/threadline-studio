@@ -326,6 +326,7 @@ function VendorSubStepRow({ sub, stageKey, projectInvoices }: {
   projectInvoices: Invoice[];
 }) {
   const [invoiceOpen, setInvoiceOpen] = useState(false);
+  const { toast } = useToast();
 
   // Find matching invoice for payment steps
   const invoice = isPaymentStep(sub.label) ? projectInvoices.find((inv) => {
