@@ -6,6 +6,11 @@ import { useProjects, type ProjectThread, type Invoice } from "@/lib/projects";
 import { QualityScale } from "@/components/QualityScale";
 import { STAGES, SUB_STEPS, isPaymentStep } from "@/lib/project-stages";
 import { useToast } from "@/hooks/use-toast";
+import { FileSharing } from "@/components/project/FileSharing";
+import { ShipmentTracker } from "@/components/project/ShipmentTracker";
+import { DisputePanel } from "@/components/project/DisputePanel";
+import { ContractPanel } from "@/components/project/ContractPanel";
+import { AmendmentPanel } from "@/components/project/AmendmentPanel";
 
 interface SubStep {
   label: string;
@@ -301,6 +306,15 @@ function ProjectCard({ project, invoices: projectInvoices, expanded, onToggle }:
                 </div>
               )}
             </div>
+          </div>
+
+          {/* Feature panels */}
+          <div className="p-5 border-t border-foreground/10 space-y-4">
+            <ContractPanel projectId={project.id} role="vendor" />
+            <FileSharing projectId={project.id} role="vendor" />
+            <ShipmentTracker projectId={project.id} />
+            <AmendmentPanel projectId={project.id} role="vendor" />
+            <DisputePanel projectId={project.id} role="vendor" />
           </div>
 
           {/* Actions */}

@@ -6,6 +6,11 @@ import { useProjects, Invoice } from "@/lib/projects";
 import { BuyerProtectionBadge } from "@/components/BuyerProtectionBadge";
 import { STAGES, SUB_STEPS, isPaymentStep } from "@/lib/project-stages";
 import { useToast } from "@/hooks/use-toast";
+import { FileSharing } from "@/components/project/FileSharing";
+import { ShipmentTracker } from "@/components/project/ShipmentTracker";
+import { DisputePanel } from "@/components/project/DisputePanel";
+import { ContractPanel } from "@/components/project/ContractPanel";
+import { AmendmentPanel } from "@/components/project/AmendmentPanel";
 
 interface SubStep {
   label: string;
@@ -470,6 +475,15 @@ export default function ProjectDetail() {
               </div>
             );
           })}
+        </div>
+
+        {/* Feature panels */}
+        <div className="space-y-4 mt-6">
+          <ContractPanel projectId={project.id} role="brand" />
+          <FileSharing projectId={project.id} role="brand" />
+          <ShipmentTracker projectId={project.id} />
+          <AmendmentPanel projectId={project.id} role="brand" />
+          <DisputePanel projectId={project.id} role="brand" />
         </div>
 
         {/* Buyer Protection + Fee note */}
