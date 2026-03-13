@@ -7,6 +7,7 @@ import { SiteLayout } from "@/components/layout/SiteLayout";
 import { VendorLayout } from "@/components/layout/VendorLayout";
 import { VendorActionsProvider } from "@/lib/vendors";
 import { ProjectsProvider } from "@/lib/projects";
+import { ProjectFeaturesProvider } from "@/lib/project-features";
 import { AuthProvider } from "@/lib/auth";
 import { VendorAuthProvider } from "@/lib/vendor-auth";
 import Index from "./pages/Index";
