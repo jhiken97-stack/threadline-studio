@@ -6,6 +6,12 @@ import { useProjects, Invoice } from "@/lib/projects";
 import { BuyerProtectionBadge } from "@/components/BuyerProtectionBadge";
 import { STAGES, SUB_STEPS, isPaymentStep } from "@/lib/project-stages";
 
+interface SubStep {
+  label: string;
+  status: "done" | "current" | "upcoming";
+  note?: string;
+}
+
 function getSubStepStatuses(
   stageKey: string,
   currentStageKey: string,
