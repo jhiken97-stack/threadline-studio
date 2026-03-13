@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, ChevronRight, MessageSquare, Package, Truck, CheckCircle2, Check, Circle, Clock, CreditCard } from "lucide-react";
+import { ChevronDown, ChevronRight, MessageSquare, Package, Truck, CheckCircle2, Check, Circle, Clock, CreditCard, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useVendorAuth } from "@/lib/vendor-auth";
 import { useProjects, type ProjectThread, type Invoice } from "@/lib/projects";
@@ -324,6 +324,8 @@ function VendorSubStepRow({ sub, stageKey, projectInvoices }: {
   stageKey: string;
   projectInvoices: Invoice[];
 }) {
+  const [invoiceOpen, setInvoiceOpen] = useState(false);
+
   // Find matching invoice for payment steps
   const invoice = isPaymentStep(sub.label) ? projectInvoices.find((inv) => {
     const desc = inv.description.toLowerCase();
@@ -334,39 +336,83 @@ function VendorSubStepRow({ sub, stageKey, projectInvoices }: {
     return false;
   }) : undefined;
 
+  const showInvoice = !!invoice && sub.status !== "upcoming";
+
   return (
-    <div className="flex items-center gap-3 py-1.5">
-      <div className={`w-4 h-4 flex items-center justify-center flex-shrink-0 rounded-full ${
-        sub.status === "done"
-          ? "bg-foreground text-background"
-          : sub.status === "current"
-            ? "border-2 border-signal bg-signal/10"
-            : "border border-foreground/15 bg-background"
-      }`}>
-        {sub.status === "done" && <Check className="h-2.5 w-2.5" />}
-        {sub.status === "current" && <Circle className="h-1.5 w-1.5 fill-signal text-signal" />}
-      </div>
-      <span className={`font-body text-sm flex-1 ${
-        sub.status === "done"
-          ? "text-muted-foreground line-through"
-          : sub.status === "current"
-            ? "text-foreground font-600"
-            : "text-muted-foreground/50"
-      }`}>
-        {sub.label}
-      </span>
-      {sub.status === "current" && !invoice && (
-        <span className="font-mono text-[8px] uppercase tracking-widest px-1.5 py-0.5 bg-signal/10 text-signal border border-signal/20">
-          In progress
-        </span>
-      )}
-      {invoice && sub.status !== "upcoming" && (
-        <span className={`font-mono text-[9px] px-1.5 py-0.5 uppercase tracking-wider flex items-center gap-1 ${
-          invoice.status === "paid" ? "bg-foreground/5 text-muted-foreground" : "bg-signal/10 text-signal"
+    <div>
+      <div className="flex items-center gap-3 py-1.5">
+        <div className={`w-4 h-4 flex items-center justify-center flex-shrink-0 rounded-full ${
+          sub.status === "done"
+            ? "bg-foreground text-background"
+            : sub.status === "current"
+              ? "border-2 border-signal bg-signal/10"
+              : "border border-foreground/15 bg-background"
         }`}>
-          <CreditCard className="h-2.5 w-2.5" />
-          {invoice.status === "paid" ? `$${invoice.amount.toLocaleString()} received` : `$${invoice.amount.toLocaleString()} awaiting payment`}
+          {sub.status === "done" && <Check className="h-2.5 w-2.5" />}
+          {sub.status === "current" && <Circle className="h-1.5 w-1.5 fill-signal text-signal" />}
+        </div>
+        <span className={`font-body text-sm flex-1 ${
+          sub.status === "done"
+            ? "text-muted-foreground line-through"
+            : sub.status === "current"
+              ? "text-foreground font-600"
+              : "text-muted-foreground/50"
+        }`}>
+          {sub.label}
         </span>
+        {sub.status === "current" && !showInvoice && (
+          <span className="font-mono text-[8px] uppercase tracking-widest px-1.5 py-0.5 bg-signal/10 text-signal border border-signal/20">
+            In progress
+          </span>
+        )}
+        {showInvoice && (
+          <button
+            onClick={() => setInvoiceOpen(!invoiceOpen)}
+            className={`font-mono text-[9px] px-1.5 py-0.5 uppercase tracking-wider flex items-center gap-1 hover:opacity-80 transition-opacity ${
+              invoice.status === "paid" ? "bg-foreground/5 text-muted-foreground" : "bg-signal/10 text-signal"
+            }`}
+          >
+            <CreditCard className="h-2.5 w-2.5" />
+            {invoice.status === "paid" ? "Received" : `$${invoice.amount.toLocaleString()} pending`}
+            <ChevronDown className={`h-2.5 w-2.5 transition-transform ${invoiceOpen ? "rotate-180" : ""}`} />
+          </button>
+        )}
+      </div>
+
+      {showInvoice && invoiceOpen && invoice && (
+        <div className="ml-7 mt-1 mb-2 p-4 border border-foreground/10 bg-background animate-in slide-in-from-top-1 duration-150">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="font-mono text-[9px] px-2 py-0.5 bg-signal/10 text-signal uppercase tracking-wider">Invoice</span>
+            <span className="font-mono text-[9px] text-muted-foreground">{invoice.date}</span>
+          </div>
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className={`w-7 h-7 flex items-center justify-center flex-shrink-0 ${
+                invoice.status === "paid" ? "bg-foreground text-background" : "bg-signal/10 text-signal"
+              }`}>
+                {invoice.status === "paid" ? <Check className="h-3 w-3" /> : <Clock className="h-3 w-3" />}
+              </div>
+              <div className="min-w-0">
+                <span className="font-body text-sm font-600 block">{invoice.description}</span>
+                <span className="font-mono text-[9px] text-muted-foreground flex items-center gap-1.5">
+                  {invoice.status === "paid" ? (
+                    `Received ${invoice.paidDate}`
+                  ) : (
+                    <>
+                      <ShieldCheck className="h-3 w-3 text-signal" /> Held in escrow · Awaiting brand payment
+                    </>
+                  )}
+                </span>
+              </div>
+            </div>
+            <div className="text-right flex-shrink-0">
+              <span className="font-display text-base font-800 block">${invoice.amount.toLocaleString()}</span>
+              <span className="font-mono text-[9px] text-muted-foreground">
+                −${(invoice.amount * 0.025).toFixed(2)} fee = ${(invoice.amount * 0.975).toFixed(2)} net
+              </span>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );
