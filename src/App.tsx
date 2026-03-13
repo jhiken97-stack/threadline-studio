@@ -76,6 +76,7 @@ const App = () => (
             } />
           </Routes>
         </BrowserRouter>
+        </ProjectFeaturesProvider>
         </ProjectsProvider>
       </VendorActionsProvider>
       </VendorAuthProvider>

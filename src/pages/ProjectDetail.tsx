@@ -477,6 +477,15 @@ export default function ProjectDetail() {
           })}
         </div>
 
+        {/* Feature panels */}
+        <div className="space-y-4 mt-6">
+          <ContractPanel projectId={project.id} role="brand" />
+          <FileSharing projectId={project.id} role="brand" />
+          <ShipmentTracker projectId={project.id} />
+          <AmendmentPanel projectId={project.id} role="brand" />
+          <DisputePanel projectId={project.id} role="brand" />
+        </div>
+
         {/* Buyer Protection + Fee note */}
         {projectInvoices.length > 0 && (
           <div className="space-y-2 mt-6 mb-6">

@@ -308,6 +308,15 @@ function ProjectCard({ project, invoices: projectInvoices, expanded, onToggle }:
             </div>
           </div>
 
+          {/* Feature panels */}
+          <div className="p-5 border-t border-foreground/10 space-y-4">
+            <ContractPanel projectId={project.id} role="vendor" />
+            <FileSharing projectId={project.id} role="vendor" />
+            <ShipmentTracker projectId={project.id} />
+            <AmendmentPanel projectId={project.id} role="vendor" />
+            <DisputePanel projectId={project.id} role="vendor" />
+          </div>
+
           {/* Actions */}
           <div className="p-5 border-t border-foreground/10 flex items-center gap-2">
             <Button variant="outline" size="sm" className="font-mono text-[10px]">
