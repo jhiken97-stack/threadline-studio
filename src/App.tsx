@@ -40,6 +40,7 @@ const App = () => (
       <VendorAuthProvider>
       <VendorActionsProvider>
         <ProjectsProvider>
+        <ProjectFeaturesProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
