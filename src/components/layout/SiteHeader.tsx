@@ -44,6 +44,12 @@ export function SiteHeader() {
           >
             For Manufacturers
           </Link>
+          <Link
+            to="/vendor/login"
+            className="font-mono text-[10px] uppercase tracking-widest text-signal/70 hover:text-signal transition-colors"
+          >
+            Vendor Login
+          </Link>
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
