@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useProjects, Invoice } from "@/lib/projects";
 import { BuyerProtectionBadge } from "@/components/BuyerProtectionBadge";
 import { STAGES, SUB_STEPS, isPaymentStep } from "@/lib/project-stages";
+import { useToast } from "@/hooks/use-toast";
 
 interface SubStep {
   label: string;
@@ -112,6 +113,7 @@ function SubStepRow({ sub, invoice, payingId, paidId, onPay }: {
   onPay: (inv: Invoice) => void;
 }) {
   const [invoiceOpen, setInvoiceOpen] = useState(false);
+  const { toast } = useToast();
   // Show invoice for done and current steps (not upcoming/future)
   const showInvoice = !!invoice && sub.status !== "upcoming";
   const isPaying = invoice ? payingId === invoice.id : false;
@@ -163,6 +165,13 @@ function SubStepRow({ sub, invoice, payingId, paidId, onPay }: {
           <div className="flex items-center gap-2 mb-2">
             <span className="font-mono text-[9px] px-2 py-0.5 bg-signal/10 text-signal uppercase tracking-wider">Invoice</span>
             <span className="font-mono text-[9px] text-muted-foreground">{invoice.date}</span>
+            <button
+              onClick={(e) => { e.stopPropagation(); toast({ title: "Invoice PDF", description: `Downloading invoice for "${invoice.description}"…` }); }}
+              className="ml-auto flex items-center gap-1 font-mono text-[9px] uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors"
+              title="View invoice PDF"
+            >
+              <FileText className="h-3 w-3" /> PDF
+            </button>
           </div>
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3 min-w-0">
