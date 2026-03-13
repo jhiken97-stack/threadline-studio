@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { ChevronDown, ChevronRight, MessageSquare, Package, Truck, CheckCircle2, Check, Circle, Clock, CreditCard, ShieldCheck } from "lucide-react";
+import { ChevronDown, ChevronRight, MessageSquare, Package, Truck, CheckCircle2, Check, Circle, Clock, CreditCard, ShieldCheck, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useVendorAuth } from "@/lib/vendor-auth";
 import { useProjects, type ProjectThread, type Invoice } from "@/lib/projects";
 import { QualityScale } from "@/components/QualityScale";
 import { STAGES, SUB_STEPS, isPaymentStep } from "@/lib/project-stages";
+import { useToast } from "@/hooks/use-toast";
 
 interface SubStep {
   label: string;

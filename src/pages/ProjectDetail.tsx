@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useProjects, Invoice } from "@/lib/projects";
 import { BuyerProtectionBadge } from "@/components/BuyerProtectionBadge";
 import { STAGES, SUB_STEPS, isPaymentStep } from "@/lib/project-stages";
+import { useToast } from "@/hooks/use-toast";
 
 interface SubStep {
   label: string;
