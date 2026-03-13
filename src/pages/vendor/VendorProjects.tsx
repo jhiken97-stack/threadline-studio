@@ -6,6 +6,11 @@ import { useProjects, type ProjectThread, type Invoice } from "@/lib/projects";
 import { QualityScale } from "@/components/QualityScale";
 import { STAGES, SUB_STEPS, isPaymentStep } from "@/lib/project-stages";
 import { useToast } from "@/hooks/use-toast";
+import { FileSharing } from "@/components/project/FileSharing";
+import { ShipmentTracker } from "@/components/project/ShipmentTracker";
+import { DisputePanel } from "@/components/project/DisputePanel";
+import { ContractPanel } from "@/components/project/ContractPanel";
+import { AmendmentPanel } from "@/components/project/AmendmentPanel";
 
 interface SubStep {
   label: string;
