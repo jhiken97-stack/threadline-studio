@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, ChevronRight, MessageSquare, Package, Truck, CheckCircle2, Check, Circle, Clock, CreditCard } from "lucide-react";
+import { ChevronDown, ChevronRight, MessageSquare, Package, Truck, CheckCircle2, Check, Circle, Clock, CreditCard, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useVendorAuth } from "@/lib/vendor-auth";
 import { useProjects, type ProjectThread, type Invoice } from "@/lib/projects";
